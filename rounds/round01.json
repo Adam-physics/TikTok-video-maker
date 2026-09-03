@@ -1,0 +1,15 @@
+{
+  "id": "round01",
+  "question_page": "assets/pages/test-q01.png",
+  "answer_page": "assets/pages/test-a01.png",
+  "cover": null,
+  "answers": ["real", "fake", "real"],
+  "prompt": "COMMENT YOUR GUESS",
+  "lock": ["LOCK IN", "YOUR GUESS!"],
+  "endcard": {
+    "headline": "ANSWERS TO ALL 210",
+    "subline": "Trick Trivia — link in bio"
+  },
+  "caption": "Two of these are true and one is lying to your face. Most adults get the middle one wrong. Which did you pick?",
+  "hashtags": ["#realorfake", "#trivia", "#funfacts", "#didyouknow", "#kidsactivities", "#teachersoftiktok", "#familygame", "#roadtripgames"]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "trick-trivia-shorts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Turns Trick Trivia book pages into upload-ready vertical shorts",
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0"
+  }
+}

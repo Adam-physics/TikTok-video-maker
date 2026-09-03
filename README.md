@@ -1,0 +1,105 @@
+# Trick Trivia — TikTok short generator
+
+Turns a page pair from *Trick Trivia! Real or Fake?* into an upload-ready
+vertical video. One command in, one MP4 plus its caption out.
+
+```bash
+npm install                       # fetches a static ffmpeg, no system install
+pip install -r requirements.txt
+python make.py rounds/round01.json
+```
+
+Output lands in `out/`: `round01.mp4` (1080x1920, H.264/AAC, faststart) and
+`round01.txt` (caption and hashtags to paste at upload).
+
+## Why it looks like the book
+
+Nothing about the brand is re-created in code. The halftone background, the
+title lockup and the three claim panels are all **cropped out of the printed
+page**, so a frame is the book rather than a design that references it. The
+answer pages already carry their own `REAL!` / `FAKE!` stamps, so a reveal
+needs nothing drawn over it.
+
+That is also the marketing argument: a viewer who plays three rounds has
+used the product. The book is the obvious next step, not a pitch.
+
+## Adding a round
+
+Drop the two page scans in `assets/pages/`, then check the crop by eye
+before rendering half a minute of video around it:
+
+```bash
+python make.py calibrate assets/pages/q07.png
+# writes assets/derived/calibration-q07.png with the panels outlined
+```
+
+Panels are found automatically by looking for the cards' near-black rules.
+If a page defeats the detector, set `question_bands` / `answer_bands` in the
+round file as `[[top, bottom], ...]` fractions of page height.
+
+Then a round file:
+
+```json
+{
+  "id": "round07",
+  "question_page": "assets/pages/q07.png",
+  "answer_page": "assets/pages/a07.png",
+  "cover": "assets/cover.png",
+  "answers": ["real", "fake", "real"],
+  "prompt": "COMMENT YOUR GUESS",
+  "endcard": {"headline": "207 MORE INSIDE", "subline": "link in bio"},
+  "caption": "...",
+  "hashtags": ["#realorfake", "#funfacts"]
+}
+```
+
+`answers` drives the reveal sound — a chime for real, a honk for fake — so
+getting it wrong is audible.
+
+## Beat sheet
+
+| Beat | Length | Purpose |
+|---|---|---|
+| Claim 1–3 | 4.4s each | Guess timer drains; two ticks push a decision before the cut |
+| Lock in | 1.3s | The pause that makes people commit in the comments |
+| Reveal 1–3 | 3.6s each | Payoff, with the printed stamp |
+| End card | 2.6s | The book as the answer key |
+
+About 28 seconds, which is long enough to guess and short enough that a
+finished watch still counts as one. Adjust in `trivia/brand.py`.
+
+## Design decisions worth keeping
+
+**Silent by default.** No narration. Reading the claim *is* the game, and a
+robot voice reading it aloud spoils the pace. Free TTS is not good enough to
+put next to this artwork, so the score is synthesised instead: `trivia/audio.py`
+writes its own marimba bed and effects with numpy. Nothing here carries a
+licence that can strike a monetised account later, and the bed sits at
+-21 dB mean so narration can be added later without a remix.
+
+**Layout adapts, text never clips.** Type shrinks until it fits the side
+margins, and the block under the timer is centred in whatever room the
+header leaves — so a wordy answer panel and a short claim panel both sit
+balanced with no per-page tuning.
+
+**TikTok's chrome is respected.** `SAFE_BOTTOM` keeps the caption, the
+handle and the button rail from covering anything that has to be read.
+
+## Layout
+
+```
+make.py             CLI: render a round, or calibrate a page crop
+trivia/brand.py     canvas, palette, safe area, beat lengths
+trivia/pages.py     find and crop panels, title and background from a page
+trivia/scenes.py    compose 1080x1920 stills
+trivia/audio.py     procedural score and effects -> WAV
+trivia/render.py    ffmpeg assembly: motion, guess timer, mux
+tools/              synthetic test pages; delete once real scans are in
+```
+
+## Still to do
+
+- Real page scans in `assets/pages/` (the current ones are stand-ins from
+  `tools/make_test_pages.py`, drawn only to prove the pipeline).
+- `assets/cover.png` for the end card.
+- More round files; formats beyond the three-claim round.
