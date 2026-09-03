@@ -1,86 +1,135 @@
 """Cut a printed book page into its three panels.
 
-A Trick Trivia page is three bordered cards stacked on a flat halftone
-background, with the title lockup above them. Every card is outlined in
-near-black and spans most of the page width, so the cards can be found by
-looking for rows that are overwhelmingly dark: those rows are the card's
-top and bottom rules, and a panel is the span between a pair of them.
+A Trick Trivia page is three cards stacked on a flat halftone ground, with
+the title lockup above them. The cards are found by looking for the ground
+itself: the only rows that are almost entirely background are the seams
+between cards, the breathing space under the title, and the margin below
+the last card. Four such seams bound three panels.
 
-Detection is a convenience, not a contract -- pass explicit bands in the
-round file whenever a page does something unusual.
+Ink is not a usable signal here -- the illustrations are full-bleed and
+frequently darker than the card outlines, and decorative bubbles overlap
+the card edges. Background coverage is stable across every page tested,
+including reveal pages whose underwater art is close in hue to the ground.
+
+Detection is a convenience, not a contract: pass explicit bands in the
+round file whenever a page does something unusual, and check any new page
+with `python make.py calibrate` before rendering around it.
 """
 from __future__ import annotations
 
 import numpy as np
 from PIL import Image, ImageDraw
 
-DARK = 78              # luma at or below this counts as ink
-LINE_COVERAGE = 0.50   # fraction of the width a row must ink to be a rule
-MIN_PANEL_FRAC = 0.07  # a panel is at least this tall, as a page fraction
-MAX_PANEL_FRAC = 0.45
+BG_TOLERANCE = 190     # summed per-channel distance that still reads as ground
+SEAM_COVERAGE = 0.55   # fraction of the row width that must be ground
+EDGE_COVERAGE = 0.50   # looser, for the outer edges of the panel block
+MIN_SEPARATION = 200   # px; stops one wide seam being counted twice
+SEARCH_TOP, SEARCH_BOTTOM = 0.35, 0.75   # where interior seams can live
 
 
-def _dark_rows(img: Image.Image) -> np.ndarray:
-    """Fraction of inked pixels per row, measured across the page interior."""
-    grey = np.asarray(img.convert("L"), dtype=np.int16)
-    x0 = int(grey.shape[1] * 0.06)
-    interior = grey[:, x0:grey.shape[1] - x0]
-    return (interior <= DARK).mean(axis=1)
+def _ground_profile(img: Image.Image) -> np.ndarray:
+    """Per-row fraction of pixels matching the page's background colour."""
+    a = np.asarray(img, dtype=np.int16)
+    h, w = a.shape[:2]
+    ring = np.concatenate([a[:30].reshape(-1, 3), a[-30:].reshape(-1, 3)])
+    ground = np.median(ring, axis=0)
+    matches = np.abs(a - ground).sum(axis=2) < BG_TOLERANCE
+    return matches[:, int(w * 0.10):int(w * 0.90)].mean(axis=1)
 
 
-def _rules(coverage: np.ndarray) -> list[tuple[int, int]]:
-    """Collapse runs of inked rows into (start, end) rules."""
-    hits = coverage >= LINE_COVERAGE
-    runs, start = [], None
-    for y, on in enumerate(hits):
-        if on and start is None:
+def _seams(profile: np.ndarray, lo: int, hi: int, threshold: float):
+    """Runs of mostly-background rows, strongest first."""
+    runs, y = [], lo
+    while y < hi:
+        if profile[y] >= threshold:
             start = y
-        elif not on and start is not None:
-            runs.append((start, y - 1))
-            start = None
-    if start is not None:
-        runs.append((start, len(hits) - 1))
+            while y < hi and profile[y] >= threshold:
+                y += 1
+            runs.append((float(profile[start:y].max()), start, y - 1))
+        else:
+            y += 1
+    return sorted(runs, reverse=True)
+
+
+def _interior_seams(profile: np.ndarray, h: int) -> list[tuple[int, int]]:
+    """The two seams between the three cards."""
+    lo, hi = int(h * SEARCH_TOP), int(h * SEARCH_BOTTOM)
+    chosen: list[tuple[float, int, int]] = []
+    for run in _seams(profile, lo, hi, SEAM_COVERAGE):
+        if all(abs(run[1] - kept[1]) >= MIN_SEPARATION for kept in chosen):
+            chosen.append(run)
+        if len(chosen) == 2:
+            break
+    if len(chosen) != 2:
+        raise ValueError("could not find the two seams between the three cards")
+    return sorted((start, end) for _, start, end in chosen)
+
+
+def _sustained_runs(profile, lo: int, hi: int, min_length: int = 4):
+    """Background runs long enough to be real breathing space, not a light
+    patch inside an illustration."""
+    runs, y = [], lo
+    while y < hi:
+        if profile[y] >= SEAM_COVERAGE:
+            start = y
+            while y < hi and profile[y] >= SEAM_COVERAGE:
+                y += 1
+            if y - start >= min_length:
+                runs.append((start, y - 1))
+        else:
+            y += 1
     return runs
 
 
-def find_panels(path: str, expected: int = 3) -> list[tuple[int, int, int, int]]:
-    """Return up to `expected` panel boxes as (left, top, right, bottom).
+def _block_edges(profile: np.ndarray, h: int, first: int, last: int) -> tuple[int, int]:
+    """Top of the first card and bottom of the last, either side of the seams."""
+    above = _sustained_runs(profile, int(h * 0.08), first)
+    below = _sustained_runs(profile, last + 1, int(h * 0.97))
+    top = above[-1][1] + 1 if above else int(h * 0.20)
+    bottom = below[0][0] - 1 if below else int(h * 0.92)
+    return top, bottom
 
-    Panels are ordered top to bottom. Raises if the page does not yield the
-    expected count, so a bad crop fails loudly instead of shipping.
-    """
+
+def find_panels(path: str) -> list[tuple[int, int, int, int]]:
+    """Return the three panel boxes as (left, top, right, bottom), top down."""
     img = Image.open(path).convert("RGB")
-    w, h = img.size
-    rules = _rules(_dark_rows(img))
+    h = img.size[1]
+    profile = _ground_profile(img)
+    (g1_start, g1_end), (g2_start, g2_end) = _interior_seams(profile, h)
+    top, bottom = _block_edges(profile, h, g1_start, g2_end)
 
-    lo, hi = MIN_PANEL_FRAC * h, MAX_PANEL_FRAC * h
-    spans: list[tuple[int, int, int]] = []
-    for (a_start, a_end), (b_start, b_end) in zip(rules, rules[1:]):
-        height = b_end - a_start
-        if lo <= height <= hi:
-            spans.append((height, a_start, b_end))
-
-    # Keep the tallest plausible spans, then restore reading order.
-    spans.sort(reverse=True)
-    chosen = sorted(spans[:expected], key=lambda s: s[1])
-    if len(chosen) != expected:
-        raise ValueError(
-            f"{path}: found {len(chosen)} panel(s), expected {expected}. "
-            "Run `python make.py calibrate <page>` and set explicit bands."
-        )
+    bands = [(top, g1_start - 1), (g1_end + 1, g2_start - 1), (g2_end + 1, bottom)]
+    bands[0] = (_trim_banner(bands), bands[0][1])
 
     boxes = []
-    for _, top, bottom in chosen:
-        left, right = _horizontal_extent(img, top, bottom)
-        boxes.append((left, top, right, bottom))
+    for band_top, band_bottom in bands:
+        left, right = _horizontal_extent(img, band_top, band_bottom)
+        boxes.append((left, band_top, right, band_bottom))
     return boxes
 
 
+def _trim_banner(bands) -> int:
+    """Pull the first band down off the page's strapline.
+
+    On claim pages a banner ("CAN YOU SPOT THE TRUTH?") sits above the first
+    card and inside its seam, which would make panel one taller than the two
+    below it. When the first band runs noticeably long, trim the excess from
+    its top so all three panels match.
+    """
+    (top, first_bottom), *rest = bands
+    typical = sorted(b - t for t, b in rest)[len(rest) // 2]
+    overshoot = (first_bottom - top) - typical
+    return top + overshoot if overshoot > typical * 0.12 else top
+
+
 def _horizontal_extent(img: Image.Image, top: int, bottom: int) -> tuple[int, int]:
-    """Trim a panel band to the card's own left and right rules."""
-    grey = np.asarray(img.convert("L"), dtype=np.int16)[top:bottom + 1]
-    inked = (grey <= DARK).mean(axis=0)
-    cols = np.flatnonzero(inked >= 0.55)
+    """Trim a band to the card's own left and right edges."""
+    a = np.asarray(img, dtype=np.int16)
+    ring = np.concatenate([a[:30].reshape(-1, 3), a[-30:].reshape(-1, 3)])
+    ground = np.median(ring, axis=0)
+    band = a[top:bottom + 1]
+    on_card = (np.abs(band - ground).sum(axis=2) >= BG_TOLERANCE).mean(axis=0)
+    cols = np.flatnonzero(on_card >= 0.55)
     if cols.size < 2:
         return 0, img.size[0] - 1
     return int(cols[0]), int(cols[-1])
@@ -97,7 +146,9 @@ def crop_panels(path: str, bands=None, expected: int = 3) -> list[Image.Image]:
         h, w = img.size[1], img.size[0]
         boxes = [(0, int(t * h), w - 1, int(b * h)) for t, b in bands]
     else:
-        boxes = find_panels(path, expected)
+        boxes = find_panels(path)
+    if len(boxes) != expected:
+        raise ValueError(f"{path}: got {len(boxes)} panels, expected {expected}")
     return [img.crop((l, t, r + 1, b + 1)) for l, t, r, b in boxes]
 
 
@@ -108,21 +159,53 @@ def crop_title(path: str) -> Image.Image:
     return img.crop((0, 0, img.size[0], max(top - 6, 1)))
 
 
-def background_swatch(path: str, size: int = 96) -> Image.Image:
-    """A clean tile of the page's halftone background.
+def _period(block: np.ndarray, axis: int, lo: int = 6, hi: int = 40) -> int:
+    """The repeat length of the halftone along one axis.
 
-    Sampled from the extreme corner, which the layout always leaves empty.
+    A swatch cut to a whole number of periods tiles without seams; a swatch
+    of an arbitrary size leaves a visible grid across the finished frame.
+    """
+    limit = min(hi, block.shape[axis] // 2)
+    if limit <= lo:
+        return max(1, block.shape[axis])
+    scores = []
+    for step in range(lo, limit + 1):
+        a, b = (block[:-step], block[step:]) if axis == 0 else \
+               (block[:, :-step], block[:, step:])
+        scores.append((float(np.abs(a - b).mean()), step))
+    return min(scores)[1]
+
+
+def background_swatch(path: str) -> Image.Image:
+    """A seamlessly tileable piece of the page's halftone ground.
+
+    The page corners are not empty -- a mascot and decorative stars sit in
+    them -- so the swatch is cut from the widest band of pure ground on the
+    page, then sized to a whole number of halftone periods. Tiling anything
+    else leaves a visible grid across the finished frame.
     """
     img = Image.open(path).convert("RGB")
-    return img.crop((0, 0, size, size))
+    profile = _ground_profile(img)
+    bands, y, h = [], 0, img.size[1]
+    while y < h:
+        if profile[y] >= 0.99:
+            start = y
+            while y < h and profile[y] >= 0.99:
+                y += 1
+            bands.append((y - start, start, y - 1))
+        else:
+            y += 1
+    if not bands:
+        return img.crop((0, 0, 16, 16))
+
+    _, top, bottom = max(bands)
+    strip = np.asarray(img.crop((0, top, img.size[0], bottom + 1)), dtype=np.int16)
+    px, py = _period(strip, 1), _period(strip, 0)
+    return img.crop((0, top, px, top + py))
 
 
 def calibrate(path: str, out_path: str) -> str:
-    """Write a copy of the page with the detected panels outlined.
-
-    This is the fast way to check a crop by eye before rendering 30 seconds
-    of video around it.
-    """
+    """Write a copy of the page with the detected panels outlined."""
     img = Image.open(path).convert("RGB")
     draw = ImageDraw.Draw(img)
     for i, (l, t, r, b) in enumerate(find_panels(path), start=1):

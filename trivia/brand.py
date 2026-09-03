@@ -28,7 +28,7 @@ PAPER = (250, 248, 240)
 
 # The guess timer sits in a fixed slot under the title, so its position
 # does not drift when an answer panel is taller than a claim panel.
-TIMER_X, TIMER_Y = 90, 505
+TIMER_X, TIMER_Y = 90, 384
 TIMER_W, TIMER_H = 900, 22
 
 # Panel presentation

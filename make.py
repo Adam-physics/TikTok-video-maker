@@ -45,11 +45,12 @@ def build_scenes(spec: dict) -> tuple[list[dict], list[tuple[float, str]]]:
     sounds: list[tuple[float, str]] = []
     clock = 0.0
 
-    def add(image, duration, timer=False):
+    def add(image, duration, timer=None):
         nonlocal clock
         path = os.path.join(DERIVED, f"{spec['id']}-{len(frames):02d}.png")
         image.save(path)
-        frames.append({"png": path, "duration": duration, "timer": timer})
+        frames.append({"png": path, "duration": duration,
+                       "timer": timer is not None, "timer_box": timer})
         sounds.append((clock, "whoosh"))
         return clock, duration
 
@@ -60,7 +61,7 @@ def build_scenes(spec: dict) -> tuple[list[dict], list[tuple[float, str]]]:
         start, dur = add(
             scenes.panel_scene(q_bg, q_title, panel, counter=f"{i + 1} of 3",
                                prompt=prompt, timer=True),
-            brand.T_CLAIM, timer=True)
+            brand.T_CLAIM, timer=scenes.timer_box(q_title))
         # Two ticks as the bar runs out, to push the guess before the cut.
         sounds += [(start + dur - 1.9, "tick"), (start + dur - 0.9, "tick")]
         clock += dur

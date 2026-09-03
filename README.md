@@ -97,10 +97,32 @@ trivia/render.py    ffmpeg assembly: motion, guess timer, mux
 tools/              synthetic test pages; delete once real scans are in
 ```
 
+## How panels are found
+
+Ink is not a usable signal on these pages: the illustrations are full-bleed
+and often darker than the card outlines, and decorative bubbles overlap the
+card edges. Instead the detector looks for the **ground** — the only rows
+that are almost entirely background are the seams between cards, the space
+under the title, and the margin below the last card. Four seams bound three
+panels. This holds even on reveal pages whose underwater art is close in
+hue to the blue page ground.
+
+Two consequences worth knowing:
+
+- The background swatch is cut from the **widest band of pure ground**, not
+  from a corner — the corners hold the mascot and decorative stars. It is
+  then sized to a whole number of halftone periods, so the tiled canvas
+  shows no grid.
+- The claim-page strapline ("CAN YOU SPOT THE TRUTH?") sits above the first
+  card and inside its seam. It is trimmed off panel one and left in the
+  title lockup, where it belongs, so all three panels come out the same
+  height.
+
+`tools/make_test_pages.py` regenerates stand-in pages matching the real
+geometry, for testing the pipeline without touching the artwork.
+
 ## Still to do
 
-- Real page scans in `assets/pages/` (the current ones are stand-ins from
-  `tools/make_test_pages.py`, drawn only to prove the pipeline).
 - `assets/cover.png` for the end card.
 - More round files; formats beyond the three-claim round.
 

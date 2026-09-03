@@ -24,8 +24,7 @@ TEXT_WIDTH = W - brand.SAFE_SIDE * 2
 BAND_TOP = brand.SAFE_TOP
 BAND_BOTTOM = H - brand.SAFE_BOTTOM
 
-TITLE_Y = 190
-HEADER_BOTTOM = brand.TIMER_Y + brand.TIMER_H + 40
+TITLE_GAP = 26      # between the lockup and the guess timer
 
 # Vertical rhythm below the panel.
 GAP_PANEL = 46
@@ -92,19 +91,31 @@ def _pill(draw, y, text, size, fill):
     return height
 
 
+def timer_box(title, title_width: int = W) -> tuple[int, int, int, int]:
+    """Where the guess timer sits, as (x, y, width, height).
+
+    Claim and reveal pages crop to lockups of different heights, so the
+    timer is placed under whichever one this scene uses rather than at a
+    fixed offset. render.py animates the fill using the same box.
+    """
+    height = round(title.size[1] * title_width / title.size[0])
+    return brand.TIMER_X, height + TITLE_GAP, brand.TIMER_W, brand.TIMER_H
+
+
 def panel_scene(swatch, title, panel, counter=None, prompt=None, timer=False,
-                title_width=760, panel_width=1044):
+                title_width=W, panel_width=1044):
     """A claim or reveal frame: title lockup, hero panel, counter, nudge."""
     frame = tiled_background(swatch)
     draw = ImageDraw.Draw(frame)
 
-    frame.paste(_fit_width(title, title_width), ((W - title_width) // 2, TITLE_Y))
+    # Flush to the top edge and full width, so the lockup's own halftone
+    # bleeds off the frame instead of showing as a pasted rectangle.
+    frame.paste(_fit_width(title, title_width), ((W - title_width) // 2, 0))
 
-    if timer:
-        # Empty groove; render.py animates the fill draining across it.
-        x, y, tw, th = brand.TIMER_X, brand.TIMER_Y, brand.TIMER_W, brand.TIMER_H
-        draw.rounded_rectangle((x, y, x + tw, y + th), radius=th // 2,
-                               fill=brand.INK, outline=brand.INK, width=5)
+    x, y, tw, th = timer_box(title, title_width)
+    header_bottom = y + th + 40
+    # The timer itself -- groove and fill both -- is drawn by render.py as
+    # an overlay, so the scene's slow push cannot drift one from the other.
 
     panel_img = _fit_width(panel, panel_width)
     counter_font = _auto_font(draw, counter or "", 44) if counter else None
@@ -117,7 +128,7 @@ def panel_scene(swatch, title, panel, counter=None, prompt=None, timer=False,
         stack += GAP_PANEL + pill_height
     if prompt_font:
         stack += GAP_TEXT + prompt_font.size
-    y = HEADER_BOTTOM + max(0, (BAND_BOTTOM - HEADER_BOTTOM - stack) // 2)
+    y = header_bottom + max(0, (BAND_BOTTOM - header_bottom - stack) // 2)
 
     _paste_with_shadow(frame, panel_img, ((W - panel_width) // 2, y))
     y += panel_img.size[1]

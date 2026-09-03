@@ -42,21 +42,29 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Groove,DejaVu Sans,40,&H00141410,&H00141410,&H00000000,-1,100,100,0,0,1,5,0,7,0,0,0,1
 Style: Bar,DejaVu Sans,40,&H001AC7FF,&H00141410,&H00000000,-1,100,100,0,0,1,5,0,7,0,0,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
-    x, y, w, h = brand.TIMER_X, brand.TIMER_Y, brand.TIMER_W, brand.TIMER_H
     events, t = [], 0.0
     for scene in scenes:
         dur = scene["duration"]
         if scene.get("timer"):
+            x, y, w, h = scene["timer_box"]
             ms = int(dur * 1000)
-            tags = (rf"{{\an7\pos({x},{y})\clip({x},{y},{x + w},{y + h})"
-                    rf"\t(0,{ms},\clip({x},{y},{x},{y + h}))}}")
             shape = rf"{{\p1}}m 0 0 l {w} 0 {w} {h} 0 {h}{{\p0}}"
-            events.append(f"Dialogue: 0,{_ts(t)},{_ts(t + dur)},Bar,,0,0,0,,{tags}{shape}")
+            # Both halves are overlays. Baking the groove into the still
+            # would let the scene's slow push drift it away from the fill,
+            # which stays put because subtitles render after the zoom.
+            groove = rf"{{\an7\pos({x},{y})}}"
+            events.append(
+                f"Dialogue: 0,{_ts(t)},{_ts(t + dur)},Groove,,0,0,0,,{groove}{shape}")
+            fill = (rf"{{\an7\pos({x},{y})\clip({x},{y},{x + w},{y + h})"
+                    rf"\t(0,{ms},\clip({x},{y},{x},{y + h}))}}")
+            events.append(
+                f"Dialogue: 1,{_ts(t)},{_ts(t + dur)},Bar,,0,0,0,,{fill}{shape}")
         t += dur
     with open(path, "w") as f:
         f.write(head + "\n".join(events) + "\n")
