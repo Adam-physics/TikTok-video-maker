@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Turn one Trick Trivia book page pair into an upload-ready short.
 
-    python make.py rounds/round01.json      # render a round
+    python make.py rounds/round01.json      # render a round as video
+    python make.py carousel rounds/round01.json   # ...or as a Photo Mode carousel
     python make.py calibrate <page.png>     # check panel detection by eye
 
 A round is three claims and their three reveals, cut straight from the
@@ -14,7 +15,7 @@ import json
 import os
 import sys
 
-from trivia import audio, brand, pages, render, scenes
+from trivia import audio, brand, carousel, pages, render, scenes
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DERIVED = os.path.join(ROOT, "assets", "derived")
@@ -113,10 +114,74 @@ def render_round(spec_path: str) -> str:
     return mp4
 
 
+def build_carousel(spec_path: str) -> list[str]:
+    """Seven slides: hook claim, two more claims, three reveals, the close.
+
+    `order` in the round file reorders the page's three panels so the claim
+    most adults get wrong leads -- being wrong is what makes someone
+    comment, and slide one is the only slide that has to earn a swipe cold.
+    """
+    spec = _load(spec_path)
+    q_page = os.path.join(ROOT, spec["question_page"])
+    a_page = os.path.join(ROOT, spec["answer_page"])
+    order = spec.get("order", [0, 1, 2])
+
+    q_panels = pages.crop_panels(q_page, spec.get("question_bands"))
+    a_panels = pages.crop_panels(a_page, spec.get("answer_bands"))
+    q_panels = [q_panels[i] for i in order]
+    a_panels = [a_panels[i] for i in order]
+    q_title, a_title = pages.crop_title(q_page), pages.crop_title(a_page)
+    q_bg, a_bg = pages.background_swatch(q_page), pages.background_swatch(a_page)
+
+    car = spec.get("carousel", {})
+    hook = car.get("hook", "Your kid will beat you at this.")
+    slides = [
+        carousel.claim_slide(q_bg, q_title, q_panels[0], hook=hook,
+                             chip=car.get("chip1", "REAL or FAKE?  swipe →")),
+        carousel.claim_slide(q_bg, q_title, q_panels[1],
+                             chip=car.get("chip2", "2 of 3  ·  swipe →")),
+        carousel.claim_slide(q_bg, q_title, q_panels[2],
+                             chip=car.get("chip3", "Lock in all 3  ·  answers next →")),
+        carousel.claim_slide(a_bg, a_title, a_panels[0], chip="1 of 3"),
+        carousel.claim_slide(a_bg, a_title, a_panels[1], chip="2 of 3"),
+        carousel.claim_slide(a_bg, a_title, a_panels[2],
+                             chip=car.get("chip6", "Comment your score  ↓")),
+    ]
+
+    cover = None
+    if spec.get("cover"):
+        from PIL import Image
+        cover = Image.open(os.path.join(ROOT, spec["cover"])).convert("RGB")
+    # Every page in assets/pages fans out behind the close, so the interior
+    # is on screen even before a cover file exists.
+    from PIL import Image
+    pages_dir = os.path.join(ROOT, "assets", "pages")
+    interior = [Image.open(os.path.join(pages_dir, f)).convert("RGB")
+                for f in sorted(os.listdir(pages_dir)) if f.endswith(".png")]
+    slides.append(carousel.cta_slide(
+        a_bg, cover,
+        car.get("close", "That was 1 page. There are 70."),
+        spec.get("reviews", []),
+        car.get("cta", "Trick Trivia  ·  Amazon  ·  link in bio"),
+        interior=interior))
+
+    out_dir = os.path.join(OUT, f"{spec['id']}-carousel")
+    paths = carousel.export(slides, out_dir)
+    notes = os.path.join(out_dir, "caption.txt")
+    with open(notes, "w") as f:
+        f.write(car.get("caption", spec.get("caption", "")).strip() + "\n\n")
+        f.write(" ".join(car.get("hashtags", spec.get("hashtags", []))) + "\n")
+    print(f"{out_dir}/  ({len(paths)} slides + caption.txt)")
+    return paths
+
+
 def main(argv: list[str]) -> int:
     if len(argv) < 2:
         print(__doc__)
         return 2
+    if argv[1] == "carousel":
+        build_carousel(argv[2])
+        return 0
     if argv[1] == "calibrate":
         os.makedirs(DERIVED, exist_ok=True)
         page = argv[2]

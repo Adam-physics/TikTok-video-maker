@@ -121,10 +121,66 @@ Two consequences worth knowing:
 `tools/make_test_pages.py` regenerates stand-in pages matching the real
 geometry, for testing the pipeline without touching the artwork.
 
+## Carousels (Photo Mode)
+
+```bash
+python make.py carousel rounds/round01.json
+# -> out/round01-carousel/slide-01.jpg … slide-07.jpg + caption.txt
+```
+
+Seven slides: a hook claim, two more claims, three reveals, the close.
+`order` in the round file puts the claim most adults get wrong on slide one.
+
+### Why carousels, and the rules the layout follows
+
+Photo Mode is scored on swipe-through, saves, comments and completion, not
+watch time — every swipe is an active signal, and the format is currently
+pushed harder than video and less crowded. A real-or-fake page is already a
+swipe structure: claim, swipe, reveal.
+
+Rules from the research, baked into `trivia/carousel.py`:
+
+- **1080×1920.** Critical text centre-middle. Nothing that must be read in
+  the bottom 350px or right 64px, where TikTok's UI sits.
+- **Slide one is the thumbnail.** If it does not earn a swipe, the other
+  slides do not exist. It carries the visual hook (the panel) and the text
+  hook (the line above it), and they must say the same thing.
+- **Five to seven slides.** Engagement drops after seven.
+- **Nudge the swipe.** "swipe →" on early slides measurably lifts
+  swipe-through. Each slide closes the loop the last one opened and opens
+  the next.
+- **The last slide asks for an action.** Completion plus a comment is the
+  strongest pair of signals a post gets — hence "Comment your score".
+- **Caption ≥200 characters, keyword-rich.** TikTok indexes captions for
+  search. Three to eight niche hashtags; never `#fyp`.
+- **Rotate slide one every one to two weeks.** Audience fatigue is fast.
+
+### Kallaway's hook model, applied
+
+Hook priority is **visual → written → spoken**, because eyes comprehend
+before ears do. A carousel has no spoken hook, so it is the purest case:
+the picture and the on-screen line carry everything. His three-step
+formula — *context lean-in* (what is this, why care), *scroll-stop
+interjection* (a contrasting claim), *contrarian snapback* (the turn) —
+maps onto slide one, slide one's chip, and the reveal. Keep on-screen
+hooks under seven words and specific.
+
+### At post time (things the files cannot do for you)
+
+- **Add a trending sound in the app.** Photo Mode without audio gets
+  ~70% less reach. Lo-fi and sped-up tracks currently outperform library
+  music on carousel placements.
+- Paste `caption.txt` as the caption.
+- Post the video *and* the carousel for the same round; they reach
+  differently.
+
 ## Still to do
 
-- `assets/cover.png` for the end card.
-- More round files; formats beyond the three-claim round.
+- `assets/cover.png` — goes on the video end card and the carousel close.
+- `reviews` in the round file: `[{"name": "…", "quote": "…"}]` — the close
+  slide renders up to three as review cards.
+- More page scans: the close fans every page in `assets/pages`, and five
+  distinct pages read as a real book where four cycles.
 
 ## Page naming
 

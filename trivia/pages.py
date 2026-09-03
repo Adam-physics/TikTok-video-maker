@@ -156,7 +156,8 @@ def crop_title(path: str) -> Image.Image:
     """Everything above the first panel: the book's own title lockup."""
     img = Image.open(path).convert("RGB")
     top = find_panels(path)[0][1]
-    return img.crop((0, 0, img.size[0], max(top - 6, 1)))
+    # The card carries a glow above its outline; stop short of it.
+    return img.crop((0, 0, img.size[0], max(top - 24, 1)))
 
 
 def _period(block: np.ndarray, axis: int, lo: int = 6, hi: int = 40) -> int:
