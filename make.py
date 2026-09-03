@@ -115,12 +115,15 @@ def render_round(spec_path: str) -> str:
 
 
 def build_carousel(spec_path: str) -> list[str]:
-    """Seven slides: hook claim, two more claims, three reveals, the close.
+    """Cover, three claims, three reveals, the turn, the proof.
 
-    `order` in the round file reorders the page's three panels so the claim
-    most adults get wrong leads -- being wrong is what makes someone
-    comment, and slide one is the only slide that has to earn a swipe cold.
+    `order` in the round file reorders the page's panels so the claim most
+    adults get wrong leads: its illustration is the cover's visual hook and
+    it is the first claim, because being wrong is what makes someone
+    comment.
     """
+    from PIL import Image
+
     spec = _load(spec_path)
     q_page = os.path.join(ROOT, spec["question_page"])
     a_page = os.path.join(ROOT, spec["answer_page"])
@@ -133,42 +136,41 @@ def build_carousel(spec_path: str) -> list[str]:
     q_title, a_title = pages.crop_title(q_page), pages.crop_title(a_page)
     q_bg, a_bg = pages.background_swatch(q_page), pages.background_swatch(a_page)
 
-    car = spec.get("carousel", {})
-    hook = car.get("hook", "Your kid will beat you at this.")
-    slides = [
-        carousel.claim_slide(q_bg, q_title, q_panels[0], hook=hook,
-                             chip=car.get("chip1", "REAL or FAKE?  swipe →")),
-        carousel.claim_slide(q_bg, q_title, q_panels[1],
-                             chip=car.get("chip2", "2 of 3  ·  swipe →")),
-        carousel.claim_slide(q_bg, q_title, q_panels[2],
-                             chip=car.get("chip3", "Lock in all 3  ·  answers next →")),
-        carousel.claim_slide(a_bg, a_title, a_panels[0], chip="1 of 3"),
-        carousel.claim_slide(a_bg, a_title, a_panels[1], chip="2 of 3"),
-        carousel.claim_slide(a_bg, a_title, a_panels[2],
-                             chip=car.get("chip6", "Comment your score  ↓")),
-    ]
-
-    cover = None
-    if spec.get("cover"):
-        from PIL import Image
-        cover = Image.open(os.path.join(ROOT, spec["cover"])).convert("RGB")
-    # Every page in assets/pages fans out behind the close, so the interior
-    # is on screen even before a cover file exists.
-    from PIL import Image
     pages_dir = os.path.join(ROOT, "assets", "pages")
     interior = [Image.open(os.path.join(pages_dir, f)).convert("RGB")
                 for f in sorted(os.listdir(pages_dir)) if f.endswith(".png")]
-    slides.append(carousel.cta_slide(
-        a_bg, cover,
-        car.get("close", "That was 1 page. There are 70."),
-        spec.get("reviews", []),
-        car.get("cta", "Trick Trivia  ·  Amazon  ·  link in bio"),
-        interior=interior))
+    cover = None
+    if spec.get("cover"):
+        cover = Image.open(os.path.join(ROOT, spec["cover"])).convert("RGB")
+
+    car = spec.get("carousel", {})
+    slides = [
+        carousel.cover_slide(
+            q_bg, q_title, carousel.panel_art(q_panels[0], car.get("art_fraction", 0.46)),
+            car["hook"], car.get("cover_chip", "3 facts  ·  1 is a lie  ·  swipe →")),
+        carousel.claim_slide(q_bg, q_title, q_panels[0], kicker="Real or fake?",
+                             chip="1 of 3  ·  swipe →"),
+        carousel.claim_slide(q_bg, q_title, q_panels[1], kicker="Real or fake?",
+                             chip="2 of 3  ·  swipe →"),
+        carousel.claim_slide(q_bg, q_title, q_panels[2], kicker="Last one. No cheating.",
+                             chip="Lock in all 3  ·  answers next →"),
+        carousel.claim_slide(a_bg, a_title, a_panels[0], chip="1 of 3"),
+        carousel.claim_slide(a_bg, a_title, a_panels[1], chip="2 of 3"),
+        carousel.claim_slide(a_bg, a_title, a_panels[2],
+                             chip=car.get("score_chip", "Comment your score  /3  ↓")),
+        carousel.turn_slide(
+            a_bg, car.get("turn", "That was one page of Trick Trivia."),
+            interior, cover,
+            car.get("stats", ["210 facts", "70 pages", "Ages 7–13"])),
+        carousel.proof_slide(
+            q_bg, car.get("proof", "Kids beat their parents. Parents buy it anyway."),
+            spec.get("reviews", []),
+            car.get("cta", "Trick Trivia on Amazon  ·  link in bio")),
+    ]
 
     out_dir = os.path.join(OUT, f"{spec['id']}-carousel")
     paths = carousel.export(slides, out_dir)
-    notes = os.path.join(out_dir, "caption.txt")
-    with open(notes, "w") as f:
+    with open(os.path.join(out_dir, "caption.txt"), "w") as f:
         f.write(car.get("caption", spec.get("caption", "")).strip() + "\n\n")
         f.write(" ".join(car.get("hashtags", spec.get("hashtags", []))) + "\n")
     print(f"{out_dir}/  ({len(paths)} slides + caption.txt)")

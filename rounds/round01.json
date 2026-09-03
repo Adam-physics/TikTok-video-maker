@@ -35,13 +35,8 @@
   ],
   "reviews": [],
   "carousel": {
-    "hook": "Your kid will beat you at this.",
-    "chip1": "REAL or FAKE?  swipe \u2192",
-    "chip2": "2 of 3  \u00b7  swipe \u2192",
-    "chip3": "Lock in all 3  \u00b7  answers next \u2192",
-    "chip6": "Comment your score  \u2193",
-    "close": "That was 1 page. There are 70.",
-    "cta": "Trick Trivia  \u00b7  Amazon  \u00b7  link in bio",
+    "hook": "Your 8-year-old will beat you at this.",
+    "cta": "Trick Trivia on Amazon  \u00b7  link in bio",
     "caption": "Real or fake? Three animal facts, and the one that sounds most obvious is the lie. This is from Trick Trivia, a real-or-fake guessing game book for kids ages 7 to 13: 210 facts, full-colour comic illustrations, and every page is a new round. It is the screen-free road trip game, dinner table game and classroom brain break that kids actually ask for, because the whole point is beating the adults. Comment your score out of 3, then show your kid and see who wins.",
     "hashtags": [
       "#realorfake",
@@ -52,6 +47,14 @@
       "#teachersoftiktok",
       "#momhacks",
       "#amazonfinds"
-    ]
+    ],
+    "cover_chip": "3 facts  \u00b7  1 is a lie  \u00b7  swipe \u2192",
+    "turn": "That was one page of Trick Trivia.",
+    "stats": [
+      "210 facts",
+      "70 pages",
+      "Ages 7\u201313"
+    ],
+    "proof": "Kids beat their parents. Parents buy it anyway."
   }
 }
