@@ -1,7 +1,7 @@
 {
-  "id": "round01",
-  "question_page": "assets/pages/q01.png",
-  "answer_page": "assets/pages/a01.png",
+  "id": "round-test",
+  "question_page": "assets/pages/test-q01.png",
+  "answer_page": "assets/pages/test-a01.png",
   "cover": null,
   "answers": [
     "real",
@@ -17,7 +17,7 @@
     "headline": "ANSWERS TO ALL 210",
     "subline": "Trick Trivia \u2014 link in bio"
   },
-  "caption": "Flamingos, polar bears, octopuses. Two of these are true and one is lying straight to your face. Almost everyone gets the middle one wrong \u2014 and the reason why is genuinely strange. What did you pick?",
+  "caption": "Pipeline check only \u2014 stand-in artwork, not for upload.",
   "hashtags": [
     "#realorfake",
     "#trivia",

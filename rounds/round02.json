@@ -1,0 +1,31 @@
+{
+  "id": "round02",
+  "question_page": "assets/pages/q02.png",
+  "answer_page": "assets/pages/a02.png",
+  "cover": null,
+  "answers": [
+    "real",
+    "real",
+    "fake"
+  ],
+  "prompt": "COMMENT YOUR GUESS",
+  "lock": [
+    "LOCK IN",
+    "YOUR GUESS!"
+  ],
+  "endcard": {
+    "headline": "207 MORE INSIDE",
+    "subline": "Trick Trivia \u2014 link in bio"
+  },
+  "caption": "A dolphin, a snail, and a bat. Only one of these is made up, and it is the one absolutely everybody believes. Your kid probably knows this one and you don't. Guess before the reveal.",
+  "hashtags": [
+    "#realorfake",
+    "#trivia",
+    "#funfacts",
+    "#didyouknow",
+    "#kidsactivities",
+    "#teachersoftiktok",
+    "#familygame",
+    "#roadtripgames"
+  ]
+}

@@ -103,3 +103,18 @@ tools/              synthetic test pages; delete once real scans are in
   `tools/make_test_pages.py`, drawn only to prove the pipeline).
 - `assets/cover.png` for the end card.
 - More round files; formats beyond the three-claim round.
+
+## Page naming
+
+Pages pair up as question then answer, in printed order:
+
+| File | Book page | Contents |
+|---|---|---|
+| `assets/pages/q01.png` | 1 | flamingo / polar bear / octopus — claims |
+| `assets/pages/a01.png` | 2 | the same three, revealed |
+| `assets/pages/q02.png` | 3 | dolphin / snail / bat — claims |
+| `assets/pages/a02.png` | 4 | the same three, revealed |
+
+Upload the highest-resolution originals you have. The panels get scaled up
+to fill a 1080-wide frame, so a print-resolution source stays crisp where a
+screenshot will not.
