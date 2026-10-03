@@ -41,7 +41,7 @@ export const S05Series: React.FC<SceneProps> = ({dur}) => {
           <AbsoluteFill style={{background: '#000'}}>
             <Photo file={s.photo} dur={wordLen} from={1.18} to={1.08} driftX={3} darken={0.55} streaks />
             <Center>
-              <KineticWord text={s.name} size={portrait ? 150 : 210} />
+              <KineticWord text={s.name} size={portrait ? 118 : 210} />
             </Center>
           </AbsoluteFill>
           <Sfx file={SFX.whooshShort} at={0} volume={0.35} />
