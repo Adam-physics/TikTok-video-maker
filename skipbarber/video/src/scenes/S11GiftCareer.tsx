@@ -5,6 +5,7 @@ import {Headline} from '../primitives/Headline';
 import {useLayout} from '../primitives/layout';
 import {clamp} from '../primitives/motion';
 import {Photo} from '../primitives/Photo';
+import {C} from '../theme';
 import {SceneProps} from './types';
 
 // 11. Home page: "whether you're looking for a one-of-a-kind gift or want to start your racing career"
@@ -27,16 +28,16 @@ export const S11GiftCareer: React.FC<SceneProps> = ({dur}) => {
       <div style={panel(P.trophy, 100 - a, k, false)}>
         <Photo file={P.trophy} dur={dur} from={1.05} to={1.15} driftX={2} />
       </div>
-      <div style={{position: 'absolute', ...(portrait ? {left: 0, right: 0, top: `${a}%`, height: 6 * u} : {top: 0, bottom: 0, left: `${a}%`, width: 6 * u}), background: '#FF0000', transform: portrait ? 'translateY(-50%)' : 'translateX(-50%)', boxShadow: '0 0 30px #FF0000'}} />
-      <AbsoluteFill style={{background: 'linear-gradient(0deg, rgba(0,0,0,0.75), rgba(0,0,0,0) 45%)'}} />
+      <div style={{position: 'absolute', ...(portrait ? {left: 0, right: 0, top: `${a}%`, height: 6 * u} : {top: 0, bottom: 0, left: `${a}%`, width: 6 * u}), background: C.red, transform: portrait ? 'translateY(-50%)' : 'translateX(-50%)', boxShadow: `0 0 30px ${C.red}`}} />
+      <AbsoluteFill style={{background: portrait ? 'linear-gradient(0deg, rgba(0,0,0,0.8), rgba(0,0,0,0) 40%), linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0) 62%)' : 'linear-gradient(0deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.5) 32%, rgba(0,0,0,0) 58%)'}} />
       <Sequence durationInFrames={half}>
         <div style={{position: 'absolute', left: (portrait ? 60 : 110) * u, bottom: (portrait ? 1020 : 110) * u}}>
-          <Headline text="A bucket-list *gift*." size={portrait ? 100 : 110} align="left" delay={2} stagger={3} exitAt={half - 7} />
+          <Headline shadow text="A bucket-list *gift*." size={portrait ? 100 : 110} align="left" delay={2} stagger={3} exitAt={half - 7} />
         </div>
       </Sequence>
       <Sequence from={half}>
         <div style={{position: 'absolute', right: (portrait ? 60 : 110) * u, bottom: (portrait ? 140 : 110) * u}}>
-          <Headline text={'Or the start\nof a *career*.'} size={portrait ? 100 : 110} align={portrait ? 'left' : 'left'} delay={2} stagger={3} />
+          <Headline shadow text={'Or the start\nof a *career*.'} size={portrait ? 100 : 110} align={portrait ? 'left' : 'left'} delay={2} stagger={3} />
         </div>
       </Sequence>
     </AbsoluteFill>

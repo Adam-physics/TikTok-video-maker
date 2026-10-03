@@ -20,7 +20,8 @@ export const Headline: React.FC<{
   maxWidth?: number;
   lineHeight?: number;
   font?: string;
-}> = ({font = F.head, text, size = 104, color = C.white, accentColor = C.red, delay = 0, stagger = 3, exitAt, align = 'center', weight = 700, maxWidth, lineHeight = 1.08}) => {
+  shadow?: boolean; // soft dark halo for text over photos
+}> = ({shadow = false, font = F.head, text, size = 104, color = C.white, accentColor = C.red, delay = 0, stagger = 3, exitAt, align = 'center', weight = 700, maxWidth, lineHeight = 1.08}) => {
   const f = useCurrentFrame();
   const {u, portrait} = useLayout();
   const lines = text.split('\n');
@@ -36,6 +37,7 @@ export const Headline: React.FC<{
         letterSpacing: '-0.025em',
         textAlign: align,
         maxWidth: (maxWidth ?? (portrait ? 960 : 1600)) * u,
+        textShadow: shadow ? `0 ${4 * u}px ${28 * u}px rgba(0,0,0,0.75), 0 0 ${60 * u}px rgba(0,0,0,0.5)` : undefined,
       }}
     >
       {lines.map((line, li) => (

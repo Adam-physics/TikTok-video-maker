@@ -18,7 +18,7 @@ export const Background: React.FC<{kind: BgKind}> = ({kind}) => {
     return (
       <AbsoluteFill
         style={{
-          background: `radial-gradient(70% 80% at ${x}% ${y}%, #FF1A1A 0%, #B00000 28%, #3A0000 60%, #070000 100%)`,
+          background: `radial-gradient(70% 80% at ${x}% ${y}%, #F2363B 0%, #B0141B 28%, #3A0507 60%, #070102 100%)`,
         }}
       />
     );

@@ -23,7 +23,7 @@ import {S11GiftCareer} from './scenes/S11GiftCareer';
 import {S12Cta} from './scenes/S12Cta';
 import {S13End} from './scenes/S13End';
 import {SceneProps} from './scenes/types';
-import {place, SceneId, totalFrames, Variant} from './timeline';
+import {beatTime, FPS, MUSIC_EDIT, place, SceneId, totalFrames, Variant} from './timeline';
 
 const SCENES: Record<SceneId, React.FC<SceneProps & {partnerTag?: boolean}>> = {
   hook: S01Hook, whatif: S02WhatIf, counter: S03Counter, logo: S04Logo, series: S05Series, car: S06Car,
@@ -45,9 +45,45 @@ export const Demo: React.FC<{variant: Variant}> = ({variant}) => {
           </Sequence>
         );
       })}
-      {has(MUSIC) ? (
-        <Audio src={src(MUSIC)} volume={(f) => interpolate(f, [0, 3, total - 45, total - 1], [0, 0.9, 0.9, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})} />
-      ) : null}
+      {has(MUSIC) ? <Music variant={variant} total={total} /> : null}
     </AbsoluteFill>
+  );
+};
+
+const TRACK_FRAMES = Math.floor(67.78 * FPS);
+const MUSIC_VOL = 0.85;
+
+// Lays the source track out as the variant's bar-aligned edit list. Each join gets a 2 frame
+// dip so the splice never clicks; the last segment fades only if the video ends before the music.
+const Music: React.FC<{variant: Variant; total: number}> = ({variant, total}) => {
+  let at = 0;
+  const segs = MUSIC_EDIT[variant].map(([a, b], i, all) => {
+    const from = a === null ? 0 : Math.round(beatTime(a) * FPS);
+    const to = b === null ? TRACK_FRAMES : Math.round(beatTime(b) * FPS);
+    const len = Math.min(to - from, total - at);
+    const seg = {from, len, at, first: i === 0, last: i === all.length - 1};
+    at += to - from;
+    return seg;
+  });
+  return (
+    <>
+      {segs.filter((s) => s.len > 0).map((s) => (
+        <Sequence key={s.at} from={s.at} durationInFrames={s.len} layout="none">
+          <Audio
+            src={src(MUSIC)}
+            trimBefore={s.from}
+            durationInFrames={s.len}
+            volume={(f) => {
+              const inRamp = s.first ? 1 : interpolate(f, [0, 2], [0.2, 1], {extrapolateRight: 'clamp'});
+              const endsEarly = s.at + s.len >= total && s.from + s.len < TRACK_FRAMES - 2;
+              const outRamp = endsEarly
+                ? interpolate(f, [s.len - 12, s.len], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})
+                : s.last ? 1 : interpolate(f, [s.len - 2, s.len], [1, 0.2], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+              return MUSIC_VOL * inRamp * outRamp;
+            }}
+          />
+        </Sequence>
+      ))}
+    </>
   );
 };

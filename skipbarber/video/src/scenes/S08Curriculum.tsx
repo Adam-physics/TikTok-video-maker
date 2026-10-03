@@ -7,6 +7,7 @@ import {useLayout} from '../primitives/layout';
 import {clamp, pop} from '../primitives/motion';
 import {Photo} from '../primitives/Photo';
 import {Sfx} from '../primitives/Sfx';
+import {CutFlash} from '../primitives/SpeedLine';
 import {C, F} from '../theme';
 import {SceneProps} from './types';
 
@@ -36,19 +37,19 @@ const Step: React.FC<{i: number; len: number}> = ({i, len}) => {
       <AbsoluteFill style={{background: portrait ? 'linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.75) 100%)' : 'linear-gradient(90deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0) 70%)'}} />
       <div style={{position: 'absolute', left: (portrait ? 70 : 120) * u, top: (portrait ? 200 : 0) * u, bottom: portrait ? undefined : 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 22 * u}}>
         <Eyebrow text={`Three Day Racing School  0${i + 1}`} delay={2} />
-        <Headline text={s.head} size={portrait ? 120 : 132} align="left" delay={3} stagger={4} exitAt={len - 8} />
+        <Headline shadow text={s.head} size={portrait ? 120 : 132} align="left" delay={3} stagger={4} exitAt={len - 8} />
       </div>
-      <div style={{position: 'absolute', right: portrait ? 70 * u : 140 * u, bottom: portrait ? 260 * u : undefined, top: portrait ? undefined : 0, height: portrait ? undefined : '100%', display: 'flex', alignItems: 'center', perspective: 1600 * u}}>
+      <div style={{position: 'absolute', right: portrait ? 70 * u : 140 * u, left: portrait ? 70 * u : undefined, justifyContent: 'center', bottom: portrait ? 300 * u : undefined, top: portrait ? undefined : 0, height: portrait ? undefined : '100%', display: 'flex', alignItems: 'center', perspective: 1600 * u}}>
         <div
           style={{
-            width: 540 * u, background: '#fff', borderRadius: 26 * u, padding: 36 * u,
+            width: (portrait ? 800 : 540) * u, background: '#fff', borderRadius: 26 * u, padding: 36 * u,
             transform: `translateX(${tx * u}px) translateZ(${tz * u}px) rotateY(${rotY}deg) rotateX(6deg)`,
             boxShadow: `0 ${40 * u}px ${120 * u}px rgba(0,0,0,0.55)`, opacity: interpolate(p, [0, 0.2], [0, 1], clamp),
           }}
         >
           <div style={{fontFamily: F.ui, fontWeight: 700, fontSize: 20 * u, color: C.red, letterSpacing: '0.16em', textTransform: 'uppercase'}}>{s.title}</div>
           {s.items.map((it, k) => {
-            const t = f - 14 - k * 5;
+            const t = f - 9 - k * 4;
             return (
               <div key={it} style={{display: 'flex', alignItems: 'center', gap: 18 * u, marginTop: 22 * u, opacity: interpolate(t, [0, 6], [0, 1], clamp), transform: `translateX(${interpolate(t, [0, 8], [24, 0], clamp) * u}px)`}}>
                 <div style={{width: 34 * u, height: 34 * u, borderRadius: 10 * u, background: C.red, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 * u, fontFamily: F.ui, fontWeight: 700}}>&#10003;</div>
@@ -69,7 +70,8 @@ export const S08Curriculum: React.FC<SceneProps> = ({dur}) => {
       {STEPS.map((_, i) => (
         <Sequence key={i} from={i * len} durationInFrames={i === 2 ? dur - 2 * len : len}>
           <Step i={i} len={i === 2 ? dur - 2 * len : len} />
-          <Sfx file={SFX.whoosh2} at={0} volume={0.35} />
+          {i === 2 ? <CutFlash len={9} /> : null}
+          <Sfx file={i === 2 ? SFX.whoosh : SFX.whoosh2} at={0} volume={i === 2 ? 0.5 : 0.35} />
         </Sequence>
       ))}
     </AbsoluteFill>

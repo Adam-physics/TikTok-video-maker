@@ -1,6 +1,7 @@
 // Brand values measured on skipbarber.com with getComputedStyle (see scrape/inventory.md).
 export const C = {
-  red: '#FF0000', // site brand red
+  // The logo's red. The site CSS uses #FF0000, which smears in H.264 and clashes with the mark.
+  red: '#ED1F24',
   redDeep: '#8A0000',
   ink: '#111111', // site header bar
   black: '#000000',
