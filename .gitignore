@@ -3,3 +3,6 @@ out/
 assets/derived/
 __pycache__/
 *.pyc
+skipbarber/reference/
+skipbarber/analysis/frames-*/
+skipbarber/analysis/*.wav
