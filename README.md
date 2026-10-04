@@ -211,7 +211,9 @@ under it. Amazon autoplays muted, so the words carry the whole pitch.
 A book file is a cover plus a list of beats. Each beat has `lines` (the
 headline, auto-sized to fit; wrap `*words*` for the accent colour), and an
 optional `chip` label above and `sub` line below (`\n` forces a break).
-`dur` is seconds on screen. Keep the total 15–30s; Amazon accepts 6–45s,
+`dur` is seconds on screen. `"pop": true` stamps a short line down
+(the "IT'S REAL." beats); `"compare": {...}` swaps the cover for a
+one-liner-versus-explained side-by-side (see `books/*-explained.json`). Keep the total 15–30s; Amazon accepts 6–45s,
 16:9, under 500MB, audio at 96kbps or more, no letterboxing.
 
 Code lives in `ads/` (frames in `ad.py`, music in `score.py`). Fonts are

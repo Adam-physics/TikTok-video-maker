@@ -31,11 +31,13 @@ F_CHIP = os.path.join(FONTS, "BarlowCondensed-Bold.ttf")
 F_SUB = os.path.join(FONTS, "BarlowSemiCondensed-SemiBold.ttf")
 
 TEXT_X = 130            # left edge of the text column
-TEXT_W = 900            # widest a line may run
-COVER_CX = 1440         # cover centre
-COVER_H = 930
+TEXT_W = 1000           # widest a line may run
+COVER_CX = 1500         # cover centre
+COVER_H = 880
 WHITE = (255, 255, 255)
 INK = (14, 16, 22)
+PAPER = (250, 246, 234)
+GREY = (150, 156, 168)
 
 ENTER, STAGGER, EXIT = 0.42, 0.09, 0.24
 
@@ -181,9 +183,11 @@ def _wrap(text: str, font, width: int) -> list[str]:
     return lines + [cur] if cur else lines
 
 
-def card(beat: dict, accent) -> list[tuple[Image.Image, int, int]]:
-    """Lay out one beat as [(element image, top y)], vertically centred."""
-    size = 168
+def card(beat: dict, accent) -> list[tuple[Image.Image, int, int, float]]:
+    """Lay out one beat as [(element image, x, y, entry delay)]."""
+    if beat.get("compare"):
+        return compare(beat["compare"], accent)
+    size = 190
     while size > 60:
         head = ImageFont.truetype(F_HEAD, size)
         if max(_width(head, l) for l in beat["lines"]) <= TEXT_W:
@@ -206,10 +210,61 @@ def card(beat: dict, accent) -> list[tuple[Image.Image, int, int]]:
     total = sum(step for _, _, step in items[:-1]) + last_img.height - 2 * last_pad
     y = (H - total) // 2
     placed = []
-    for img, pad, step in items:
-        placed.append((img, y - pad, pad))
+    for k, (img, pad, step) in enumerate(items):
+        placed.append((img, TEXT_X - pad, y - pad, k * STAGGER))
         y += step
     return placed
+
+
+def _panel(size, fill, outline=None) -> Image.Image:
+    img = Image.new("RGBA", size, (0, 0, 0, 0))
+    ImageDraw.Draw(img).rounded_rectangle(
+        (0, 0, size[0] - 1, size[1] - 1), 28, fill=fill,
+        outline=outline, width=6 if outline else 0)
+    return img
+
+
+def compare(spec: dict, accent) -> list[tuple[Image.Image, int, int, float]]:
+    """Two cards side by side: a one-line fact versus an explained entry.
+
+    The right card stands for a page of the book: a real headline over
+    ruled lines of body copy. Swap in an actual page crop once one exists.
+    """
+    pw, ph, top = 790, 700, 230
+    lx, rx = 130, W - 130 - pw
+    chip_f = ImageFont.truetype(F_CHIP, 46)
+    body = ImageFont.truetype(F_SUB, 76)
+
+    left = _panel((pw, ph), (24, 30, 44, 235), (70, 78, 96))
+    d = ImageDraw.Draw(left)
+    d.text((56, 52), spec["left_label"], font=chip_f, fill=GREY)
+    y = 230
+    for line in _wrap(spec["fact"], body, pw - 112):
+        d.text((56, y), line, font=body, fill=WHITE)
+        y += 92
+    d.text((56, y + 40), spec["left_tail"], font=ImageFont.truetype(F_SUB, 56), fill=GREY)
+
+    right = _panel((pw, ph), PAPER + (255,), accent)
+    d = ImageDraw.Draw(right)
+    d.rounded_rectangle((48, 44, 48 + chip_f.getlength(spec["right_label"]) + 40, 108),
+                        32, fill=accent)
+    d.text((68, 50), spec["right_label"], font=chip_f, fill=INK)
+    head = ImageFont.truetype(F_HEAD, 84)
+    y = 150
+    for line in _wrap(spec["fact"].upper(), head, pw - 110):
+        d.text((56, y), line, font=head, fill=INK)
+        y += 84
+    y += 26
+    rng = np.random.default_rng(5)
+    while y < ph - 120:
+        w = pw - 112 if rng.random() > 0.18 else rng.uniform(0.4, 0.8) * (pw - 112)
+        d.rounded_rectangle((56, y, 56 + w, y + 14), 7, fill=(196, 192, 182))
+        y += 34
+    tag = spec["right_tail"]
+    d.text((56, ph - 90), tag, font=ImageFont.truetype(F_CHIP, 48), fill=(120, 96, 0))
+
+    lp, rp = _shadowed(left, 16, 0.6), _shadowed(right, 16, 0.6)
+    return [(lp, lx - 48, top - 48, 0.0), (rp, rx - 48, top - 48, 0.7)]
 
 
 # --- assembly --------------------------------------------------------------
@@ -231,7 +286,8 @@ def render(spec: dict, out_dir: str) -> str:
 
     os.makedirs(out_dir, exist_ok=True)
     wav = os.path.join(out_dir, f"{spec['id']}.wav")
-    score.render(total, starts[1:], wav)
+    score.render(total, starts[1:], wav,
+                 [s for s, b in zip(starts, beats) if b.get("pop")])
     mp4 = os.path.join(out_dir, f"{spec['id']}.mp4")
 
     cmd = [ffmpeg_bin(), "-y", "-hide_banner", "-loglevel", "error",
@@ -258,6 +314,12 @@ def render(spec: dict, out_dir: str) -> str:
     return mp4
 
 
+def _fade(img: Image.Image, alpha: float) -> Image.Image:
+    out = img.copy()
+    out.putalpha(img.getchannel("A").point(lambda v: int(v * alpha)))
+    return out
+
+
 def _frame(now, total, bg, cover, glow, cards, beats, starts) -> Image.Image:
     # Background: a slow push-in across the whole ad.
     z = now / total
@@ -265,6 +327,13 @@ def _frame(now, total, bg, cover, glow, cards, beats, starts) -> Image.Image:
     x0, y0 = (bg.width - cw) * 0.5, (bg.height - ch) * 0.4
     frame = bg.resize((W, H), Image.BILINEAR, box=(x0, y0, x0 + cw, y0 + ch)).convert("RGBA")
 
+    # Cover: hidden while a full-width comparison is on screen.
+    vis = 1.0
+    for b, st in zip(beats, starts):
+        if b.get("compare"):
+            out_ = _ease((now - st) / 0.3)
+            back = _ease((now - (st + b["dur"] - 0.3)) / 0.3)
+            vis = min(vis, 1 - out_ + back)
     # Cover: breathes, bumps on every cut, settles in on frame one.
     bump = sum(0.022 * math.exp(-(now - s) * 7) for s in starts[1:] if now >= s)
     settle = 0.05 * (1 - _ease(now / 0.7))
@@ -272,10 +341,14 @@ def _frame(now, total, bg, cover, glow, cards, beats, starts) -> Image.Image:
     s = 1 + bump + settle + grow + 0.008 * math.sin(now * 1.6)
     cy = H / 2 + 7 * math.sin(now * 1.2)
     gs = 1 + 0.04 * math.sin(now * 2.0) + bump * 2
-    g = glow.resize((round(glow.width * gs), round(glow.height * gs)), Image.BILINEAR)
-    frame.alpha_composite(g, (round(COVER_CX - g.width / 2), round(cy - g.height / 2)))
-    c = cover.resize((round(cover.width * s), round(cover.height * s)), Image.BICUBIC)
-    frame.alpha_composite(c, (round(COVER_CX - c.width / 2), round(cy - c.height / 2)))
+    if vis > 0.01:
+        g = glow.resize((round(glow.width * gs), round(glow.height * gs)), Image.BILINEAR)
+        c = cover.resize((round(cover.width * s), round(cover.height * s)), Image.BICUBIC)
+        if vis < 0.999:
+            g, c = _fade(g, vis), _fade(c, vis)
+        cx = COVER_CX + (1 - vis) * 260
+        frame.alpha_composite(g, (round(cx - g.width / 2), round(cy - g.height / 2)))
+        frame.alpha_composite(c, (round(cx - c.width / 2), round(cy - c.height / 2)))
 
     # Text: each element rises in on a stagger and lifts out before the cut.
     for i, (elements, beat, start) in enumerate(zip(cards, beats, starts)):
@@ -284,18 +357,23 @@ def _frame(now, total, bg, cover, glow, cards, beats, starts) -> Image.Image:
         if now < start - lead_in or now > end:
             continue
         last = i == len(beats) - 1
-        for k, (img, y, pad) in enumerate(elements):
-            p = _ease((now - start + lead_in - k * STAGGER) / ENTER)
+        pop = beat.get("pop")
+        for img, x, y, delay in elements:
+            p = _ease((now - start + lead_in - delay) / (0.22 if pop else ENTER))
             if p <= 0:
                 continue
             q = 0.0 if last else _ease((now - (end - EXIT)) / EXIT)
             alpha = p * (1 - q)
             if alpha <= 0.01:
                 continue
-            dy = (1 - p) * 56 - q * 34
-            layer = img
-            if alpha < 0.999:
-                layer = img.copy()
-                layer.putalpha(img.getchannel("A").point(lambda v, a=alpha: int(v * a)))
-            frame.alpha_composite(layer, (TEXT_X - pad, round(y + dy)))
+            layer = _fade(img, alpha) if alpha < 0.999 else img
+            if pop:                       # stamps down from slightly larger
+                k = 1 + 0.35 * (1 - p)
+                layer = layer.resize((round(img.width * k), round(img.height * k)), Image.BILINEAR)
+                x -= (layer.width - img.width) // 6
+                y -= (layer.height - img.height) // 2
+                dy = -q * 34
+            else:
+                dy = (1 - p) * 56 - q * 34
+            frame.alpha_composite(layer, (round(x), round(y + dy)))
     return frame.convert("RGB")

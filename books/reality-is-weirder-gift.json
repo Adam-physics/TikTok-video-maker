@@ -1,0 +1,43 @@
+{
+  "id": "reality-is-weirder-gift",
+  "title": "Reality Is Weirder Than You Think",
+  "cover": "assets/books/reality-is-weirder/cover.png",
+  "accent": [
+    255,
+    232,
+    20
+  ],
+  "sky": {
+    "base": [
+      5,
+      9,
+      22
+    ],
+    "glow": [
+      [
+        18,
+        86,
+        118
+      ],
+      [
+        64,
+        38,
+        120
+      ],
+      [
+        22,
+        70,
+        96
+      ]
+    ]
+  },
+  "beats": [
+    {"chip": "HARD TO BUY FOR?", "lines": ["THEY SAY THEY", "DON'T WANT", "*ANYTHING.*"], "dur": 2.6},
+    {"lines": ["GIVE THEM", "*101 THINGS*", "THEY'LL REPEAT", "FOR YEARS."], "dur": 2.6},
+    {"chip": "LIKE THIS", "lines": ["HIPPOS MAKE", "THEIR OWN", "*SUNSCREEN.*"], "dur": 2.2},
+    {"chip": "OR THIS", "lines": ["ONE TEASPOON", "OF NEUTRON STAR", "WEIGHS *BILLIONS*", "*OF TONS.*"], "dur": 2.6},
+    {"lines": ["FOR *DAD.*", "FOR THE *TEEN.*", "FOR *GRANDMA.*"], "sub": "Anyone curious.", "dur": 2.4},
+    {"chip": "STOCKING STUFFER", "lines": ["THE EASY", "*CHRISTMAS*", "GIFT."], "sub": "Bite-sized science, 3 minutes a fact.", "dur": 2.6},
+    {"chip": "AVAILABLE ON AMAZON", "lines": ["REALITY IS", "*WEIRDER*", "THAN YOU THINK"], "sub": "101 hidden truths about life,\nnature & the universe", "dur": 3.2}
+  ]
+}

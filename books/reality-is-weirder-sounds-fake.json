@@ -1,0 +1,44 @@
+{
+  "id": "reality-is-weirder-sounds-fake",
+  "title": "Reality Is Weirder Than You Think",
+  "cover": "assets/books/reality-is-weirder/cover.png",
+  "accent": [
+    255,
+    232,
+    20
+  ],
+  "sky": {
+    "base": [
+      5,
+      9,
+      22
+    ],
+    "glow": [
+      [
+        18,
+        86,
+        118
+      ],
+      [
+        64,
+        38,
+        120
+      ],
+      [
+        22,
+        70,
+        96
+      ]
+    ]
+  },
+  "beats": [
+    {"chip": "SOUNDS MADE UP", "lines": ["A FUNGUS CAN", "*HIJACK*", "AN ANT'S BRAIN."], "dur": 2.6},
+    {"pop": true, "lines": ["IT'S *REAL.*"], "sub": "And the book explains exactly how.", "dur": 1.9},
+    {"chip": "SOUNDS MADE UP", "lines": ["YOU'VE NEVER", "ACTUALLY *TOUCHED*", "ANYTHING."], "dur": 2.4},
+    {"pop": true, "lines": ["ALSO *REAL.*"], "sub": "Your atoms are 99.9999% empty space.", "dur": 2.0},
+    {"chip": "SOUNDS MADE UP", "lines": ["HIPPOS MAKE", "THEIR OWN", "*SUNSCREEN.*"], "dur": 2.2},
+    {"pop": true, "lines": ["STILL *REAL.*"], "sub": "Every fact verified. Sources cited.", "dur": 1.9},
+    {"lines": ["*101* FACTS THAT", "SOUND FAKE."], "sub": "All real. All explained in plain English.", "dur": 2.8},
+    {"chip": "AVAILABLE ON AMAZON", "lines": ["REALITY IS", "*WEIRDER*", "THAN YOU THINK"], "sub": "101 hidden truths about life,\nnature & the universe", "dur": 3.2}
+  ]
+}

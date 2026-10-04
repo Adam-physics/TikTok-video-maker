@@ -1,0 +1,43 @@
+{
+  "id": "reality-is-weirder-explained",
+  "title": "Reality Is Weirder Than You Think",
+  "cover": "assets/books/reality-is-weirder/cover.png",
+  "accent": [
+    255,
+    232,
+    20
+  ],
+  "sky": {
+    "base": [
+      5,
+      9,
+      22
+    ],
+    "glow": [
+      [
+        18,
+        86,
+        118
+      ],
+      [
+        64,
+        38,
+        120
+      ],
+      [
+        22,
+        70,
+        96
+      ]
+    ]
+  },
+  "beats": [
+    {"lines": ["MOST FACT BOOKS", "GIVE YOU", "*ONE SENTENCE.*"], "dur": 2.4},
+    {"lines": ["YOU READ IT.", "YOU *FORGET* IT."], "dur": 1.9},
+    {"compare": {"fact": "Hippos make their own sunscreen.", "left_label": "OTHER FACT BOOKS", "left_tail": "...and that's it.", "right_label": "THIS BOOK", "right_tail": "THE HOW AND WHY  ·  3-MINUTE READ"}, "dur": 4.0},
+    {"lines": ["EVERY FACT", "*EXPLAINED*", "IN 3 MINUTES."], "sub": "Plain English. So it actually sticks.", "dur": 2.6},
+    {"chip": "WEIRD BUT TRUE", "lines": ["A FUNGUS CAN", "*HIJACK*", "AN ANT'S BRAIN."], "dur": 2.4},
+    {"lines": ["*101* OF THE WEIRDEST", "TRUE FACTS", "EVER FOUND."], "sub": "Animals · Space · Body · Physics", "dur": 2.6},
+    {"chip": "AVAILABLE ON AMAZON", "lines": ["REALITY IS", "*WEIRDER*", "THAN YOU THINK"], "sub": "101 hidden truths about life,\nnature & the universe", "dur": 3.2}
+  ]
+}

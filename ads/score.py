@@ -41,7 +41,7 @@ def boom() -> np.ndarray:
     return np.sin(2 * np.pi * np.cumsum(freq) / SR) * np.exp(-t * 4.5)
 
 
-def render(duration: float, cuts: list[float], path: str) -> str:
+def render(duration: float, cuts: list[float], path: str, hits: list[float] = ()) -> str:
     out = np.zeros(int(duration * SR) + SR)
     t = 0.0
     k = 0
@@ -56,6 +56,8 @@ def render(duration: float, cuts: list[float], path: str) -> str:
         k += 1
 
     _mix(out, boom() * 0.5, 0.0)
+    for h in hits:                          # a stamp on the "it's real" beats
+        _mix(out, boom() * 0.35, h)
     for c in cuts:
         _mix(out, whoosh(0.3) * 0.08, max(0.0, c - 0.15))
 
