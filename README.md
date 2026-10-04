@@ -196,3 +196,23 @@ Pages pair up as question then answer, in printed order:
 Upload the highest-resolution originals you have. The panels get scaled up
 to fill a 1080-wide frame, so a print-resolution source stays crisp where a
 screenshot will not.
+
+## Amazon Sponsored video ads
+
+```bash
+python make_ad.py books/reality-is-weirder.json
+# -> out/ads/<id>.mp4  (1920x1080, 30fps, H.264/AAC, faststart)
+```
+
+A landscape ad for Amazon Sponsored Brands video: text beats on the left,
+the cover on the right from frame one (no black lead-in), a synthesised bed
+under it. Amazon autoplays muted, so the words carry the whole pitch.
+
+A book file is a cover plus a list of beats. Each beat has `lines` (the
+headline, auto-sized to fit; wrap `*words*` for the accent colour), and an
+optional `chip` label above and `sub` line below (`\n` forces a break).
+`dur` is seconds on screen. Keep the total 15–30s; Amazon accepts 6–45s,
+16:9, under 500MB, audio at 96kbps or more, no letterboxing.
+
+Code lives in `ads/` (frames in `ad.py`, music in `score.py`). Fonts are
+Barlow Condensed / Barlow Semi Condensed under the SIL Open Font License.
