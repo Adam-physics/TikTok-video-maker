@@ -39,6 +39,6 @@
     {"chip": "SOUNDS MADE UP", "lines": ["HIPPOS MAKE", "THEIR OWN", "*SUNSCREEN.*"], "dur": 2.2},
     {"pop": true, "lines": ["STILL *REAL.*"], "sub": "Every fact verified. Sources cited.", "dur": 1.9},
     {"lines": ["*101* FACTS THAT", "SOUND FAKE."], "sub": "All real. All explained in plain English.", "dur": 2.8},
-    {"chip": "AVAILABLE ON AMAZON", "lines": ["REALITY IS", "*WEIRDER*", "THAN YOU THINK"], "sub": "101 hidden truths about life,\nnature & the universe", "dur": 3.2}
+    {"chip": "BY THEODORE G. MERCER", "lines": ["REALITY IS", "*WEIRDER*", "THAN YOU THINK"], "sub": "101 hidden truths about life,\nnature & the universe", "dur": 3.2}
   ]
 }

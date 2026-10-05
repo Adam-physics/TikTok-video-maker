@@ -37,7 +37,7 @@
     {"chip": "LIKE THIS", "lines": ["HIPPOS MAKE", "THEIR OWN", "*SUNSCREEN.*"], "dur": 2.2},
     {"chip": "OR THIS", "lines": ["ONE TEASPOON", "OF NEUTRON STAR", "WEIGHS *BILLIONS*", "*OF TONS.*"], "dur": 2.6},
     {"lines": ["FOR *DAD.*", "FOR THE *TEEN.*", "FOR *GRANDMA.*"], "sub": "Anyone curious.", "dur": 2.4},
-    {"chip": "STOCKING STUFFER", "lines": ["THE EASY", "*CHRISTMAS*", "GIFT."], "sub": "Bite-sized science, 3 minutes a fact.", "dur": 2.6},
-    {"chip": "AVAILABLE ON AMAZON", "lines": ["REALITY IS", "*WEIRDER*", "THAN YOU THINK"], "sub": "101 hidden truths about life,\nnature & the universe", "dur": 3.2}
+    {"chip": "GIFT IDEA", "lines": ["THE EASY GIFT", "FOR *CURIOUS*", "*MINDS.*"], "sub": "Bite-sized science, 3 minutes a fact.", "dur": 2.6},
+    {"chip": "BY THEODORE G. MERCER", "lines": ["REALITY IS", "*WEIRDER*", "THAN YOU THINK"], "sub": "101 hidden truths about life,\nnature & the universe", "dur": 3.2}
   ]
 }
