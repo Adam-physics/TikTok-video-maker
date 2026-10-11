@@ -150,7 +150,7 @@ section{padding-block:clamp(84px,9vw,136px)}
 .is-ready .intro{opacity:1;transform:none;filter:none}
 
 /* floating chips, like objects resting on the chart */
-.float{position:absolute;display:flex;flex-direction:column;gap:3px;padding:14px 18px;border-radius:20px;background:rgba(14,22,42,.62);border:1px solid rgba(201,214,240,.14);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 30px 60px -30px rgba(0,0,0,.8);animation:bob 7s ease-in-out infinite;opacity:0;transition:opacity .8s 1.3s}
+.float{position:absolute;display:flex;flex-direction:column;gap:3px;padding:14px 18px;border-radius:20px;background:rgba(14,22,42,.62);border:1px solid rgba(201,214,240,.14);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 30px 60px -30px rgba(0,0,0,.8);animation:bob 7s ease-in-out infinite;opacity:0;transition:opacity 1s 1.7s}
 .is-ready .float{opacity:1}
 .float small{font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--night-muted)}
 .float b{font:750 17px/1.15 var(--f);letter-spacing:-.02em}

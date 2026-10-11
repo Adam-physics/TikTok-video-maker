@@ -66,7 +66,9 @@
     var DPR = Math.min(window.devicePixelRatio || 1, 2);
     var W = 0, H = 0, stars = [], band = null;
     var mouse = { x: -9999, y: -9999, sx: -9999, sy: -9999, in: false };
-    var ripples = [], meteors = [], nextMeteor = 2;
+    // The intro timeline starts this far in, so the A begins forming right away.
+    var LEAD_IN = .7;
+    var ripples = [], meteors = [], nextMeteor = 2.7;
     var t0 = performance.now(), last = t0, running = false, visible = true;
     var scrollV = 0, lastScroll = window.scrollY;
     var hover = null;
@@ -83,7 +85,7 @@
           var k = p[0] + ',' + p[1];
           if (!verts[k]) {
             verts[k] = { k: k, i: p[0], j: p[1], x: 0, y: 0, sx: rand(-.3, 1.3), sy: rand(-.3, 1.3),
-              d: .05 + p[1] / 8 * .45 + Math.random() * .12, ph: Math.random() * 6.28, info: NAMED[k] || null };
+              d: .35 + p[1] / 8 * .9 + Math.random() * .25, ph: Math.random() * 6.28, info: NAMED[k] || null };
             vlist.push(verts[k]);
           }
           return verts[k];
@@ -91,9 +93,9 @@
         for (var e = 0; e < 3; e++) {
           var a = pts[e], b = pts[(e + 1) % 3];
           var key = a.k < b.k ? a.k + '|' + b.k : b.k + '|' + a.k;
-          if (!seen[key]) { seen[key] = 1; edges.push({ a: a, b: b, d: .55 + Math.min(a.j, b.j) / 8 * .6 + Math.random() * .15 }); }
+          if (!seen[key]) { seen[key] = 1; edges.push({ a: a, b: b, d: 1.5 + Math.min(a.j, b.j) / 8 * 1.1 + Math.random() * .3 }); }
         }
-        facets.push({ tone: t[0], v: pts, d: 1.2 + Math.random() * .3 });
+        facets.push({ tone: t[0], v: pts, d: 2.7 + Math.random() * .6 });
       });
     }
 
@@ -173,7 +175,7 @@
     function frame(now) {
       if (!running) return;
       var dt = Math.min(.05, (now - last) / 1000); last = now;
-      var t = REDUCED ? 99 : (now - t0) / 1000;
+      var t = REDUCED ? 99 : (now - t0) / 1000 + LEAD_IN, since = t - LEAD_IN;
       var sy = window.scrollY; scrollV += ((sy - lastScroll) - scrollV) * .2; lastScroll = sy;
       var p = heroProgress();
 
@@ -183,12 +185,12 @@
       ctx.clearRect(0, 0, W, H);
 
       // galactic band, slow drift + parallax
-      if (band) { ctx.globalAlpha = clamp(t / .8, 0, 1) * (1 - p * .6); ctx.drawImage(band, -mx * 14, -my * 10 - p * 40); ctx.globalAlpha = 1; }
+      if (band) { ctx.globalAlpha = clamp(since / .8, 0, 1) * (1 - p * .6); ctx.drawImage(band, -mx * 14, -my * 10 - p * 40); ctx.globalAlpha = 1; }
 
       drawGraticule(t, p);
 
       // background stars
-      var fade = clamp(t / .6, 0, 1), R = COARSE ? 0 : 150, near = [];
+      var fade = clamp(since / .6, 0, 1), R = COARSE ? 0 : 150, near = [];
       var warp = REDUCED ? 0 : clamp(Math.abs(scrollV), 0, 60);
       for (var i = 0; i < stars.length; i++) {
         var s = stars[i];
@@ -259,7 +261,7 @@
 
     function vpos(v, t, p, mx, my) {
       // fly in from the sky, then hold the lattice with a slight breathing motion
-      var e = easeInOut((t - v.d) / 1.15);
+      var e = easeInOut((t - v.d) / 1.6);
       var bx = v.x - mx * 18, by = v.y - my * 14;
       var breathe = REDUCED ? 0 : Math.sin(t * .8 + v.ph) * .8;
       var x = v.fx + (bx - v.fx) * e, y = v.fy + (by - v.fy) * e + breathe;
@@ -275,13 +277,13 @@
       vlist.forEach(function (v) { P[v.k] = vpos(v, t, p, mx, my); });
 
       // sweeping light across the facets, every ~9s
-      var sweepT = ((t - 1.8) % 9) / 1.8, sweepOn = t > 1.8 && sweepT < 1 && !REDUCED;
+      var sweepT = ((t - 3.2) % 9) / 1.8, sweepOn = t > 3.2 && sweepT < 1 && !REDUCED;
 
       // facets
       facets.forEach(function (f) {
         var a = P[f.v[0].k], b = P[f.v[1].k], c = P[f.v[2].k];
         var cx = (a.x + b.x + c.x) / 3, cy = (a.y + b.y + c.y) / 3;
-        var base = (f.tone === 't' ? .13 : .085) * easeOut((t - f.d) / .9);
+        var base = (f.tone === 't' ? .13 : .085) * easeOut((t - f.d) / 1.2);
         var glow = 0;
         if (mouse.in) { var dd = Math.hypot(mouse.sx - cx, mouse.sy - cy); glow = Math.pow(clamp(1 - dd / 260, 0, 1), 2) * .32; }
         if (sweepOn) { var u = ((cx - box.x) / box.w + (cy - box.y) / box.h) / 2; glow += Math.exp(-Math.pow(u - (sweepT * 1.6 - .3), 2) / .01) * .22; }
@@ -295,7 +297,7 @@
       // edges draw themselves in
       ctx.lineWidth = 1;
       edges.forEach(function (ed) {
-        var pr = easeOut((t - ed.d) / .7);
+        var pr = easeOut((t - ed.d) / .9);
         if (pr <= 0) return;
         var a = P[ed.a.k], b = P[ed.b.k];
         var mxp = (a.x + b.x) / 2, myp = (a.y + b.y) / 2, boost = 0;
