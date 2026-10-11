@@ -32,3 +32,10 @@ The constellation is the Arsenal mark itself. The logo's facets sit on a triangu
 - The product screens in "What We Build" are labelled *Illustrative*. Swap in real screenshots when they exist.
 - The evidence bars are drawn for illustration. The numbers and their sources match the live site.
 - Links to pages not rebuilt here (IR portal, contact, newsroom, vertical pages) point at the live site.
+
+## Demo video
+
+`video/arsenal-story.mp4` is a 70-second, 1080p explainer called "One relationship". It's drawn entirely in code from the same constellation, line art and colours as the site, and it's silent with on-screen captions. `video/VOICEOVER.md` has the narration script, timed to the captions.
+
+- Watch it live in a browser: serve this folder and open `video/story.html`.
+- Re-render it after editing `story.html`: serve this folder on port 8765, then run `node video/render.js video/arsenal-story.mp4`. This needs Playwright and ffmpeg, and takes about 2 minutes.

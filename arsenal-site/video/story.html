@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arsenal Story</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%;background:#03050b}
+  body{display:grid;place-items:center}
+  canvas{width:min(100vw,177.78vh);height:auto;display:block}
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+/* "One relationship": a 70-second story of the Arsenal model, drawn entirely in code.
+   Open the page to watch it play. The renderer calls window.renderAt(t) frame by frame. */
+(function () {
+  'use strict';
+  var W = 1920, H = 1080, DUR = 70;
+  var cv = document.getElementById('c'), ctx = cv.getContext('2d');
+
+  // ── palette (from the Arsenal mark) ──
+  var ICE = [156, 200, 236], FACET = [110, 143, 214], DEEP = [59, 71, 166], TIP = [139, 92, 246],
+      WHITE = [233, 238, 249], GREEN = [61, 203, 140], MUTED = [154, 166, 195], NAVY = [63, 84, 139];
+  var F = '"Archivo", system-ui, sans-serif', M = '"JetBrains Mono", ui-monospace, monospace';
+
+  // ── helpers ──
+  function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function seg(t, a, b) { return clamp((t - a) / (b - a), 0, 1); }
+  function eo(x) { x = clamp(x, 0, 1); return 1 - Math.pow(1 - x, 3); }
+  function eio(x) { x = clamp(x, 0, 1); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  function life(t, a, b, fi, fo) { return Math.min(eo(seg(t, a, a + (fi || .6))), 1 - eio(seg(t, b - (fo || .6), b))); }
+  function lerp(a, b, k) { return a + (b - a) * k; }
+  function mix(a, b, k) { return [lerp(a[0], b[0], k), lerp(a[1], b[1], k), lerp(a[2], b[2], k)]; }
+  function rgba(c, a) { return 'rgba(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ',' + clamp(a, 0, 1) + ')'; }
+  function font(w, size, fam, stretch) { ctx.font = w + ' ' + size + 'px ' + (fam || F); ctx.fontStretch = stretch || 'normal'; }
+  function glow(x, y, r, c, a) { var g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, rgba(c, a)); g.addColorStop(1, rgba(c, 0)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fill(); }
+  function star(x, y, r, c, a, spikes) {
+    glow(x, y, r * 7, c, .4 * a);
+    if (spikes) { ctx.strokeStyle = rgba(c, .55 * a); ctx.lineWidth = 1.2; var s = r * spikes; ctx.beginPath(); ctx.moveTo(x - s, y); ctx.lineTo(x + s, y); ctx.moveTo(x, y - s); ctx.lineTo(x, y + s); ctx.stroke(); }
+    ctx.fillStyle = rgba(c, a); ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fill();
+    ctx.fillStyle = rgba([255, 255, 255], a); ctx.beginPath(); ctx.arc(x, y, r * .5, 0, 6.283); ctx.fill();
+  }
+  function rr(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  // draw a polyline up to progress k (0..1)
+  function partial(pts, k) {
+    var L = 0, d = []; for (var i = 1; i < pts.length; i++) { var l = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); d.push(l); L += l; }
+    var goal = L * clamp(k, 0, 1); ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+    for (var j = 1; j < pts.length; j++) { if (goal >= d[j - 1]) { ctx.lineTo(pts[j][0], pts[j][1]); goal -= d[j - 1]; } else { var f = goal / d[j - 1]; ctx.lineTo(lerp(pts[j - 1][0], pts[j][0], f), lerp(pts[j - 1][1], pts[j][1], f)); break; } }
+    ctx.stroke();
+  }
+  function check(x, y, s, c, a) { ctx.fillStyle = rgba(c, a); ctx.beginPath(); ctx.arc(x, y, s, 0, 6.283); ctx.fill(); ctx.strokeStyle = rgba([11, 18, 38], a); ctx.lineWidth = s * .22; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x - s * .45, y); ctx.lineTo(x - s * .1, y + s * .38); ctx.lineTo(x + s * .5, y - s * .38); ctx.stroke(); ctx.lineCap = 'butt'; }
+
+  // ── sky ──
+  var R = rng(7), STARS = [];
+  for (var i = 0; i < 1100; i++) { var z = Math.pow(R(), 1.8); STARS.push({ x: R() * W, y: R() * H, z: z, r: .4 + z * 1.6 + (R() < .03 ? 1 : 0), ph: R() * 6.28, sp: .6 + R() * 1.6, c: R() < .08 ? [255, 214, 170] : mix(WHITE, ICE, R() * .6) }); }
+  var band = document.createElement('canvas'); band.width = W; band.height = H;
+  (function () {
+    var g = band.getContext('2d'), r = rng(11); g.translate(W / 2, H / 2); g.rotate(-.38); g.translate(-W / 2, -H / 2);
+    for (var i = 0; i < 30; i++) { var x = (r() * 1.2 - .1) * W, y = H * .5 + (r() - .5) * .25 * H, rad = (.08 + r() * .14) * W, c = r() < .25 ? TIP : r() < .5 ? DEEP : FACET; var gr = g.createRadialGradient(x, y, 0, x, y, rad); gr.addColorStop(0, rgba(c, .03 + r() * .05)); gr.addColorStop(1, rgba(c, 0)); g.fillStyle = gr; g.fillRect(x - rad, y - rad, rad * 2, rad * 2); }
+    for (var d = 0; d < 2600; d++) { g.fillStyle = 'rgba(220,230,255,' + (r() * .2) + ')'; g.fillRect(r() * W, H * .5 + (r() + r() + r() - 1.5) * H * .17, .8, .8); }
+  })();
+  function drawSky(t, a) {
+    var bg = ctx.createRadialGradient(W * .68, H * .3, 0, W * .68, H * .3, W * .9);
+    bg.addColorStop(0, '#0f1832'); bg.addColorStop(.6, '#060912'); bg.addColorStop(1, '#03050b');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+    ctx.globalAlpha = a; ctx.drawImage(band, -t * 3, 0); ctx.drawImage(band, W - t * 3, 0); ctx.globalAlpha = 1;
+    for (var i = 0; i < STARS.length; i++) {
+      var s = STARS[i], x = ((s.x - t * (4 + s.z * 10)) % W + W) % W;
+      var tw = .65 + .35 * Math.sin(t * s.sp + s.ph), al = a * tw * (.22 + s.z * .7);
+      ctx.fillStyle = rgba(s.c, al); ctx.beginPath(); ctx.arc(x, s.y, s.r, 0, 6.283); ctx.fill();
+      if (s.r > 1.7) glow(x, s.y, s.r * 4, s.c, al * .15);
+    }
+  }
+  var METEORS = [[3.2, 1300, 120, -1], [17.5, 600, 90, 1], [44, 1500, 150, -1], [58.5, 420, 110, 1]];
+  function drawMeteors(t) {
+    METEORS.forEach(function (m) {
+      var k = (t - m[0]) / .9; if (k < 0 || k > 1) return;
+      var x = m[1] + m[3] * k * 700, y = m[2] + k * 380, a = Math.sin(k * Math.PI);
+      var g = ctx.createLinearGradient(x, y, x - m[3] * 160, y - 87); g.addColorStop(0, 'rgba(255,255,255,' + a + ')'); g.addColorStop(1, 'rgba(156,200,236,0)');
+      ctx.strokeStyle = g; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - m[3] * 160, y - 87); ctx.stroke();
+    });
+  }
+
+  // ── captions: the narration, revealed word by word ──
+  var CAPS = [
+    [0.9, 5.2, 'Most studios start with an idea,|then go looking for revenue.', []],
+    [5.6, 9.0, 'Arsenal started with revenue.', ['revenue.']],
+    [9.6, 15.2, 'Energy and finance businesses|that operate today…', ['operate', 'today…']],
+    [15.6, 20.8, '…and fund everything we build.', ['build.']],
+    [21.6, 28.2, 'On that foundation:|one shared AI stack.', ['shared', 'AI', 'stack.']],
+    [28.6, 35.4, 'And a portfolio of AI-native companies,|all built on it.', ['AI-native']],
+    [37.4, 49.2, 'One relationship|becomes many revenue lines.', ['many', 'revenue', 'lines.']],
+    [50.4, 55.6, 'We don’t strip companies.|We build them.', ['build', 'them.']],
+    [56.0, 61.8, 'A public listing turns that growth|into currency for the next one.', ['currency']]
+  ];
+  function drawCaptions(t) {
+    CAPS.forEach(function (c) {
+      if (t < c[0] || t > c[1]) return;
+      var out = 1 - eio(seg(t, c[1] - .5, c[1])), lines = c[2].split('|'), n = 0, size = 58, y0 = 900 - (lines.length - 1) * 70;
+      font('800', size, F, 'semi-expanded'); ctx.textBaseline = 'alphabetic';
+      lines.forEach(function (line, li) {
+        var x = 160;
+        line.split(' ').forEach(function (w) {
+          var k = eo(seg(t, c[0] + n * .07, c[0] + n * .07 + .5)); n++;
+          var acc = c[3].indexOf(w) >= 0;
+          ctx.fillStyle = rgba(acc ? ICE : WHITE, k * out);
+          ctx.fillText(w, x, y0 + li * 70 + (1 - k) * 22);
+          x += ctx.measureText(w + ' ').width;
+        });
+      });
+    });
+  }
+
+  // ── scene 2: the operating foundation, drawn as line art ──
+  function drawFoundation(t) {
+    var a = life(t, 9.2, 21.2, .8, 1.0); if (a <= 0) return;
+    var k = function (s, e) { return eo(seg(t, s, e)); };
+    var gy = 600;
+    ctx.save(); ctx.globalAlpha = a; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    // ground
+    ctx.strokeStyle = rgba(WHITE, .18); ctx.lineWidth = 1.5; partial([[240, gy], [1680, gy]], k(9.3, 10.6));
+    // pumpjack
+    var px = 360, rock = Math.sin(t * 2.2) * .16;
+    ctx.strokeStyle = rgba(ICE, .95); ctx.lineWidth = 3;
+    partial([[px - 70, gy], [px - 70, gy - 20], [px + 90, gy - 20], [px + 90, gy]], k(9.6, 10.6));
+    partial([[px - 30, gy - 20], [px, gy - 150], [px + 30, gy - 20]], k(10, 11));
+    if (t > 10.8) {
+      var bk = k(10.8, 11.6); ctx.save(); ctx.translate(px, gy - 150); ctx.rotate(rock); ctx.globalAlpha = a * bk;
+      ctx.beginPath(); ctx.moveTo(-120, 0); ctx.lineTo(110, 0); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-120, -18); ctx.quadraticCurveTo(-150, 0, -120, 34); ctx.stroke();
+      ctx.restore(); ctx.globalAlpha = a;
+      var hx = px - 120 * Math.cos(rock), hy = gy - 150 - 120 * Math.sin(rock) + 30;
+      ctx.strokeStyle = rgba(ICE, .6 * bk); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(px - 120, gy); ctx.stroke();
+    }
+    // pipeline
+    var pipe = [[460, gy - 40], [980, gy - 40], [980, gy - 90], [1180, gy - 90]];
+    ctx.strokeStyle = rgba(WHITE, .14); ctx.lineWidth = 14; partial(pipe, k(10.8, 12.4));
+    ctx.strokeStyle = rgba(ICE, .9); ctx.lineWidth = 3.5; ctx.setLineDash([3, 20]); ctx.lineDashOffset = -t * 60; partial(pipe, k(10.8, 12.4)); ctx.setLineDash([]);
+    // processing plant
+    ctx.strokeStyle = rgba(ICE, .95); ctx.lineWidth = 3;
+    var pk = k(11.8, 13.2);
+    partial([[1040, gy], [1040, gy - 150], [1060, gy - 170], [1080, gy - 150], [1080, gy]], pk);
+    partial([[1100, gy], [1100, gy - 110], [1180, gy - 110], [1180, gy]], pk);
+    partial([[1200, gy], [1200, gy - 210], [1220, gy - 210], [1220, gy]], pk);
+    ctx.beginPath(); ctx.arc(1140, gy - 110, 40, Math.PI, 0); ctx.globalAlpha = a * pk; ctx.stroke(); ctx.globalAlpha = a;
+    // biogas dome
+    ctx.strokeStyle = rgba(GREEN, .95); var bg = k(12.6, 13.6);
+    ctx.globalAlpha = a * bg; ctx.beginPath(); ctx.arc(1300, gy, 46, Math.PI, 0); ctx.stroke(); ctx.globalAlpha = a;
+    // finance desk card
+    var fk = k(12.8, 14.2);
+    ctx.globalAlpha = a * fk; rr(1420, gy - 250, 260, 230, 18); ctx.fillStyle = 'rgba(233,238,249,.06)'; ctx.fill(); ctx.strokeStyle = rgba(WHITE, .2); ctx.lineWidth = 1.5; ctx.stroke();
+    font('600', 15, M); ctx.fillStyle = rgba(MUTED, 1); ctx.fillText('FINANCE · M&A', 1444, gy - 214);
+    [.35, .5, .42, .7, .62, .9].forEach(function (h, i) { var bh = 120 * h * eo(seg(t, 13.4 + i * .12, 14.4 + i * .12)); ctx.fillStyle = rgba(i % 2 ? ICE : FACET, .9); rr(1446 + i * 37, gy - 46 - bh, 24, bh, 5); ctx.fill(); });
+    ctx.globalAlpha = a;
+    // labels
+    font('600', 17, M); ctx.textAlign = 'center';
+    [['UPSTREAM', 360, 10.8], ['MIDSTREAM', 760, 12], ['DOWNSTREAM', 1130, 13], ['BIOGAS', 1300, 13.4], ['FINANCE', 1550, 14]].forEach(function (l) { ctx.fillStyle = rgba(l[0] === 'BIOGAS' ? GREEN : MUTED, eo(seg(t, l[2], l[2] + .6))); ctx.fillText(l[0], l[1], gy + 40); });
+    ctx.textAlign = 'left';
+    // the foundation beam and the cash rising out of it
+    var bmk = k(15.4, 16.6), by = 720;
+    ctx.strokeStyle = rgba(ICE, .5); ctx.lineWidth = 2; partial([[260, by], [1660, by]], bmk);
+    font('600', 16, M); ctx.fillStyle = rgba(ICE, bmk); ctx.textAlign = 'center'; ctx.fillText('OPERATING TODAY  ·  CASH FLOW', 960, by + 34); ctx.textAlign = 'left';
+    if (t > 15.8) {
+      for (var p = 0; p < 26; p++) {
+        var ph = ((t - 15.8) * .55 + p / 26) % 1, x = 300 + (p * 211) % 1320, y = by - ph * 640;
+        star(x, y, 2.2, ICE, Math.sin(ph * Math.PI) * .9 * seg(t, 15.8, 16.6));
+      }
+    }
+    ctx.restore();
+  }
+
+  // ── the Arsenal mark as a constellation (real lattice of the logo) ──
+  var TRIS = [
+    ['a',[5,2],[5,0],[6,1]],['a',[6,3],[6,1],[7,2]],['a',[7,4],[7,2],[8,3]],['a',[8,5],[8,3],[9,4]],['a',[9,6],[9,4],[10,5]],['a',[5,4],[5,2],[6,3]],['a',[6,5],[6,3],[7,4]],['a',[7,6],[7,4],[8,5]],['a',[8,7],[8,5],[9,6]],
+    ['b',[5,4],[5,2],[4,3]],['b',[6,1],[6,3],[5,2]],['b',[7,2],[7,4],[6,3]],['b',[8,3],[8,5],[7,4]],['b',[9,4],[9,6],[8,5]],['b',[6,3],[6,5],[5,4]],['b',[7,4],[7,6],[6,5]],['b',[8,5],[8,7],[7,6]],['b',[5,2],[5,0],[4,1]],['b',[4,3],[4,1],[3,2]],['b',[3,4],[3,2],[2,3]],['b',[2,5],[2,3],[1,4]],['b',[1,6],[1,4],[0,5]],['b',[4,5],[4,3],[3,4]],['b',[3,6],[3,4],[2,5]],['b',[2,7],[2,5],[1,6]],
+    ['a',[4,1],[4,3],[5,2]],['a',[3,2],[3,4],[4,3]],['a',[2,3],[2,5],[3,4]],['a',[1,4],[1,6],[2,5]],['a',[4,3],[4,5],[5,4]],['a',[3,4],[3,6],[4,5]],['a',[2,5],[2,7],[3,6]],
+    ['t',[5,6],[4,7],[5,8]],['t',[5,6],[6,7],[5,8]],['t',[4,7],[3,8],[5,8]],['t',[6,7],[7,8],[5,8]]
+  ];
+  var LABELS = {
+    '5,0': ['SHARED AI STACK', 'above', WHITE], '0,5': ['ENERGY', 'left', GREEN], '10,5': ['FINANCE', 'right', GREEN],
+    '3,2': ['ACCOUNTING AI', 'left', ICE], '7,2': ['FAMILY OFFICE', 'right', ICE], '1,4': ['INSURANCE', 'left', ICE],
+    '9,4': ['IMPLEMENTATION', 'right', ICE], '5,4': ['LEGACY AI', 'below', ICE], '2,7': ['PUBLISHING', 'left', ICE],
+    '8,7': ['ROBOTICS', 'right', ICE], '5,6': ['HEALTH & INSURANCE · NEXT', 'belowtip', [180, 156, 251]]
+  };
+  var ORDER = ['3,2', '7,2', '1,4', '9,4', '5,4', '2,7', '8,7'];
+  var V = {}, VL = [], E = [], FA = [];
+  (function () {
+    var r = rng(23), seen = {};
+    TRIS.forEach(function (tr) {
+      var pts = tr.slice(1).map(function (p) { var k = p[0] + ',' + p[1]; if (!V[k]) { V[k] = { k: k, i: p[0], j: p[1], sx: (r() * 1.4 - .2) * W, sy: (r() * 1.4 - .2) * H, d: p[1] / 8 * .9 + r() * .25, ph: r() * 6.28 }; VL.push(V[k]); } return V[k]; });
+      for (var e = 0; e < 3; e++) { var a = pts[e], b = pts[(e + 1) % 3], key = a.k < b.k ? a.k + b.k : b.k + a.k; if (!seen[key]) { seen[key] = 1; E.push([a, b, Math.min(a.j, b.j) / 8 * 1.1 + r() * .3]); } }
+      FA.push({ tone: tr[0], v: pts, d: r() * .6 });
+    });
+  })();
+  // box: {x, y, h}; s = scene start time
+  function drawMark(t, box, s, alpha, opts) {
+    opts = opts || {};
+    var h = box.h, w = h * 640.68 / 750.13, x0 = box.x - w / 2, y0 = box.y;
+    function home(v) { return [x0 + v.i / 10 * w, y0 + v.j / 8 * h]; }
+    var P = {};
+    VL.forEach(function (v) {
+      var hm = home(v), e = opts.instant ? 1 : eio(seg(t, s + .5 + v.d, s + 2.1 + v.d));
+      if (opts.feet && (v.k === '0,5' || v.k === '10,5')) { var f = opts.feet[v.k]; e = eio(seg(t, s - .6, s + .8)); P[v.k] = [lerp(f[0], hm[0], e), lerp(f[1], hm[1], e), 1]; return; }
+      P[v.k] = [lerp(v.sx, hm[0], e), lerp(v.sy, hm[1], e) + Math.sin(t * .8 + v.ph) * .8, e];
+    });
+    var swp = opts.sweep ? ((t - opts.sweep) / 1.8) : -1;
+    FA.forEach(function (f) {
+      var a = P[f.v[0].k], b = P[f.v[1].k], c = P[f.v[2].k], cx = (a[0] + b[0] + c[0]) / 3, cy = (a[1] + b[1] + c[1]) / 3;
+      var u = (cx - x0) / w, vv = (cy - y0) / h, g = clamp(u * .65 + vv * .35, 0, 1);
+      var col = f.tone === 't' ? TIP : g < .5 ? mix(ICE, FACET, g * 2) : mix(FACET, DEEP, (g - .5) * 2); if (f.tone === 'b') col = mix(col, WHITE, .18);
+      var base = (f.tone === 't' ? (opts.tip ? .1 + .2 * seg(t, opts.tip, opts.tip + .8) : .12) : .1) * (opts.instant ? 1 : eo(seg(t, s + 2.4 + f.d, s + 3.6 + f.d)));
+      if (swp > 0 && swp < 1) base += Math.exp(-Math.pow((u + vv) / 2 - (swp * 1.6 - .3), 2) / .01) * .25;
+      ctx.fillStyle = rgba(col, base * alpha); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c[0], c[1]); ctx.closePath(); ctx.fill();
+    });
+    ctx.lineWidth = Math.max(1, h / 520);
+    E.forEach(function (ed) {
+      var pr = opts.instant ? 1 : eo(seg(t, s + 1.4 + ed[2], s + 2.3 + ed[2])); if (pr <= 0) return;
+      var a = P[ed[0].k], b = P[ed[1].k], tip = ed[0].j >= 6 && ed[1].j >= 6 && ed[0].i >= 3 && ed[0].i <= 7 && ed[1].i >= 3 && ed[1].i <= 7;
+      ctx.strokeStyle = tip ? rgba([199, 152, 255], .45 * alpha) : rgba([186, 212, 240], .3 * alpha);
+      ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(lerp(a[0], b[0], pr), lerp(a[1], b[1], pr)); ctx.stroke();
+    });
+    var sc = h / 600;
+    VL.forEach(function (v) {
+      var p = P[v.k], L = LABELS[v.k], lit = 0, col = WHITE;
+      if (L && opts.light) { lit = opts.light(v.k); col = L[2]; }
+      var r = (1.6 + lit * 1.6) * sc * (1 + .12 * Math.sin(t * 2 + v.ph));
+      star(p[0], p[1], r, lit ? col : WHITE, clamp(.3 + p[2] * .7, 0, 1) * alpha, lit > .5 ? 5 : 0);
+      if (L && lit > 0 && opts.labels) {
+        font('600', Math.round(17 * sc), M); ctx.fillStyle = rgba(col, lit * .95 * alpha); ctx.textBaseline = 'middle';
+        var o = 22 * sc;
+        if (L[1] === 'left') { ctx.textAlign = 'right'; ctx.fillText(L[0], p[0] - o, p[1]); }
+        else if (L[1] === 'right') { ctx.textAlign = 'left'; ctx.fillText(L[0], p[0] + o, p[1]); }
+        else if (L[1] === 'above') { ctx.textAlign = 'center'; ctx.fillText(L[0], p[0], p[1] - o * 1.3); }
+        else if (L[1] === 'below') { ctx.textAlign = 'center'; ctx.fillText(L[0], p[0], p[1] + o * 1.3); }
+        else { ctx.textAlign = 'center'; ctx.fillText(L[0], p[0], y0 + h + o * 1.6); }
+        ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      }
+    });
+    return P;
+  }
+
+  // ── scene 4: the flywheel ──
+  var COS = ['Accounting AI', 'Family Office', 'Insurance', 'Implementation', 'Publishing', 'Legacy AI', 'Robotics'];
+  function drawFlywheel(t) {
+    var a = life(t, 36.2, 50.2, .9, .8); if (a <= 0) return;
+    var cx = 780, cy = 430, RAD = 270, s = 38.4;
+    ctx.save(); ctx.globalAlpha = a;
+    ctx.strokeStyle = rgba(WHITE, .1); ctx.lineWidth = 1.2; ctx.setLineDash([4, 10]);
+    ctx.beginPath(); ctx.arc(cx, cy, RAD * eo(seg(t, 36.4, 37.6)), 0, 6.283); ctx.stroke(); ctx.setLineDash([]);
+    var lit = 0;
+    COS.forEach(function (name, i) {
+      var ang = -Math.PI / 2 + i / COS.length * 6.283, x = cx + Math.cos(ang) * RAD, y = cy + Math.sin(ang) * RAD;
+      var at = s + (i === 0 ? 0 : 1.1 + i * .62), k = eo(seg(t, at, at + .7)), nk = eo(seg(t, 36.8 + i * .08, 37.6 + i * .08));
+      if (k > 0) {
+        lit = Math.max(lit, k > .5 ? i + 1 : lit);
+        var mx = cx + Math.cos(ang + .5) * RAD * .5, my = cy + Math.sin(ang + .5) * RAD * .5;
+        ctx.strokeStyle = rgba(ICE, .85); ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.moveTo(cx, cy);
+        for (var q = 1; q <= 30 * k; q++) { var u = q / 30, ix = (1 - u) * (1 - u) * cx + 2 * (1 - u) * u * mx + u * u * x, iy = (1 - u) * (1 - u) * cy + 2 * (1 - u) * u * my + u * u * y; ctx.lineTo(ix, iy); }
+        ctx.stroke();
+        if (k < 1) { var u2 = k, px = (1 - u2) * (1 - u2) * cx + 2 * (1 - u2) * u2 * mx + u2 * u2 * x, py = (1 - u2) * (1 - u2) * cy + 2 * (1 - u2) * u2 * my + u2 * u2 * y; star(px, py, 3, WHITE, 1); }
+      }
+      ctx.globalAlpha = a * nk;
+      ctx.fillStyle = k >= 1 ? 'rgba(156,200,236,.18)' : 'rgba(233,238,249,.05)'; ctx.strokeStyle = k >= 1 ? rgba(ICE, .9) : rgba(WHITE, .25); ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(x, y, 36, 0, 6.283); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = k >= 1 ? rgba(ICE, 1) : rgba(MUTED, .8);
+      ctx.beginPath(); ctx.moveTo(x, y - 11); ctx.lineTo(x + 11, y + 8); ctx.lineTo(x - 11, y + 8); ctx.closePath(); ctx.fill();
+      font('650', 21, F); ctx.fillStyle = rgba(k >= 1 ? WHITE : MUTED, 1); ctx.textBaseline = 'middle';
+      var lx = cx + Math.cos(ang) * (RAD + 58), ly = cy + Math.sin(ang) * (RAD + 58);
+      ctx.textAlign = Math.abs(Math.cos(ang)) < .3 ? 'center' : Math.cos(ang) > 0 ? 'left' : 'right';
+      if (ctx.textAlign !== 'center') lx = cx + Math.cos(ang) * (RAD + 50);
+      ctx.fillText(name, lx, ly); ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      ctx.globalAlpha = a;
+    });
+    // centre: one relationship
+    var ck = eo(seg(t, 37, 38));
+    glow(cx, cy, 170, ICE, .12 * ck);
+    ctx.fillStyle = rgba([233, 238, 249], ck); ctx.beginPath(); ctx.arc(cx, cy, 92 * (.8 + .2 * ck), 0, 6.283); ctx.fill();
+    ctx.textAlign = 'center'; font('800', 25, F, 'semi-expanded'); ctx.fillStyle = rgba([11, 18, 38], ck); ctx.fillText('Accounting', cx, cy - 4); ctx.fillText('firm', cx, cy + 24);
+    font('600', 13, M); ctx.fillStyle = rgba(NAVY, ck); ctx.fillText('ONE RELATIONSHIP', cx, cy - 40); ctx.textAlign = 'left';
+    // counter
+    var ck2 = eo(seg(t, 38, 38.8)), n = lit || 1;
+    font('600', 18, M); ctx.fillStyle = rgba(MUTED, ck2); ctx.fillText('REVENUE LINES', 1330, 330);
+    font('850', 220, F, 'semi-expanded'); ctx.fillStyle = rgba(ICE, ck2); ctx.fillText(String(n), 1320, 540);
+    font('600', 18, M); ctx.fillStyle = rgba(MUTED, ck2); ctx.fillText('FROM 1 RELATIONSHIP', 1330, 590);
+    ctx.restore();
+  }
+
+  // ── scene 5: owner-first, then the public-company chassis ──
+  function drawCompound(t) {
+    var a = life(t, 50.2, 62.2, .8, .8); if (a <= 0) return;
+    ctx.save(); ctx.globalAlpha = a;
+    // the business card
+    var ck = eo(seg(t, 50.4, 51.4)), x = 300, y = 190 + (1 - ck) * 30;
+    ctx.globalAlpha = a * ck; rr(x, y, 560, 470, 30); ctx.fillStyle = 'rgba(14,22,42,.85)'; ctx.fill(); ctx.strokeStyle = rgba(WHITE, .16); ctx.lineWidth = 1.5; ctx.stroke();
+    font('600', 16, M); ctx.fillStyle = rgba(MUTED, 1); ctx.fillText('A BUSINESS WE PARTNER WITH', x + 40, y + 58);
+    font('800', 44, F, 'semi-expanded'); ctx.fillStyle = rgba(WHITE, 1); ctx.fillText('Your business', x + 40, y + 118);
+    [['Your team stays', 51.4], ['Your legacy holds', 52.1], ['Your upside grows', 52.8]].forEach(function (r, i) {
+      var k = eo(seg(t, r[1], r[1] + .5)); ctx.globalAlpha = a * ck * k;
+      check(x + 58, y + 188 + i * 62, 15, ICE, 1); font('600', 26, F); ctx.fillStyle = rgba(WHITE, 1); ctx.fillText(r[0], x + 92 + (1 - k) * 12, y + 197 + i * 62);
+    });
+    var aik = eo(seg(t, 53.6, 54.4)); ctx.globalAlpha = a * ck * aik;
+    rr(x + 40 + (1 - aik) * -40, y + 380, 330, 52, 26); ctx.fillStyle = 'rgba(156,200,236,.16)'; ctx.fill();
+    star(x + 72 + (1 - aik) * -40, y + 406, 4, ICE, 1); font('700', 21, F); ctx.fillStyle = rgba(ICE, 1); ctx.fillText('+ AI in what it sells', x + 94 + (1 - aik) * -40, y + 414);
+    // arrow to the ticket
+    ctx.globalAlpha = a; var ak = eo(seg(t, 55.6, 56.4));
+    ctx.strokeStyle = rgba(ICE, .7); ctx.lineWidth = 2.5; ctx.setLineDash([2, 12]); ctx.lineCap = 'round'; partial([[x + 590, 425], [1030, 425]], ak); ctx.setLineDash([]); ctx.lineCap = 'butt';
+    // the ticket
+    var tk = eo(seg(t, 55.8, 56.8)), tx = 1070, ty = 190 + (1 - tk) * 30;
+    ctx.globalAlpha = a * tk; rr(tx, ty, 520, 470, 30); ctx.fillStyle = '#E9EEF9'; ctx.fill();
+    ctx.fillStyle = '#060912'; ctx.beginPath(); ctx.arc(tx, ty + 175, 18, 0, 6.283); ctx.arc(tx + 520, ty + 175, 18, 0, 6.283); ctx.fill();
+    font('600', 16, M); ctx.fillStyle = '#566079'; ctx.fillText('OTCID', tx + 40, ty + 58); ctx.textAlign = 'right'; ctx.fillText('PUBLIC-COMPANY CHASSIS', tx + 480, ty + 58); ctx.textAlign = 'left';
+    font('850', 110, F, 'expanded'); ctx.fillStyle = rgba(NAVY, 1); ctx.fillText('ADHI', tx + 36, ty + 160);
+    ctx.strokeStyle = 'rgba(11,18,38,.2)'; ctx.lineWidth = 2; ctx.setLineDash([8, 8]); ctx.beginPath(); ctx.moveTo(tx + 40, ty + 200); ctx.lineTo(tx + 480, ty + 200); ctx.stroke(); ctx.setLineDash([]);
+    ['Audit', 'Governance', 'Public listing', 'Acquisition currency'].forEach(function (s, i) {
+      var k = eo(seg(t, 57 + i * .6, 57.5 + i * .6)); ctx.globalAlpha = a * tk * k;
+      check(tx + 58, ty + 246 + i * 54, 15, NAVY, 1); font('650', 26, F); ctx.fillStyle = '#0B1226'; ctx.fillText(s, tx + 92 + (1 - k) * 12, ty + 255 + i * 54);
+    });
+    ctx.restore();
+  }
+
+  // ── scene 6: the close ──
+  function drawClose(t) {
+    var a = seg(t, 62.4, 63.4) * (1 - seg(t, 69.2, 70)); if (a <= 0) return;
+    ctx.save(); ctx.textAlign = 'center';
+    var k1 = eo(seg(t, 63.6, 64.4)), k2 = eo(seg(t, 64.3, 65.1));
+    font('850', 92, F, 'semi-expanded');
+    ctx.fillStyle = rgba(WHITE, k1 * a); ctx.fillText('We don’t back the future.', 960, 730 + (1 - k1) * 24);
+    ctx.fillStyle = rgba(WHITE, k2 * a); var w1 = ctx.measureText('We ').width, w2 = ctx.measureText('We build it.').width;
+    ctx.textAlign = 'left'; ctx.fillText('We ', 960 - w2 / 2, 840 + (1 - k2) * 24); ctx.fillStyle = rgba(ICE, k2 * a); ctx.fillText('build it.', 960 - w2 / 2 + w1, 840 + (1 - k2) * 24);
+    ctx.textAlign = 'center';
+    var k3 = eo(seg(t, 65.8, 66.6));
+    font('600', 22, M); ctx.fillStyle = rgba(ICE, k3 * a); ctx.fillText('PARTNER WITH US  ·  ARSENALHOLDINGSCORP.COM  ·  OTCID: ADHI', 960, 935);
+    font('400', 15, F); ctx.fillStyle = rgba(MUTED, .8 * k3 * a);
+    ctx.fillText('Illustrative. Contains forward-looking statements; actual results may differ. Not an offer to sell or a solicitation to buy securities.', 960, 1020);
+    ctx.restore();
+  }
+
+  // ── frame ──
+  function renderAt(t) {
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1;
+    var skyA = eo(seg(t, 0, 1.6));
+    drawSky(t, skyA);
+    drawMeteors(t);
+    drawFoundation(t);
+
+    // scene 3: the mark assembles above the foundation; Energy and Finance arrive from the beam
+    var mA = life(t, 20.4, 37.6, .6, 1.4);
+    if (mA > 0) {
+      var out = eio(seg(t, 35.6, 37.6));
+      var box = { x: 960 + out * -180, y: 110 + out * 320, h: 590 * (1 - out * .75) };
+      drawMark(t, box, 21.2, mA, {
+        feet: { '0,5': [260, 720], '10,5': [1660, 720] }, sweep: 27.6, labels: true, tip: 34,
+        light: function (k) {
+          if (k === '0,5' || k === '10,5') return eo(seg(t, 21.4, 22.2));
+          if (k === '5,0') return eo(seg(t, 25.4, 26.2));
+          if (k === '5,6') return eo(seg(t, 34, 34.8));
+          var i = ORDER.indexOf(k); return i < 0 ? 0 : eo(seg(t, 29.2 + i * .62, 29.8 + i * .62));
+        }
+      });
+    }
+    drawFlywheel(t);
+    drawCompound(t);
+
+    // the close: the full mark, already formed, settles above the line
+    var cA = seg(t, 62.4, 63.6) * (1 - seg(t, 69.2, 70));
+    if (cA > 0) drawMark(t, { x: 960, y: 140 + (1 - eo(seg(t, 62.4, 63.8))) * 30, h: 470 }, 0, cA, { instant: true, labels: false, sweep: 64.2 });
+    drawClose(t);
+    drawCaptions(t);
+
+    // letterbox vignette
+    var vg = ctx.createRadialGradient(W / 2, H / 2, H * .45, W / 2, H / 2, H * 1.05);
+    vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.45)'); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+    if (t > 69.3) { ctx.fillStyle = 'rgba(3,5,11,' + seg(t, 69.3, 70) + ')'; ctx.fillRect(0, 0, W, H); }
+  }
+
+  window.DURATION = DUR;
+  window.renderAt = renderAt;
+  window.storyReady = (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () { return document.fonts.load('800 58px "Archivo"'); }).then(function () { return document.fonts.load('600 16px "JetBrains Mono"'); });
+
+  if (!/render/.test(location.search)) {
+    window.storyReady.then(function () {
+      var t0 = performance.now();
+      (function loop(now) { var t = ((now - t0) / 1000) % DUR; renderAt(t); requestAnimationFrame(loop); })(t0);
+    });
+  }
+})();
+</script>
+</body>
+</html>
