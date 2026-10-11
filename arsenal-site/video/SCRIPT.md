@@ -1,159 +1,155 @@
-# Arsenal demo video: script (draft 3)
+# Arsenal demo video: script (draft 4, a product demo)
 
-Runs about 2:10, with about 290 words of narration. The voice is short, upbeat and confident, like Byline's. The pictures carry the detail: everything the voice skips over appears on screen as a stamp, chip, counter or card, so nothing about the company is lost.
+Runs about 2:10. It demos Arsenal itself: the AI products doing real work, how the companies connect, and why the model compounds. It's one continuous camera move, cut to the music. The headlines are short serif lines with one italic word, changing in time with the voice. Every visual is new and made for this video.
 
-**Rail:** a journey rail runs along the bottom the whole time: Foundation · Platform · Portfolio · Flywheel · Why now · Partner.
-
-**Headlines:** each beat gets a short serif headline with one italic word, changing every 2–3 seconds in time with the voice.
-
-**Camera:** one continuous camera move with no hard cuts. The music shifts at each chapter, with a quiet dip before the big turns.
-
-**Visuals:** every visual is new and made for this video. Nothing is reused from the website.
-
-**Sources:** every fact comes from arsenalholdingscorp.com. Third-party figures are credited on screen.
+**The arc:** Hook (the promise) → "Here's how it works" → five live workflow demos → pull back to reveal one system → the model compounds → call to action.
 
 ---
 
-## 0 · Cold open (0:00–0:11)
-**Headlines:** Start with an *idea* → Start with *revenue* → AI-powered. *Human-led.*
+## Hook (0:00–0:10)
+**Headlines:** AI-native *companies* → *One* platform → AI-powered. *Human-led.*
 
 **Voice:**
-> Most venture studios start with an idea, then go looking for revenue.
-> Arsenal started with revenue.
-> We build AI-native companies. AI-powered. Human-led.
+> Arsenal builds companies that run on AI agents, and runs them with people.
+> One platform. A whole portfolio. Every company sells to the same clients.
+> Here's how it works.
 
 **On screen:**
-- Night sky. A lone "idea" star drifts around, searching.
-- A beam of cash flow cuts across the sky.
-- A faceted crystal "A" bursts together from the stars, on the beat.
+- Dark sky. Seven company "stars" ignite one by one, then snap together into the faceted crystal "A" in a light burst on the downbeat.
 - An AI-POWERED · HUMAN-LED stamp slams down, with an OTCID: ADHI chip.
+- On "Here's how it works," the music drops, then a flash into a bright world: a live workspace.
 
-**Then:** "Here's how." The music drops, then a flash into a bright world.
+## Workflow 1: the accounting firm (0:10–0:24)
+**Rail:** Accounting
 
-## 1 · Foundation (0:11–0:33)
-**Rail:** Foundation
-
-**Headlines:** Real *businesses* → Energy, *end to end* → Finance for *owners* → The *proving ground*
+**Headlines:** Month-end, *closed* → Agents *work*, people *sign*
 
 **Voice:**
-> It starts with real businesses.
-> Energy, from the wellhead to biogas.
-> And finance: growth capital, M&A and wealth strategy for energy companies.
-> They make money today, and they're where our AI proves itself first.
-> Credit decisions that took weeks? Now, days.
+> Nine a.m., month-end close at an accounting firm.
+> Agents reconcile every account, match every invoice, and draft the reports.
+> The partner reviews, and signs.
 
 **On screen:**
-- A line-art cross-section: wellhead → pipeline → plant → terminal, with product flowing through it. Each stage is labelled Upstream · Midstream · Downstream, and a biogas dome glows green.
-- Chips: "240+ wells drilled by our founders" and "20–50% processing margins on fee-based contracts".
-- A lending desk, where three service cards stack up: Growth capital · M&A advisory · Wealth & tax.
-- Agent chips land on the plant: maintenance · optimization · procurement.
-- A credit file gets scored as "50+ industry metrics" tick, then a calendar collapses from weeks to days. Stamp: WEEKS → DAYS.
+- A firm dashboard. The task list clears at speed under three agent cursors, ticks cascading on beat:
+  - Bank recs ✓
+  - AP matching ✓
+  - Depreciation ✓
+  - Draft reports ✓
+- A human cursor arrives and drags a signature across. Stamp: CLOSED.
+- Label: "AI for Accountants: software that runs an accounting firm."
 
-## 2 · Platform and model (0:33–0:50)
-**Rail:** Platform
+## Workflow 2: the client's family office (0:24–0:36)
+**Rail:** Wealth
 
-**Headlines:** One *shared* platform → *Build* · *Embed* · *Scale* · *Compound*
+**Headlines:** One *question* → One *answer*
 
 **Voice:**
-> Everything runs on one shared AI platform. Every company inherits it, so each one starts ahead.
-> Then, four moves: Build. Embed. Scale. Compound.
+> Then a client asks: if I sell my business this year, what happens to my estate?
+> One AI tool pulls accounting, legal, insurance and wealth together, and answers.
 
 **On screen:**
-- Glass layers labelled Models · Data · Agents · Tools snap together into a slab.
-- One company block goes through all four moves, each on a music hit, with a one-line caption under each word:
-  - **Build:** "spin up on the platform"
-  - **Embed:** "install agentic AI"
-  - **Scale:** "grow and cross-sell"
-  - **Compound:** "audit, governance and a public listing turn growth into acquisition currency"
+- The camera follows a thread from the firm to its client.
+- The client's question types into a single assistant.
+- Four data streams (Accounting · Legal · Insurance · Wealth) fly in and braid into one answer card.
+- Label: "Multi-Family Office Platform."
 
-## 3 · Portfolio (0:50–1:12)
-**Rail:** Portfolio
+## Workflow 3: the policy (0:36–0:46)
+**Rail:** Insurance
 
-**Headline:** one per company. A quick montage: the camera whips from company to company across the slab, each with its own small original scene.
+**Headlines:** Insurance, *serviced*
 
 **Voice:**
-> Here's what we're building.
-> Software that runs an accounting firm.
-> A family office in one AI tool.
-> AI that services insurance policies.
-> Implementation for owners adopting AI.
-> AI-native publishing and marketing.
-> Digital twins of human expertise.
-> And autonomous agents and robots.
+> Her life policy? Serviced automatically. Autopay on, life-expectancy analysis done, settlement recorded on-chain.
 
-**On screen:** each company's real name appears as its headline.
-- **AI for Accountants:** a ledger clears under agent cursors, then a human "Approved ✓".
-- **Multi-Family Office:** accounting, legal, insurance and wealth merge into one assistant.
-- **AI Insurance Servicing:** autopay switches on, a life-expectancy curve draws, and an on-chain settlement link appears.
-- **AI Implementation:** a Build → Grow → Sell bar.
-- **Publishing & Marketing:** a content calendar fills itself.
-- **Digital Twins / Legacy AI:** an expert's silhouette becomes a glowing twin that answers a question.
-- **Agentic Entities & Robotics:** a builder agent assembles blocks, and a service robot waves.
+**On screen:**
+- A policy card spins to face us.
+- The autopay toggle snaps on, a life-expectancy curve draws itself, and a block chain links up with a satisfying click.
+- Label: "AI Insurance Servicing."
 
-## 4 · Flywheel and what's next (1:12–1:30)
-**Rail:** Flywheel
+## Workflow 4: the loan (0:46–0:56)
+**Rail:** Finance
 
-**Headlines:** One relationship, *many lines* → Next: *health & insurance*
+**Headlines:** Weeks → *days*
 
 **Voice:**
-> And they sell together.
-> Every accountant, attorney, advisor and broker becomes a channel for the whole portfolio.
+> Her company needs capital to grow. Our underwriting scores more than fifty industry metrics, so a credit decision that took weeks takes days.
+
+**On screen:**
+- A credit file opens, and fifty metric chips light up in a rapid sweep, ticking with the hi-hats.
+- A calendar crumples from weeks into days. Stamp: APPROVED.
+- Label: "Finance: growth capital · M&A advisory · wealth & tax."
+
+## Workflow 5: in the field (0:56–1:06)
+**Rail:** Energy
+
+**Headlines:** Energy, *optimized*
+
+**Voice:**
+> Out in the field, agents watch over our own energy operations. They predict maintenance, tune production, and handle procurement.
+
+**On screen:**
+- The camera sweeps out over a line-art landscape: wellhead → pipeline → processing plant → biogas dome.
+- Agent markers pulse over each asset, and an alert ("Pump 3: service in 4 days") resolves itself.
+- Label: "Energy: upstream · midstream · downstream · biogas."
+
+## Quick-fire montage (1:06–1:14)
+**Headlines:** *More* on the platform
+
+**Voice:**
+> A founder's judgment, captured as a digital twin. AI implementation for owners. AI-native publishing. And autonomous agents and robots.
+
+**On screen:** four ultra-fast vignettes, one per downbeat.
+- An expert's silhouette becomes a glowing twin that answers a question.
+- A Build → Grow → Sell bar.
+- A content calendar fills itself.
+- A builder agent stacks blocks while a service robot waves.
+
+## The reveal: one system (1:14–1:36)
+**Headlines:** Not seven *bets* → *One* system → One relationship, *seven lines*
+
+**Voice:**
+> Here's the thing: that's not a set of separate companies. It's one system.
+> Every company runs on the same AI platform, so each new one launches faster.
+> And they all sell to the same clients. That one accountant? Now a channel for every company we run.
 > One relationship. Many revenue lines.
-> Next up: health and insurance services. We're looking for founding partners.
 
 **On screen:**
-- Four professionals orbit the slab.
-- One accountant's client relationship fires lines into all seven companies, and a counter races from 1 to 7.
-- The violet tip of the crystal "A" lights up, with three icons: Policy servicing · Revenue cycle · Documentation.
-- A "Founding partners wanted" tag.
+- The camera pulls back fast. Every scene so far turns out to sit on one glass slab, labelled Models · Data · Agents · Tools.
+- Lines fire from the accountant to every company, and a counter races from 1 to 7.
+- The whole thing turns into a spinning flywheel, with "+ Health & insurance services: next" docking in as a new piece.
 
-## 5 · Why now, and why Arsenal (1:30–1:53)
-**Rail:** Why now
-
-**Headlines:** Why *now* → *Transformation* beats efficiency → Built *differently*
+## The engine: why it compounds (1:36–1:54)
+**Headlines:** *Funded* by cash flow → *Build · Embed · Scale · Compound*
 
 **Voice:**
-> Why now? AI agents are on track to be a fifty-billion-dollar market by 2030.
-> In one McKinsey study, companies that built AI into what they sell earned a forty-three percent higher median revenue multiple.
-> Most companies never see that value. Disciplined implementation is the difference, and that's the whole point of the studio.
-> We're built for it: a public company with audit and governance from day one, run by operators who've drilled the wells and taken companies public.
+> The energy and finance businesses fund it all, with cash flow today.
+> Build. Embed. Scale. Compound.
+> And because Arsenal is a public company, growth can become currency to acquire the next business, and plug it straight in.
 
 **On screen:**
-- A bar launches from $5.3B to $52.6B (MarketsandMarkets), with a "Vertical AI agents: 62.7% CAGR" chip.
-- Quick flashes of case cards, each credited:
-  - 71% median productivity gain across 51 deployments (Stanford Digital Economy Lab)
-  - 2× EBITDA margin at a grocery chain (Stanford-reported)
-  - +53% cross-sell at a SaaS company (BCG-reported)
-- "AI in operations" is struck through and "AI in the offering" gets SELECTED, as +43% counts up. Credit: McKinsey & Company, 471 PE-backed companies.
-- Three pillars rise up: Public-company chassis · Operators, not financial engineers · One shared AI stack.
-- Leadership cards fly past with one-line credentials:
-  - Ryan Messer: COO, took PRYME Energy public, 240+ wells
-  - Jordan Mandel: Chairman
-  - Charles Holloway: ExxonMobil, BP, Chevron
-  - Erik Monsen: international financial services
-  - Lenny Moskowitz: built and sold Avon Electrical Supplies
+- Cash flows up from the energy and finance blocks into the slab.
+- The four words land on four music hits.
+- An ADHI ticket checks off Audit ✓ Governance ✓ Public listing ✓.
+- A new business block flies in and docks, and the network lights up brighter.
 
-**Fine print:** "Third-party findings; correlations, not guarantees; not projections of Arsenal's results."
+**Proof chip, shown briefly:** "Companies that build AI into what they sell: +43% median revenue multiple (McKinsey & Company, 471 PE-backed companies)."
 
-## 6 · Partner and close (1:53–2:10)
-**Rail:** Partner, then a recap where every chapter dot lights up in sequence.
-
-**Headlines:** Your business, *amplified* → Build *with us*
+## Call to action (1:54–2:10)
+**Headlines:** Plug *in* → Build *with us*
 
 **Voice:**
-> Own a business? Your team stays. Your legacy holds. Your upside grows.
-> Sell, partner, or build with us, starting with one confidential conversation.
-> We don't back the future. We build it.
+> Own a business? Plug it in. Your team stays. Your name stays. Your upside grows.
+> Investors: find us as ADHI.
+> Arsenal. We don't back the future. We build it.
 
 **On screen:**
 - An owner's card ticks Team ✓ · Legacy ✓ · Upside ✓.
 - Three deal cards fan out: Full Acquisition · Majority + Earnout · Partnership / JV.
-- A four-step path: Conversation → Diligence, together → Structure around you → Build with AI.
-- The full crystal "A", with a "Start a confidential conversation" button and a confetti burst.
-- arsenalholdingscorp.com · OTCID: ADHI · Investor relations.
+- The crystal "A" settles, with a "Start a confidential conversation" button and a confetti burst.
+- arsenalholdingscorp.com · OTCID: ADHI.
 
-**Fine print:** "Illustrative. Contains forward-looking statements; actual results may differ. Not an offer to sell or a solicitation to buy securities."
+**Fine print:** "Product scenes are illustrative; several products are in development. Contains forward-looking statements. Third-party findings are not projections of Arsenal's results. Not an offer to sell securities."
 
 ---
 
-**Compliance note:** Arsenal is a public company, so counsel should review the final narration and on-screen figures before release.
+**Compliance note:** Arsenal is a public company, so counsel should review the narration and on-screen claims before release.
