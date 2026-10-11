@@ -35,7 +35,20 @@ The constellation is the Arsenal mark itself. The logo's facets sit on a triangu
 
 ## Demo video
 
-`video/arsenal-story.mp4` is a 70-second, 1080p explainer called "One relationship". It's drawn entirely in code from the same constellation, line art and colours as the site, and it's silent with on-screen captions. `video/VOICEOVER.md` has the narration script, timed to the captions.
+The demo is a narrated product demo of Arsenal, cut in two versions, one to each music track:
 
-- Watch it live in a browser: serve this folder and open `video/story.html`.
-- Re-render it after editing `story.html`: serve this folder on port 8765, then run `node video/render.js video/arsenal-story.mp4`. This needs Playwright and ffmpeg, and takes about 2 minutes.
+- `video/arsenal-demo-tech-platforms.mp4`: about 2:28, to "Tech Platforms" (The Mountain, Pixabay).
+- `video/arsenal-demo-epic-corporate.mp4`: about 2:32, to "Epic Corporate" (Paulyudin, Pixabay). This 60-second track is extended by repeating bar-aligned sections.
+
+`video/SCRIPT.md` is the script. Everything under `video/demo/` is code, so wording, timing and visuals can all be changed and the video rebuilt.
+
+| Step | Command | What it does |
+|---|---|---|
+| 1. Narration | `python3 make_vo.py <kokoro dir>` | Generates `vo/*.wav` from `vo/lines.json` with the Kokoro "Michael" voice, through sherpa-onnx |
+| 2. Timing | `python3 build_cues.py vo/durations.json` | Puts each scene on a bar line and each narration line on a beat of the track (`cues-<track>.json`) |
+| 3. Picture | `node render.js tech out/tech-silent.mp4` | Renders `demo.html?v=tech` frame by frame to a silent 1080p video and lists its sound cues. Serve `arsenal-site/` on port 8765 first |
+| 4. Sound | `python3 mix.py tech <music.mp3> vo out/tech-silent.mp4 out/final.mp4` | Mixes the music (ducked under the voice), the narration and the sound effects, then normalizes loudness to -14 LUFS |
+
+For a live preview, open `demo/demo.html?v=tech` (or `?v=epic`) in a browser served from this folder.
+
+The music files aren't committed; they come from Pixabay under the Pixabay Content License. Product scenes are illustrative, so have counsel review the narration before any investor-facing use.
