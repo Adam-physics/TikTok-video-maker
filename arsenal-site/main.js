@@ -150,10 +150,22 @@
     bars.forEach(function (b, k) { b.classList.toggle('on', k === i); });
     plabel.textContent = 'Step ' + (i + 1) + ' of 4';
   }
-  var stepIO = new IntersectionObserver(function (es) {
-    es.forEach(function (e) { if (e.isIntersecting) setStep(+e.target.dataset.i); });
-  }, { rootMargin: '-45% 0px -45% 0px' });
-  steps.forEach(function (s) { stepIO.observe(s); });
+  // The visual on the right always matches the step whose heading sits closest to the
+  // middle of the sticky panel, so text and picture line up at any screen height.
+  var panel = $('#panel'), curStep = 0, stepTick = false;
+  function syncStep() {
+    stepTick = false;
+    if (!panel.offsetParent) return; // panel hidden on small screens
+    var pr = panel.getBoundingClientRect(), mid = pr.top + pr.height / 2, best = 0, bestD = Infinity;
+    steps.forEach(function (s, k) {
+      var h = $('h3', s).getBoundingClientRect(), d = Math.abs(h.top + h.height / 2 - mid);
+      if (d < bestD) { bestD = d; best = k; }
+    });
+    if (best !== curStep) { curStep = best; setStep(best); }
+  }
+  addEventListener('scroll', function () { if (!stepTick) { stepTick = true; requestAnimationFrame(syncStep); } }, { passive: true });
+  addEventListener('resize', syncStep);
+  syncStep();
 
   /* ── foundation tabs ── */
   var tabs = $$('#fTabs [role=tab]');
