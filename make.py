@@ -4,6 +4,8 @@
     python make.py rounds/round01.json      # render a round as video
     python make.py carousel rounds/round01.json   # ...or as a Photo Mode carousel
     python make.py calibrate <page.png>     # check panel detection by eye
+    python make.py explainer                # doodle video selling to parents
+    python make.py explainer stills         # ...or its last frame per scene
 
 A round is three claims and their three reveals, cut straight from the
 printed pages. The output is out/<id>.mp4 plus out/<id>.txt holding the
@@ -15,7 +17,7 @@ import json
 import os
 import sys
 
-from trivia import audio, brand, carousel, pages, render, scenes
+from trivia import audio, brand, carousel, explainer, pages, render, scenes
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DERIVED = os.path.join(ROOT, "assets", "derived")
@@ -189,6 +191,16 @@ def main(argv: list[str]) -> int:
         page = argv[2]
         out = os.path.join(DERIVED, "calibration-" + os.path.basename(page))
         print(pages.calibrate(page, out))
+        return 0
+    if argv[1] == "explainer":
+        if argv[2:] == ["stills"]:
+            for p in explainer.stills(os.path.join(OUT, "explainer", "stills")):
+                print(p)
+            return 0
+        os.makedirs(OUT, exist_ok=True)
+        result = explainer.render(os.path.join(OUT, "parent-value-doodle.mp4"))
+        print(result["path"], f"{result['duration']:.1f}s",
+              "narrated" if result["voiced"] else "DRAFT: no ELEVENLABS_API_KEY, no voice")
         return 0
     render_round(argv[1])
     return 0

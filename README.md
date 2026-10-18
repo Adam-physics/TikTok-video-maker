@@ -94,6 +94,9 @@ trivia/pages.py     find and crop panels, title and background from a page
 trivia/scenes.py    compose 1080x1920 stills
 trivia/audio.py     procedural score and effects -> WAV
 trivia/render.py    ffmpeg assembly: motion, guess timer, mux
+trivia/doodle.py    whiteboard-doodle engine: strokes, boil, pen, pop-ins
+trivia/explainer.py the parent-value doodle video: script, scenes, mix
+trivia/voice.py     ElevenLabs narration with word timings (cached)
 tools/              synthetic test pages; delete once real scans are in
 ```
 
@@ -173,6 +176,33 @@ hooks under seven words and specific.
 - Paste `caption.txt` as the caption.
 - Post the video *and* the carousel for the same round; they reach
   differently.
+
+## Doodle explainer (sells to parents)
+
+```bash
+python make.py explainer            # -> out/parent-value-doodle.mp4
+python make.py explainer stills     # last frame of every scene, for layout checks
+```
+
+A ~40s whiteboard-doodle video aimed at the parent, not the kid. Hook with
+a fact adults get wrong (polar bear fur), name the feeling ("NO WAY!"),
+explain the game in one breath, then the three reasons parents buy:
+screen-free, sneaky learning, fun anywhere. The only full-colour image in
+the whole video is the real book page, so it lands as the payoff.
+
+The script and drawings live in `trivia/explainer.py`; the engine in
+`trivia/doodle.py` (pen-on-paper strokes, line boil, a marker riding the
+tip). Items pinned with `.at("word")` land on the spoken word.
+
+**Narration** comes from ElevenLabs (`trivia/voice.py`): the whole script
+is read in one request with character timestamps, which then drive the
+cut points, the cues and the burned-in captions. Set `ELEVENLABS_API_KEY`
+(plus optional `ELEVENLABS_VOICE_ID`, `ELEVENLABS_MODEL`); results are
+cached in `out/explainer/` so re-renders cost nothing. Without a key the
+same timings are estimated and the render is a silent-voice draft.
+
+Fonts: Patrick Hand (OFL) and Permanent Marker (Apache 2.0), in
+`assets/fonts/` with their licences.
 
 ## Still to do
 
