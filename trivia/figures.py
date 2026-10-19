@@ -29,11 +29,10 @@ def face(cx, cy, s, mood):
     eyes, mouth, fill = [], [], None
     ex, ey = 24 * s, -8 * s
     if mood == "bored":
-        eyes = [line((cx - ex - 12 * s, cy + ey), (cx - ex + 12 * s, cy + ey), wobble=0.4),
-                line((cx + ex - 12 * s, cy + ey), (cx + ex + 12 * s, cy + ey), wobble=0.4),
-                arc(cx - ex, cy + ey, 14 * s, 10 * s, 190, 350),
-                arc(cx + ex, cy + ey, 14 * s, 10 * s, 190, 350)]
-        mouth = [line((cx - 20 * s, cy + 30 * s), (cx + 18 * s, cy + 26 * s), wobble=0.5)]
+        # Same plain dot eyes as every other figure; the flat, slightly
+        # sagging mouth carries the boredom.
+        eyes = [_dot(cx - ex, cy + ey, 6 * s), _dot(cx + ex, cy + ey, 6 * s)]
+        mouth = [line((cx - 20 * s, cy + 28 * s), (cx + 20 * s, cy + 32 * s), wobble=0.4)]
     elif mood == "happy":
         eyes = [_dot(cx - ex, cy + ey, 6 * s), _dot(cx + ex, cy + ey, 6 * s)]
         mouth = [arc(cx, cy + 12 * s, 30 * s, 22 * s, 15, 165)]

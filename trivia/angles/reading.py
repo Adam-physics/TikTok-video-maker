@@ -47,10 +47,14 @@ def small_book(cx, cy, w=300, h=190):
                    poly([(cx, cy - h / 2 + 34), (x1, cy - h / 2 + 14), (x1, cy + h / 2 - 10),
                          (cx, cy + h / 2 + 10)], closed=True)],
                   width=W, fill=(255, 255, 255), fill_offset=(0, 0))
-    lines = Shape([line((x0 + 22, cy - 40 + k * 34), (cx - 22, cy - 26 + k * 34), wobble=0.8)
-                   for k in range(4)]
-                  + [line((cx + 22, cy - 26 + k * 34), (x1 - 22, cy - 40 + k * 34), wobble=0.8)
-                     for k in range(4)], color=GREY, width=5)
+    # Text lines scale with the book, so a small one stays tidy.
+    n = 4 if h >= 150 else 2
+    step, top, pad = h * 0.18, cy - h * 0.21, w * 0.075
+    tilt = h * 0.07
+    lines = Shape([line((x0 + pad, top + k * step), (cx - pad, top + tilt + k * step), wobble=0.8)
+                   for k in range(n)]
+                  + [line((cx + pad, top + tilt + k * step), (x1 - pad, top + k * step), wobble=0.8)
+                     for k in range(n)], color=GREY, width=5 if h >= 150 else 4)
     return [pages, lines]
 
 
@@ -78,9 +82,8 @@ def mini_card(cx, cy, w=270, h=150):
 
 def l_bored():
     return [
-        *kid(320, 940, 0.85, "bored", "hold"),
-        Shape(poly([(262, 845), (320, 856), (378, 845), (378, 893), (320, 904), (262, 893)],
-                   closed=True), fill=(255, 255, 255), fill_offset=(0, 0), width=W),
+        *kid(320, 940, 0.85, "bored", "down"),
+        *small_book(480, 1080, w=150, h=90),                           # book, put down
         tag("“READING IS BORING”", (600, 380), size=58, color=BLUE).at("reading"),
         Shape(arrow((470, 430), (365, 600), bend=30, head=26), color=BLUE, width=W),
         note("z z z", (440, 640), size=52, color=GREY),
