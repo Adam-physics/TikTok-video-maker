@@ -6,6 +6,7 @@
     python make.py calibrate <page.png>     # check panel detection by eye
     python make.py explainer reading        # whiteboard video for one angle
     python make.py explainer reading stills # ...or its last frame per scene
+    python make.py skit                     # flat-cartoon texting skit (test)
 
 A round is three claims and their three reveals, cut straight from the
 printed pages. The output is out/<id>.mp4 plus out/<id>.txt holding the
@@ -191,6 +192,11 @@ def main(argv: list[str]) -> int:
         page = argv[2]
         out = os.path.join(DERIVED, "calibration-" + os.path.basename(page))
         print(pages.calibrate(page, out))
+        return 0
+    if argv[1] == "skit":
+        from trivia import skit
+        os.makedirs(OUT, exist_ok=True)
+        print(skit.render(os.path.join(OUT, "skit-lose-trivia.mp4")))
         return 0
     if argv[1] == "explainer":
         import importlib
