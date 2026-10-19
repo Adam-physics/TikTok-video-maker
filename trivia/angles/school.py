@@ -42,15 +42,27 @@ def tray(cx, cy):
 
 # ------------------------------------------------------------------ boards
 
-def l_ask():
-    reply = speech(800, 760, 120, 66, (790, 880), "fine.", size=52)
+def l_hook():
+    """Frame one is already a finished board; the red X lands on "Stop"."""
+    ask = speech(420, 560, 270, 96, (330, 810), "How was school?", size=60)
+    return [
+        Text("STOP ASKING", (540, 345), size=120, face=MARKER, color=RED).ready(),
+        *[it.ready() for it in ask],
+        *[it.ready() for it in kid(300, 1050, 0.95, "happy", "down")],
+        Shape([line((180, 470), (660, 655)), line((660, 470), (180, 655))], color=RED,
+              width=16, speed=2.5).at("stop"),
+        Text("?", (850, 520), size=230, face=MARKER, color=GREEN).at("here's"),
+        Shape(circle(850, 525, 120), color=GREEN, width=10).at("instead"),
+    ]
+
+
+def l_fine():
+    reply = speech(820, 790, 120, 66, (800, 900), "fine.", size=52)
     reply[0].at("one")
     return [
-        *kid(280, 1060, 1.0, "happy", "down"),
-        *speech(360, 560, 240, 88, (300, 760), "How was school?", size=52),
-        *kid(780, 1100, 0.75, "bored", "down"),
+        *kid(800, 1095, 0.72, "bored", "down"),
         *reply,
-        tag("1 WORD.", (800, 600), size=56, color=RED).at("word"),
+        tag("1 WORD.", (820, 655), size=56, color=RED).at("word"),
     ]
 
 
@@ -162,8 +174,9 @@ def l_book():
 
 
 SCRIPT = [
-    ("Ask your kid how school was, and you get one word. “Fine.”", l_ask),
-    ("Try this instead. Tonight, ask them to tell you three things about their day. Two true, "
+    ("Stop asking your kid “how was school?” Here's what to ask instead.", l_hook),
+    ("Because that question gets you one word. “Fine.”", l_fine, KEEP),
+    ("Tonight, ask them to tell you three things about their day. Two true, "
      "one made up.", l_three),
     ("Your job is to guess the fake one.", l_guess, KEEP),
     ("Here's why it works. To fool you, they have to remember real details: who said what, "
@@ -178,7 +191,7 @@ SCRIPT = [
 ]
 
 CAPTION = (
-    "Ask your kid \"how was school?\" and you get \"fine.\" Try this at dinner tonight: two "
+    "Stop asking your kid \"how was school?\" You just get \"fine.\" Try this at dinner tonight: two "
     "truths and a lie about their day, and you guess the fake one. To fool you, they have to "
     "remember real details, so you hear way more than \"fine.\" After a few nights, flip it: "
     "read them something wild and let them guess. We pull ours from Trick Trivia, a book of "

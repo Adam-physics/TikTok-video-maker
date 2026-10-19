@@ -106,6 +106,12 @@ def schedule(scene: dict) -> None:
     there yet.
     """
     items, words, dur = scene["new"], scene["words"], scene["duration"]
+    # Cold-open items are fully drawn on frame one, so the first thing a
+    # scrolling viewer sees is a finished board, never a blank one.
+    for it in items:
+        if getattr(it, "pre", False):
+            it.start = -60.0
+    items = [it for it in items if not getattr(it, "pre", False)]
     lead = ERASE + 0.05 if scene["erase"] else 0.05
 
     cues, used = {}, 0

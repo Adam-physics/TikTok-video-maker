@@ -190,6 +190,11 @@ class Item:
     sound: str | None = None        # effect to fire when the item starts
     scribble = False                # draws with pen noise
 
+    def ready(self):
+        """Already on the board at the scene's first frame: a cold open."""
+        self.pre = True
+        return self
+
     def at(self, cue: str, sound: str | None = None):
         self.cue = cue.lower()
         if sound:
