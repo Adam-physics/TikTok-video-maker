@@ -22,14 +22,14 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from . import brand, foley, voice
-from .doodle import INK, eraser_sprite, font, paint_hand, paper
+from .doodle import INK, SS, eraser_sprite, font, paint_hand, paper
 from .render import ffmpeg_bin
 
 W, H, FPS = brand.WIDTH, brand.HEIGHT, brand.FPS
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FONTS = os.path.join(ROOT, "assets", "fonts")
 KEEP = "keep"           # third element of a SCRIPT entry: draw on the same board
-ERASE = 0.55            # seconds the eraser takes to clear the board
+ERASE = 0.45            # one quick left-to-right pass, as in the reference
 TAIL = 1.6              # hold on the last frame after the voice ends
 SHOW_HAND = False       # the reference style draws with no visible hand
 
@@ -147,15 +147,16 @@ def board(angle) -> Image.Image:
     d = ImageDraw.Draw(img, "RGBA")
     chip = getattr(angle, "CHIP", None)
     if chip:
-        f = font(LABEL_FONT, 40)
-        w = f.getlength(chip)
+        f = font(LABEL_FONT, 40 * SS)
+        w = f.getlength(chip) / SS
         x0, y0 = (W - w) / 2 - 26, 150
-        d.rounded_rectangle([x0, y0, x0 + w + 52, y0 + 78], radius=18, outline=TEAL, width=5)
-        d.text((W / 2, y0 + 41), chip, font=f, fill=TEAL, anchor="mm")
+        d.rounded_rectangle([x0 * SS, y0 * SS, (x0 + w + 52) * SS, (y0 + 78) * SS],
+                            radius=18 * SS, outline=TEAL, width=5 * SS)
+        d.text((W / 2 * SS, (y0 + 41) * SS), chip, font=f, fill=TEAL, anchor="mm")
     foot = getattr(angle, "FOOTER", None)
     if foot:
-        f = font(os.path.join(FONTS, "PatrickHand-Regular.ttf"), 34)
-        d.text((W / 2, 1450), foot, font=f, fill=(130, 133, 140), anchor="mm")
+        f = font(CAPTION_FONT, 30 * SS)
+        d.text((W / 2 * SS, 1450 * SS), foot, font=f, fill=(140, 144, 152), anchor="mm")
     return img
 
 
@@ -179,19 +180,21 @@ def paint_caption(img: Image.Image, words, t: float) -> None:
     if not group:
         return
     # Handwritten caption, with a highlighter swipe behind the spoken word.
-    f = font(CAPTION_FONT, 72)
+    f = font(CAPTION_FONT, 72 * SS)
     texts = [w["text"].strip('"“”') for w in group]
     space = f.getlength(" ")
     widths = [f.getlength(s) for s in texts]
-    x = (W - sum(widths) - space * (len(texts) - 1)) / 2
+    x = (W * SS - sum(widths) - space * (len(texts) - 1)) / 2
+    y = CAPTION_Y * SS
+    k = SS
     d = ImageDraw.Draw(img, "RGBA")
     for w, s, wd in zip(group, texts, widths):
         active = w["start"] - 0.03 <= t <= w["end"] + 0.05 or (
             w is group[-1] and t > w["end"])
         if active:
-            d.polygon([(x - 8, CAPTION_Y - 4), (x + wd + 10, CAPTION_Y - 8),
-                       (x + wd + 6, CAPTION_Y + 34), (x - 6, CAPTION_Y + 37)], fill=HIGHLIGHT)
-        d.text((x, CAPTION_Y), s, font=f, fill=INK, anchor="ls")
+            d.polygon([(x - 8 * k, y - 4 * k), (x + wd + 10 * k, y - 8 * k),
+                       (x + wd + 6 * k, y + 34 * k), (x - 6 * k, y + 37 * k)], fill=HIGHLIGHT)
+        d.text((x, y), s, font=f, fill=INK, anchor="ls")
         x += wd + space
 
 
@@ -209,10 +212,10 @@ def scene_frame(base: Image.Image, scene: dict, t: float, frame: int) -> Image.I
     return img
 
 
-# The eraser zig-zags down the drawing area; whatever it has passed over
-# shows clean board again.
-_ERASE_PATH = [(-160, 300), (1240, 400), (-160, 600), (1240, 720), (-160, 900),
-               (1240, 1020), (-160, 1180), (1240, 1260)]
+# The eraser makes one quick pass from left to right through the middle of
+# the board, bobbing a little, and everything behind it is wiped clean: the
+# same move as the reference video.
+ERASE_TOP, ERASE_BOTTOM = 245, 1265      # between the label and the captions
 _ERASER = None
 
 
@@ -220,24 +223,19 @@ def _erase(prev: Image.Image, fresh: Image.Image, u: float) -> Image.Image:
     global _ERASER
     if _ERASER is None:
         _ERASER = eraser_sprite()
-    pts = np.array(_ERASE_PATH, float)
-    seg = np.hypot(*np.diff(pts, axis=0).T)
-    reach = u * seg.sum()
-    done, path = 0.0, [tuple(pts[0])]
-    for a, b, L in zip(pts[:-1], pts[1:], seg):
-        if done + L <= reach:
-            path.append(tuple(b))
-            done += L
-        else:
-            path.append(tuple(a + (b - a) * (reach - done) / L))
-            break
-    mask = Image.new("L", (W, H), 255)
-    ImageDraw.Draw(mask).line(path, fill=0, width=290, joint="curve")
+    e = u * u * (3 - 2 * u)                         # ease in and out
+    ex = (-0.12 + 1.26 * e) * W
+    ey = 760 + 55 * np.sin(u * np.pi * 3)
+    wipe = ex + 40                                  # the felt's trailing edge
+    w, h = W * SS, H * SS
+    col = np.clip((np.arange(w) / SS - wipe) / 24, 0, 1)   # soft vertical edge
+    mask = np.full((h, w), 255, np.uint8)
+    mask[ERASE_TOP * SS:ERASE_BOTTOM * SS, :] = (col * 255).astype(np.uint8)[None, :]
     out = fresh.copy()
-    out.paste(prev, (0, 0), mask)
+    out.paste(prev, (0, 0), Image.fromarray(mask, "L"))
     if u < 1:
-        x, y = path[-1]
-        out.alpha_composite(_ERASER, (int(x - _ERASER.width / 2), int(y - _ERASER.height / 2)))
+        out.alpha_composite(_ERASER, (int(ex * SS - _ERASER.width / 2),
+                                      int(ey * SS - _ERASER.height / 2)))
     return out
 
 
@@ -254,7 +252,8 @@ def render(angle, out_path: str) -> dict:
     base = board(angle)
     cmd = [ffmpeg_bin(), "-y", "-hide_banner", "-loglevel", "error",
            "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS),
-           "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "18",
+           "-i", "-", "-c:v", "libx264", "-preset", "slow", "-crf", "14",
+           "-tune", "animation",
            "-pix_fmt", "yuv420p", os.path.join(cache, "video.mp4")]
     enc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     n_frames = int(round(total * FPS))
@@ -271,7 +270,7 @@ def render(angle, out_path: str) -> dict:
         if s["erase"] and prev_last is not None and lt < ERASE + 0.05:
             img = _erase(prev_last, img, min(1.0, lt / ERASE))
         paint_caption(img, s["words"], lt)
-        enc.stdin.write(img.convert("RGB").tobytes())
+        enc.stdin.write(img.reduce(SS).convert("RGB").tobytes())
     enc.stdin.close()
     if enc.wait():
         raise RuntimeError("ffmpeg failed while encoding frames")
@@ -319,7 +318,7 @@ def mix(scenes, total, vo_path, path):
     track = hiss * (10 ** (-56 / 20) / (np.sqrt(np.mean(hiss ** 2)) + 1e-12))
     for k, s in enumerate(scenes):
         if s["erase"]:
-            _put(track, foley.sample("eraser"), s["t0"])
+            _put(track, foley.sample("eraser"), s["t0"] + 0.08)
         for j, it in enumerate(s["new"]):
             at = s["t0"] + it.start
             if it.sound:
@@ -352,6 +351,6 @@ def stills(angle, out_dir: str) -> list[str]:
         img = scene_frame(base, s, s["duration"] - 0.05, 0)
         paint_caption(img, s["words"], s["words"][-1]["end"])
         p = os.path.join(out_dir, f"scene-{k + 1:02d}.png")
-        img.convert("RGB").save(p)
+        img.reduce(SS).convert("RGB").save(p)
         paths.append(p)
     return paths

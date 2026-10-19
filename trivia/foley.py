@@ -1,7 +1,9 @@
 """Real-sounding foley for the whiteboard videos: marker, eraser, tape, tap.
 
-The samples in assets/sfx/ were generated once with ElevenLabs' sound
-effects model and are committed, so a render needs no key and no network.
+The marker, tape and tap samples in assets/sfx/ were generated once with
+ElevenLabs' sound effects model; the eraser swish was cut from the reference
+video the style is matched to. All are committed, so a render needs no key
+and no network.
 Each sample is level-matched by RMS, so the mix sets loudness in dB
 relative to the narration rather than trusting whatever level a file has.
 
@@ -23,18 +25,19 @@ SR = 48000
 
 # Target RMS in dBFS before the final loudness pass. The narration sits
 # around -20, so the marker is a texture you feel more than hear.
-LEVELS = {"marker": -38.0, "eraser": -27.0, "tape": -28.0, "tap": -30.0}
+LEVELS = {"marker": -38.0, "eraser": -34.0, "tape": -30.0, "tap": -32.0}
 
 _cache: dict[str, np.ndarray] = {}
 
 
 def _load(name: str) -> np.ndarray:
-    path = os.path.join(SFX, f"{name}.mp3")
+    path = next(p for p in (os.path.join(SFX, f"{name}.{ext}") for ext in ("wav", "mp3"))
+                if os.path.exists(p))
     raw = subprocess.run([ffmpeg_bin(), "-v", "error", "-i", path, "-f", "s16le", "-ac", "1",
                           "-ar", str(SR), "-"], capture_output=True, check=True).stdout
     x = np.frombuffer(raw, dtype="<i2").astype(float) / 32768
     # Trim leading and trailing near-silence so cues land on the sound.
-    loud = np.where(np.abs(x) > 0.02)[0]
+    loud = np.where(np.abs(x) > 0.1 * np.abs(x).max())[0]
     if len(loud):
         x = x[max(0, loud[0] - 200): loud[-1] + 2000]
     rms = np.sqrt(np.mean(x ** 2)) + 1e-9

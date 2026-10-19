@@ -187,9 +187,10 @@ python make.py explainer reading stills     # last frame of every scene
 ```
 
 The look follows the voice-only explainer doodles that do well on social:
-soft off-white paper, thin navy ink with a few accent colours, small stick
-figures, a fixed audience label at the top ("FOR PARENTS OF KIDS 6-12"),
-drawings that build up across sentences until an eraser wipes the board,
+a clean whiteboard, black dry-erase marker with a few saturated accent
+colours, small stick figures, a fixed audience label at the top ("FOR PARENTS OF KIDS 6-12"),
+drawings that build up across sentences until an eraser makes one quick
+left-to-right pass and wipes the board,
 the real cover taped on, and handwritten captions with a highlighter on
 the spoken word. Each video sells ONE thing the book does for a family:
 the pain, why it happens, how the book fixes it, the result, then one
@@ -197,8 +198,9 @@ clear ask ("Search Trick Trivia on Amazon").
 
 **Sound** is the narration plus quiet foley for what happens on the board
 (marker, eraser, tape, a phone tap) and a faint room tone. No music. The
-foley lives in `assets/sfx/`, generated once with ElevenLabs' sound
-effects model and committed, so renders need no key for it
+foley lives in `assets/sfx/`: marker, tape and tap generated once with
+ElevenLabs' sound effects model, the eraser swish cut from the reference
+video. All are committed, so renders need no key for them
 (`trivia/foley.py` sets each level relative to the voice).
 
 An angle is a module in `trivia/angles/` (`reading.py` is the first):
@@ -213,7 +215,8 @@ props live in `trivia/figures.py`; the engine in `trivia/doodle.py` and
 Siren on `eleven_v4`, read in one request with character timestamps that
 drive the cuts, the drawing cues and the captions. Set
 `ELEVENLABS_API_KEY` (optional `ELEVENLABS_VOICE_ID`, `ELEVENLABS_MODEL`);
-results are cached per angle in `out/explainer/<angle>/`. Without a key the
+results are cached per angle in `out/explainer/<angle>/`. Frames are drawn
+at 2x and shrunk (`doodle.SS`) so every line and letter is anti-aliased. Without a key the
 timings are estimated and the render is a silent-voice draft. The final
 mix is loudness-normalised to -14 LUFS.
 

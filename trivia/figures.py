@@ -13,7 +13,7 @@ import numpy as np
 from PIL import Image
 
 from . import brand
-from .doodle import HAND, INK, Shape, Text, arc, circle, curve, ellipse, font, line, poly
+from .doodle import KALAM, INK, Shape, Text, arc, circle, curve, ellipse, font, line, poly
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RED, GREEN, BLUE = brand.RED, brand.GREEN, brand.BLUE
@@ -104,7 +104,7 @@ def magnifier(cx, cy, r, angle=45, seed=0):
             Shape(line(p0, p1), width=22)]
 
 
-def word_box(text, size, face=HAND):
+def word_box(text, size, face=KALAM):
     """Centre x and width of each word of a single centred line."""
     f = font(face, size)
     x = 540 - f.getlength(text) / 2

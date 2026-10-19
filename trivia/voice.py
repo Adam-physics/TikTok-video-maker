@@ -49,7 +49,7 @@ def _words_from_alignment(al: dict) -> list[dict]:
 
 def estimate(text: str) -> list[dict]:
     """Word timings for an unvoiced draft, at a brisk social-video pace."""
-    t, words, pos = 0.15, [], 0
+    t, words = 0.15, []
     for m in re.finditer(r"\S+", text):
         w = m.group()
         dur = 0.08 + 0.046 * len(re.sub(r"\W", "", w))

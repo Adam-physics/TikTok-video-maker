@@ -11,7 +11,7 @@ reference explainer doodles are paced.
 """
 from __future__ import annotations
 
-from ..doodle import (HAND, INK, MARKER, Picture, Shape, Text, arrow, check, circle, ellipse,
+from ..doodle import (INK, KALAM, MARKER, Picture, Shape, Text, arrow, check, circle, ellipse,
                       line, poly, rrect)
 from ..explainer import KEEP
 from ..figures import bumpy, cover, hollow_hair, kid, polar_bear, word_box
@@ -21,14 +21,15 @@ CHIP = "FOR PARENTS OF KIDS 6–12"
 FOOTER = "Trick Trivia: Real or Fake? · by Tom Hadley"
 CLAIM = "“A polar bear's fur is white.”"
 
-TEAL = (27, 128, 122)
-BLUE = (48, 92, 172)
-RED = (208, 62, 50)
-GREEN = (46, 146, 78)
-GOLD = (226, 168, 40)
-PALE_GOLD = (252, 234, 178)
-GREY = (150, 152, 160)
-W = 7                   # line weight: thin, like a fine marker
+# Dry-erase marker colours: saturated, flat, no pencil greys.
+TEAL = (0, 122, 116)
+BLUE = (28, 86, 190)
+RED = (214, 44, 36)
+GREEN = (24, 140, 64)
+GOLD = (232, 160, 20)
+PALE_GOLD = (253, 232, 160)
+GREY = (120, 124, 134)
+W = 9                   # line weight: a bullet-tip whiteboard marker
 
 
 def tag(text, xy, size=54, color=TEAL, **kw):
@@ -36,7 +37,7 @@ def tag(text, xy, size=54, color=TEAL, **kw):
 
 
 def note(text, xy, size=60, color=INK, **kw):
-    return Text(text, xy, size=size, color=color, face=HAND, **kw)
+    return Text(text, xy, size=size, color=color, face=KALAM, **kw)
 
 
 def small_book(cx, cy, w=300, h=190):
@@ -134,10 +135,10 @@ def l_think():
     words = word_box(CLAIM, 64)
     wx, ww = words["white"]
     return [
-        Shape(ellipse(wx, 386, ww / 2 + 24, 46, sweep=400), color=RED, width=8).at("catch"),
+        Shape(ellipse(wx - 4, 386, ww / 2 + 14, 44, sweep=400), color=RED, width=8).at("catch"),
         tag("is it REALLY white?", (700, 540), size=48, color=RED).at("slow"),
         *kid(800, 1060, 0.75, "think", "chin"),
-        note("hmm...", (930, 860), size=54).at("think"),
+        note("hmm...", (950, 820), size=54).at("think"),
     ]
 
 
@@ -172,11 +173,11 @@ def l_cta():
                line((280, 980), (340, 980))], width=W),
         Shape([rrect(195, 450, 425, 510, r=28), circle(225, 480, 13, wobble=0.4),
                line((234, 489), (246, 501))], width=5).at("search", "tap"),
-        Text("Trick Trivia", (250, 481), size=36, face=HAND, anchor="lm"),
+        Text("Trick Trivia", (250, 483), size=34, face=KALAM, anchor="lm"),
         *small_book(310, 660, w=200, h=130),
         Shape(rrect(200, 820, 420, 890, r=34), color=GOLD, fill=PALE_GOLD, fill_offset=(0, 0),
               width=W).at("grab", "tap"),
-        Text("Add to Cart", (310, 856), size=38, face=HAND),
+        Text("Add to Cart", (310, 858), size=34, face=KALAM),
         Picture(cover(), (770, 600), width=290, angle=4, tape=True).at("trick"),
         tag("on Amazon", (770, 1000), size=60).at("amazon"),
         Shape(arrow((770, 950), (770, 860), bend=0, head=24), color=TEAL, width=W),

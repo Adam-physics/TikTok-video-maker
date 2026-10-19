@@ -28,12 +28,17 @@ W, H = brand.WIDTH, brand.HEIGHT
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HAND = os.path.join(ROOT, "assets", "fonts", "PatrickHand-Regular.ttf")
 MARKER = os.path.join(ROOT, "assets", "fonts", "PermanentMarker-Regular.ttf")
+KALAM = os.path.join(ROOT, "assets", "fonts", "Kalam-Bold.ttf")
 
-INK = (34, 38, 48)          # navy-black, softer than pure black on paper
+INK = (26, 29, 38)          # black dry-erase marker, a hair toward navy
 PAPER = (255, 255, 255)
 
 BOIL_EVERY = 4          # frames between wobble redraws (~7.5 per second)
-BOIL_AMP = 1.7          # pixels
+BOIL_AMP = 0.7          # pixels: marker on a whiteboard barely shimmers
+
+# Frames are drawn at SS times the output size and shrunk at the end, which
+# anti-aliases every line and letter. PIL draws hard-edged lines otherwise.
+SS = 2
 DRAW_SPEED = 2300.0     # pixels of line per second at natural pace
 POP = 0.32              # seconds for pictures and stamps to pop in
 
@@ -258,12 +263,13 @@ class Shape(Item):
             ox, oy = self.fill_offset
             for k, p in enumerate(self.paths):
                 if len(p) > 2:
-                    q = self._boiled(p, boil, k) + (ox, oy)
+                    q = (self._boiled(p, boil, k) + (ox, oy)) * SS
                     draw.polygon([tuple(x) for x in q], fill=(*self.fill, int(255 * a)))
-        r = self.width / 2
+        r = self.width * SS / 2
         for k, pts in self._partial(u):
-            q = self._boiled(pts, boil, k)
-            draw.line([tuple(x) for x in q], fill=self.color, width=self.width, joint="curve")
+            q = self._boiled(pts, boil, k) * SS
+            draw.line([tuple(x) for x in q], fill=self.color, width=self.width * SS,
+                      joint="curve")
             for end in (q[0], q[-1]):
                 draw.ellipse([end[0] - r, end[1] - r, end[0] + r, end[1] + r], fill=self.color)
 
@@ -280,14 +286,16 @@ class Text(Item):
         lh = max(b[3] - b[1] for b in boxes) + spacing
         width = max(b[2] - b[0] for b in boxes) + 2 * stroke + 8
         height = lh * len(lines) + 2 * stroke + 8
-        self.layer = Image.new("RGBA", (int(width), int(height)), (0, 0, 0, 0))
+        self.layer = Image.new("RGBA", (int(width * SS), int(height * SS)), (0, 0, 0, 0))
         d = ImageDraw.Draw(self.layer)
+        fs = font(face, size * SS)
         self.line_spans = []
         for i, (ln, b) in enumerate(zip(lines, boxes)):
             lw = b[2] - b[0]
             x = (width - lw) / 2 - b[0]
             y = i * lh - b[1] + stroke + 4
-            d.text((x, y), ln, font=f, fill=color, stroke_width=stroke, stroke_fill=stroke_color)
+            d.text((x * SS, y * SS), ln, font=fs, fill=color, stroke_width=stroke * SS,
+                   stroke_fill=stroke_color)
             self.line_spans.append(((width - lw) / 2 - stroke, (width + lw) / 2 + stroke,
                                     i * lh, (i + 1) * lh + stroke * 2 + 8, len(ln)))
         x, y = xy
@@ -336,17 +344,19 @@ class Text(Item):
         if t <= self.start:
             return
         i, x = self._reveal(t)
+        if i >= len(self.line_spans):
+            img.alpha_composite(self.layer, (self.x * SS, self.y * SS))
+            return
         mask = Image.new("L", self.layer.size, 0)
         d = ImageDraw.Draw(mask)
         for k, (x0, x1, y0, y1, _) in enumerate(self.line_spans):
             if k < i:
-                d.rectangle([0, y0, self.w, y1], fill=255)
+                d.rectangle([0, y0 * SS, self.w * SS, y1 * SS], fill=255)
             elif k == i and x is not None:
-                d.rectangle([0, y0, x, y1], fill=255)
+                d.rectangle([0, y0 * SS, x * SS, y1 * SS], fill=255)
         layer = Image.new("RGBA", self.layer.size, (0, 0, 0, 0))
         layer.paste(self.layer, (0, 0), mask)
-        jx, jy = (boil % 2), ((boil // 2) % 2)
-        img.alpha_composite(layer, (self.x + jx, self.y + jy))
+        img.alpha_composite(layer, (self.x * SS, self.y * SS))
 
 
 class Picture(Item):
@@ -355,25 +365,26 @@ class Picture(Item):
     def __init__(self, image: Image.Image, center, width=None, angle=0.0, shadow=True,
                  tape=False):
         im = image.convert("RGBA")
-        if width:
-            im = im.resize((int(width), int(im.height * width / im.width)), Image.LANCZOS)
+        width = (width or im.width) * SS
+        im = im.resize((int(width), int(im.height * width / im.width)), Image.LANCZOS)
         if tape:
             self.sound = "tape"
         if shadow:
-            pad = 24
+            pad = 24 * SS
             sh = Image.new("RGBA", (im.width + pad * 2, im.height + pad * 2), (0, 0, 0, 0))
             alpha = im.getchannel("A").point(lambda v: v * 0.28)
             blk = Image.new("RGBA", im.size, (0, 0, 0, 255))
             blk.putalpha(alpha)
-            sh.alpha_composite(blk, (pad + 10, pad + 14))
-            sh = sh.filter(ImageFilter.GaussianBlur(9))
+            sh.alpha_composite(blk, (pad + 10 * SS, pad + 14 * SS))
+            sh = sh.filter(ImageFilter.GaussianBlur(9 * SS))
             sh.alpha_composite(im, (pad, pad))
             im = sh
         if tape:
             # A strip of masking tape across the top edge, as if stuck to the board.
-            tw, th = int(im.width * 0.32), 46
+            tw, th = int(im.width * 0.32), 46 * SS
             strip = Image.new("RGBA", (tw, th), (236, 224, 188, 215))
-            ImageDraw.Draw(strip).line([(0, th - 3), (tw, th - 3)], fill=(214, 200, 160, 160), width=3)
+            ImageDraw.Draw(strip).line([(0, th - 3 * SS), (tw, th - 3 * SS)],
+                                       fill=(214, 200, 160, 160), width=3 * SS)
             canvas = Image.new("RGBA", (im.width, im.height + th // 2), (0, 0, 0, 0))
             canvas.alpha_composite(im, (0, th // 2))
             strip = strip.rotate(-3, resample=Image.BICUBIC, expand=True)
@@ -393,7 +404,7 @@ class Picture(Item):
         im = self.image
         if abs(s - 1) > 1e-3:
             im = im.resize((max(1, int(im.width * s)), max(1, int(im.height * s))), Image.BILINEAR)
-        cx, cy = self.center
+        cx, cy = self.center[0] * SS, self.center[1] * SS
         img.alpha_composite(im, (int(cx - im.width / 2), int(cy - im.height / 2)))
 
 
@@ -499,35 +510,35 @@ _HAND = None
 def paint_hand(img: Image.Image, xy) -> None:
     global _HAND
     if _HAND is None:
-        _HAND = hand_sprite(HAND_SCALE)
-    off = HAND_NIB * HAND_SCALE
-    img.alpha_composite(_HAND, (int(xy[0] - off), int(xy[1] - off)))
+        _HAND = hand_sprite(HAND_SCALE * SS)
+    off = HAND_NIB * HAND_SCALE * SS
+    img.alpha_composite(_HAND, (int(xy[0] * SS - off), int(xy[1] * SS - off)))
 
 
 # ---------------------------------------------------------------- paper
 
 def paper() -> Image.Image:
-    """Soft off-white paper, lit from above: bright in the middle, a little
-    grey toward the edges, with a faint grain so it never looks flat."""
-    yy, xx = np.mgrid[0:H, 0:W].astype(float)
-    light = ((xx - W * 0.5) / (W * 0.75)) ** 2 + ((yy - H * 0.38) / (H * 0.8)) ** 2
-    base = 250 - 14 * light
-    grain = np.random.default_rng(5).normal(0, 1.4, (H, W))
-    v = np.clip(base + grain, 0, 255)
-    rgb = np.stack([v - 1, v - 0.5, v - 2.5], axis=2)
-    return Image.fromarray(np.clip(rgb, 0, 255).astype("uint8")).convert("RGBA")
+    """A clean whiteboard at render resolution: near-white, a touch cool,
+    with the soft falloff toward the edges a lit board has. No grain."""
+    w, h = W // 4, H // 4                      # smooth field, upscaled below
+    yy, xx = np.mgrid[0:h, 0:w].astype(float)
+    light = ((xx - w * 0.5) / (w * 0.8)) ** 2 + ((yy - h * 0.4) / (h * 0.85)) ** 2
+    v = 253 - 11 * light
+    rgb = np.stack([v - 1.5, v - 0.5, v + 0.5], axis=2)
+    small = Image.fromarray(np.clip(rgb, 0, 255).astype("uint8"))
+    return small.resize((W * SS, H * SS), Image.BICUBIC).convert("RGBA")
 
 
 def eraser_sprite() -> Image.Image:
     """A board eraser seen from above: dark grip on a cream felt pad."""
-    w, h, pad = 210, 96, 30
+    w, h, pad = 150 * SS, 62 * SS, 24 * SS
     im = Image.new("RGBA", (w + pad * 2, h + pad * 2), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
-    d.rounded_rectangle([pad + 8, pad + 14, pad + w + 8, pad + h + 14], radius=14,
-                        fill=(0, 0, 0, 70))
-    im = im.filter(ImageFilter.GaussianBlur(8))
+    d.rounded_rectangle([pad + 6 * SS, pad + 10 * SS, pad + w + 6 * SS, pad + h + 10 * SS],
+                        radius=10 * SS, fill=(0, 0, 0, 60))
+    im = im.filter(ImageFilter.GaussianBlur(6 * SS))
     d = ImageDraw.Draw(im)
-    d.rounded_rectangle([pad, pad, pad + w, pad + h], radius=14, fill=(238, 233, 220, 255))
-    d.rounded_rectangle([pad, pad, pad + w, pad + h * 0.58], radius=14, fill=(64, 69, 80, 255))
-    d.rectangle([pad, pad + h * 0.4, pad + w, pad + h * 0.58], fill=(64, 69, 80, 255))
-    return im.rotate(-6, resample=Image.BICUBIC, expand=True)
+    d.rounded_rectangle([pad, pad, pad + w, pad + h], radius=10 * SS, fill=(240, 236, 226, 255))
+    d.rounded_rectangle([pad, pad, pad + w, pad + h * 0.55], radius=10 * SS, fill=(52, 58, 72, 255))
+    d.rectangle([pad, pad + h * 0.35, pad + w, pad + h * 0.55], fill=(52, 58, 72, 255))
+    return im.rotate(-7, resample=Image.BICUBIC, expand=True)
