@@ -94,3 +94,64 @@ def synthesize(text: str, cache_dir: str) -> tuple[str | None, list[dict]]:
     with open(meta, "w") as f:
         json.dump(words, f)
     return mp3, words
+
+
+def tighten(mp3: str, words: list[dict], cache_dir: str, cap: float = 0.2,
+            floor_db: float = -42.0) -> tuple[str, list[dict]]:
+    """Shorten every pause in the narration to at most `cap` seconds.
+
+    Speeding the voice up changes how it sounds; cutting dead air does not.
+    Silences are found in the audio itself (the alignment folds pauses into
+    punctuation), the middle of each long one is removed, and the word
+    timings are shifted to match so captions and cues stay in sync.
+    """
+    import subprocess
+
+    import numpy as np
+
+    from .render import ffmpeg_bin
+    sr, hop = 48000, 480
+    out = os.path.join(cache_dir, os.path.basename(mp3).replace(".mp3", f"-tight{int(cap * 100)}.wav"))
+    raw = subprocess.run([ffmpeg_bin(), "-v", "error", "-i", mp3, "-f", "s16le", "-ac", "1",
+                          "-ar", str(sr), "-"], capture_output=True, check=True).stdout
+    x = np.frombuffer(raw, dtype="<i2").astype(float) / 32768
+    frames = len(x) // hop
+    level = 20 * np.log10(np.sqrt((x[:frames * hop].reshape(frames, hop) ** 2).mean(1)) + 1e-9)
+    quiet = level < floor_db
+
+    cuts, start = [], None                      # (time the cut begins, seconds removed)
+    for i, q in enumerate(list(quiet) + [False]):
+        if q and start is None:
+            start = i
+        elif not q and start is not None:
+            dur = (i - start) * hop / sr
+            if dur > cap and start > 0:
+                begin = start * hop / sr + cap / 2
+                cuts.append((begin, dur - cap))
+            start = None
+
+    keep, last = [], 0
+    for begin, removed in cuts:
+        a, b = int(begin * sr), int((begin + removed) * sr)
+        keep.append(x[last:a])
+        last = b
+    keep.append(x[last:])
+    y = np.concatenate(keep)
+    import wave
+    with wave.open(out, "wb") as f:
+        f.setnchannels(1)
+        f.setsampwidth(2)
+        f.setframerate(sr)
+        f.writeframes((np.clip(y, -1, 1) * 32767).astype("<i2").tobytes())
+
+    def shift(t):
+        moved = 0.0
+        for begin, removed in cuts:
+            if t >= begin + removed:
+                moved += removed
+            elif t > begin:
+                return begin - moved
+        return t - moved
+
+    tight = [{**w, "start": shift(w["start"]), "end": shift(w["end"])} for w in words]
+    return out, tight

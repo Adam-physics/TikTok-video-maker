@@ -250,6 +250,8 @@ def render(angle, out_path: str) -> dict:
     os.makedirs(cache, exist_ok=True)
     text = " ".join(t for t, *_ in angle.SCRIPT)
     vo_path, words = voice.synthesize(text, cache)
+    if vo_path and getattr(angle, "TIGHTEN", None):
+        vo_path, words = voice.tighten(vo_path, words, cache, cap=angle.TIGHTEN)
     scenes = timeline(angle.SCRIPT, words)
     for s in scenes:
         schedule(s)

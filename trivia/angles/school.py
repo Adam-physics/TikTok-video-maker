@@ -14,6 +14,7 @@ from ..figures import bubble, bumpy, cover, kid
 from .reading import BLUE, GOLD, GREEN, GREY, RED, TEAL, W, note, small_book, tag
 
 ID = "school"
+TIGHTEN = 0.2           # cap every pause in the narration at this many seconds
 CHIP = "FOR PARENTS OF KIDS 6–12"
 FOOTER = "Trick Trivia: Real or Fake? · by Tom Hadley"
 CLAIM = "“Dolphins sleep with one eye open.”"
@@ -185,6 +186,15 @@ def l_book():
     ]
 
 
+def l_close():
+    """Back to the point: the parent and kid, not the book."""
+    return [
+        tag("TRY IT TONIGHT", (540, 330), size=72, color=TEAL).at("try"),
+        note("“fine.”", (300, 470), size=60, color=GREY).at("worst"),
+        Shape(line((200, 478), (400, 466)), color=RED, width=10).at("besides"),
+    ]
+
+
 SCRIPT = [
     ("Stop asking your kid “how was school?” Here's what to ask instead.", l_hook),
     ("Because that question gets you one word. “Fine.”", l_fine, KEEP),
@@ -200,6 +210,8 @@ SCRIPT = [
     (f"Like, {CLAIM} Sounds fake. It's real.", l_example),
     ("We pull ours from a book called Trick Trivia. Every page has three of these. "
      "It's on Amazon.", l_book),
+    ("Book or no book, try it tonight. Worst case, you hear something besides “fine.”",
+     l_close, KEEP),
 ]
 
 CAPTION = (
@@ -207,7 +219,7 @@ CAPTION = (
     "truths and a lie about their day, and you guess the fake one. To fool you, they have to "
     "remember real details, so you hear way more than \"fine.\" After a few nights, flip it: "
     "read them something wild and let them guess. We pull ours from Trick Trivia, a book of "
-    "real-or-fake claims. It's on Amazon."
+    "real-or-fake claims (it's on Amazon). Book or no book, try it tonight."
 )
 HASHTAGS = ["#parentingtips", "#momtok", "#dadtok", "#dinnertable", "#familygames",
             "#kidsconversation", "#realorfake"]
