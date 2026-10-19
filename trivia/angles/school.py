@@ -7,16 +7,17 @@ as a pitch, and the ask stays soft: "It's on Amazon."
 """
 from __future__ import annotations
 
-from ..doodle import INK, MARKER, Picture, Shape, Text, arrow, check, circle, ellipse, line, rrect
+from ..doodle import (INK, MARKER, Picture, Shape, Text, arrow, check, circle, curve, ellipse, line,
+                      poly, rrect)
 from ..explainer import KEEP
-from ..figures import bubble, bumpy, cover, hollow_hair, kid, polar_bear, word_box
+from ..figures import bubble, bumpy, cover, kid
 from .reading import (BLUE, GOLD, GREEN, GREY, RED, TEAL, W, mini_card, note, small_book,
                       tag)
 
 ID = "school"
 CHIP = "FOR PARENTS OF KIDS 6–12"
 FOOTER = "Trick Trivia: Real or Fake? · by Tom Hadley"
-CLAIM = "“A polar bear's fur is white.”"
+CLAIM = "“Dolphins sleep with one eye open.”"
 PINK = (252, 214, 222)
 
 
@@ -115,18 +116,36 @@ def l_flip():
     ]
 
 
+def dolphin(cx, cy, s=1.0):
+    """Side-on cartoon dolphin, asleep with its eye wide open."""
+    body = [(-235, 12), (-200, -4), (-150, -52), (-40, -84), (10, -82), (150, -50), (232, -14),
+            (300, -62), (284, 0), (300, 58), (226, 16), (100, 46), (-40, 56), (-150, 36),
+            (-212, 22), (-235, 12)]
+    fin = [(-10, -80), (40, -152), (70, -74)]
+    flipper = [(-60, 46), (-20, 104), (10, 48)]
+    P = lambda pts: [(cx + x * s, cy + y * s) for x, y in pts]
+    fill = (206, 228, 246)
+    return [
+        Shape(poly(P(fin), closed=True, wobble=1.0), width=W, fill=fill, fill_offset=(0, 0)),
+        Shape(curve(P(body), wobble=1.2, samples=10), width=W, fill=fill, fill_offset=(0, 0)),
+        Shape(poly(P(flipper), closed=True, wobble=0.8), width=W, fill=fill, fill_offset=(0, 0)),
+        Shape(curve(P([(-232, 14), (-190, 18), (-150, 10)]), wobble=0.5), width=6),     # mouth
+        Shape(circle(cx - 140 * s, cy - 16 * s, 16 * s, wobble=0.3), width=6,
+              fill=(255, 255, 255), fill_offset=(0, 0)),                               # eye, open
+        Shape(circle(cx - 136 * s, cy - 14 * s, 7 * s, wobble=0.2), fill=INK, width=4),
+        Shape(line((cx - 300 * s, cy + 150 * s), (cx + 330 * s, cy + 140 * s), wobble=2.5),
+              color=BLUE, width=W),
+    ]
+
+
 def l_example():
-    words = word_box(CLAIM, 62)
-    wx, ww = words["white"]
     return [
         Shape(rrect(90, 290, 990, 470, r=26), width=W, fill=(255, 255, 255), fill_offset=(0, 0)),
-        note(CLAIM, (540, 380), size=62),
-        *polar_bear(300, 730, 0.62),
-        tag("sounds true...", (760, 640), size=54, color=BLUE).at("sounds"),
-        Shape(ellipse(wx - 4, 386, ww / 2 + 14, 44, sweep=400), color=RED, width=8).at("not"),
-        tag("FAKE!", (760, 790), size=84, color=RED),
-        hollow_hair((560, 1060), (690, 960), 24, color=TEAL).at("see-through"),
-        tag("see-through!", (620, 1150), size=50),
+        note(CLAIM, (540, 380), size=52, max_width=860),
+        *dolphin(500, 760, 1.15),
+        note("z z z", (300, 560), size=58, color=GREY),
+        tag("sounds fake...", (540, 1010), size=56, color=BLUE).at("sounds"),
+        tag("REAL!", (540, 1140), size=100, color=GREEN).at("real"),
     ]
 
 
@@ -153,7 +172,7 @@ SCRIPT = [
     ("You'll hear more about their day in two minutes than you have all week.", l_result),
     ("After a few nights, flip it. You read them something wild, and they guess if it's real.",
      l_flip),
-    (f"Like, {CLAIM} Sounds true. It's not. It's see-through.", l_example),
+    (f"Like, {CLAIM} Sounds fake. It's real.", l_example),
     ("We pull ours from a book called Trick Trivia. Every page has three of these. "
      "It's on Amazon.", l_book),
 ]
