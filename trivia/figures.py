@@ -151,6 +151,10 @@ def bumpy(cx, cy, rx, ry, bumps=11, depth=0.09, seed=0):
                 wobble=1.6, seed=seed)
 
 
+def cover() -> Image.Image:
+    return Image.open(os.path.join(ROOT, "assets", "cover.png"))
+
+
 def page(name) -> Image.Image:
     return Image.open(os.path.join(ROOT, "assets", "pages", name))
 

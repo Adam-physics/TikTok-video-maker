@@ -186,15 +186,26 @@ python make.py explainer reading            # -> out/reading.mp4 + out/reading.t
 python make.py explainer reading stills     # last frame of every scene
 ```
 
-The familiar whiteboard format: black marker on white, stick figures, a
-drawing hand, and bold word-by-word captions. Each video sells ONE thing
-the book does for a family, not the whole listing: the pain, why it
-happens, how the book fixes it (shown on a real page), the result, then
-one clear ask ("Search Trick Trivia on Amazon").
+The look follows the voice-only explainer doodles that do well on social:
+soft off-white paper, thin navy ink with a few accent colours, small stick
+figures, a fixed audience label at the top ("FOR PARENTS OF KIDS 6-12"),
+drawings that build up across sentences until an eraser wipes the board,
+the real cover taped on, and handwritten captions with a highlighter on
+the spoken word. Each video sells ONE thing the book does for a family:
+the pain, why it happens, how the book fixes it, the result, then one
+clear ask ("Search Trick Trivia on Amazon").
+
+**Sound** is the narration plus quiet foley for what happens on the board
+(marker, eraser, tape, a phone tap) and a faint room tone. No music. The
+foley lives in `assets/sfx/`, generated once with ElevenLabs' sound
+effects model and committed, so renders need no key for it
+(`trivia/foley.py` sets each level relative to the voice).
 
 An angle is a module in `trivia/angles/` (`reading.py` is the first):
 `SCRIPT` pairs each narration line with the drawing made while it is
-spoken; `.at("word")` pins a drawing to that spoken word. Stick figures and
+spoken (add `KEEP` to keep drawing on the same board instead of erasing);
+`.at("word")` pins a drawing to that spoken word. `CHIP` and `FOOTER` set
+the fixed label and bottom line. Stick figures and
 props live in `trivia/figures.py`; the engine in `trivia/doodle.py` and
 `trivia/explainer.py`.
 
@@ -206,12 +217,11 @@ results are cached per angle in `out/explainer/<angle>/`. Without a key the
 timings are estimated and the render is a silent-voice draft. The final
 mix is loudness-normalised to -14 LUFS.
 
-Fonts: Patrick Hand and Montserrat (OFL), Permanent Marker (Apache 2.0),
+Fonts: Kalam, Patrick Hand and Montserrat (OFL), Permanent Marker (Apache 2.0),
 in `assets/fonts/` with their licences.
 
 ## Still to do
 
-- `assets/cover.png` — goes on the video end card and the carousel close.
 - `reviews` in the round file: `[{"name": "…", "quote": "…"}]` — the close
   slide renders up to three as review cards.
 - More page scans: the close fans every page in `assets/pages`, and five

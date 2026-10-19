@@ -1,9 +1,15 @@
 """Whiteboard explainer engine: one script in, one narrated vertical video out.
 
 A video is an *angle* module (see `trivia/angles/`) holding a SCRIPT: a list
-of (narration line, scene builder) pairs. The narration is voiced in one
-take; its word timings cut the scenes, pin drawings to spoken words, and
-drive the captions.
+of (narration line, scene builder) pairs, optionally with KEEP as a third
+element to keep drawing on the same board instead of erasing it. The
+narration is voiced in one take; its word timings cut the scenes, pin
+drawings to spoken words, and drive the captions.
+
+The look follows the explainer doodles that already perform on social:
+soft paper, thin navy ink, a fixed audience label at the top, drawings that
+build up across sentences until an eraser wipes the board, handwritten
+captions with a highlighter on the spoken word, and no music.
 """
 from __future__ import annotations
 
@@ -15,17 +21,23 @@ import wave
 import numpy as np
 from PIL import Image, ImageDraw
 
-from . import audio, brand, voice
-from .doodle import INK, font, paint_hand, paper
+from . import brand, foley, voice
+from .doodle import INK, eraser_sprite, font, paint_hand, paper
 from .render import ffmpeg_bin
 
 W, H, FPS = brand.WIDTH, brand.HEIGHT, brand.FPS
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TRANSITION = 0.30
-CAPTION_Y = 1390
+FONTS = os.path.join(ROOT, "assets", "fonts")
+KEEP = "keep"           # third element of a SCRIPT entry: draw on the same board
+ERASE = 0.55            # seconds the eraser takes to clear the board
 TAIL = 1.6              # hold on the last frame after the voice ends
-CAPTION_FONT = os.path.join(ROOT, "assets", "fonts", "Montserrat-Black.ttf")
-YELLOW = brand.YELLOW
+SHOW_HAND = False       # the reference style draws with no visible hand
+
+CAPTION_Y = 1330
+CAPTION_FONT = os.path.join(FONTS, "Kalam-Bold.ttf")
+LABEL_FONT = os.path.join(FONTS, "PermanentMarker-Regular.ttf")
+TEAL = (27, 128, 122)
+HIGHLIGHT = (255, 214, 64, 150)
 
 
 # ------------------------------------------------------------------ timing
@@ -34,37 +46,67 @@ def _norm(w: str) -> str:
     return re.sub(r"[^\w-]", "", w.lower())
 
 
+def _entries(script):
+    for entry in script:
+        text, build, *flags = entry
+        yield text, build, KEEP in flags
+
+
+class Held:
+    """An item carried over from the previous line: already fully drawn."""
+
+    cue = None
+    sound = None
+    scribble = False
+    duration = 0.0
+    start = -1.0
+
+    def __init__(self, item):
+        self.item = item
+
+    def tip(self, t):
+        return None
+
+    def paint(self, img, t, boil):
+        self.item.paint(img, self.item.start + self.item.duration + 60, boil)
+
+
 def timeline(script, words: list[dict]):
     """Split the narration's words into scenes and give each a duration."""
-    scenes, i = [], 0
-    counts = [len(text.split()) for text, _ in script]
+    entries = list(_entries(script))
+    counts = [len(text.split()) for text, _, _ in entries]
     if len(words) != sum(counts):
         raise RuntimeError(f"narration has {len(words)} words, script has {sum(counts)}")
-    starts = []
+    starts, i = [], 0
     for n in counts:
         starts.append(0.0 if i == 0 else words[i]["start"] - 0.12)
         i += n
     end = words[-1]["end"] + TAIL
-    i = 0
-    for k, ((text, build), n) in enumerate(zip(script, counts)):
+    scenes, i, board = [], 0, []
+    for k, ((text, build, keep), n) in enumerate(zip(entries, counts)):
         t0 = starts[k]
         t1 = starts[k + 1] if k + 1 < len(starts) else end
         local = [{**w, "start": w["start"] - t0, "end": w["end"] - t0} for w in words[i:i + n]]
-        scenes.append({"t0": t0, "duration": t1 - t0, "words": local, "items": build()})
+        keep = keep and k > 0
+        new = build()
+        held = [Held(it) for it in board] if keep else []
+        board = (board if keep else []) + new
+        scenes.append({"t0": t0, "duration": t1 - t0, "words": local, "items": held + new,
+                       "new": new, "erase": k > 0 and not keep})
         i += n
     return scenes
 
 
 def schedule(scene: dict) -> None:
-    """Give every item a start time inside the scene.
+    """Give every new item a start time inside the scene.
 
     Items pinned to a word split the scene into segments. Each segment is
     drawn between its own cue and the next one, sped up if it would not
-    otherwise finish -- so a stamp never lands on a drawing that is not
+    otherwise finish -- so a mark never lands on a drawing that is not
     there yet.
     """
-    items, words, dur = scene["items"], scene["words"], scene["duration"]
-    lead = TRANSITION if scene["t0"] > 0 else 0.05
+    items, words, dur = scene["new"], scene["words"], scene["duration"]
+    lead = ERASE + 0.05 if scene["erase"] else 0.05
 
     cues, used = {}, 0
     for n, it in enumerate(items):
@@ -98,6 +140,25 @@ def schedule(scene: dict) -> None:
 
 # ------------------------------------------------------------------ frames
 
+def board(angle) -> Image.Image:
+    """Paper plus everything that never changes: the audience label on top
+    and the small line at the bottom."""
+    img = paper()
+    d = ImageDraw.Draw(img, "RGBA")
+    chip = getattr(angle, "CHIP", None)
+    if chip:
+        f = font(LABEL_FONT, 40)
+        w = f.getlength(chip)
+        x0, y0 = (W - w) / 2 - 26, 150
+        d.rounded_rectangle([x0, y0, x0 + w + 52, y0 + 78], radius=18, outline=TEAL, width=5)
+        d.text((W / 2, y0 + 41), chip, font=f, fill=TEAL, anchor="mm")
+    foot = getattr(angle, "FOOTER", None)
+    if foot:
+        f = font(os.path.join(FONTS, "PatrickHand-Regular.ttf"), 34)
+        d.text((W / 2, 1450), foot, font=f, fill=(130, 133, 140), anchor="mm")
+    return img
+
+
 def _caption_groups(words):
     groups, cur = [], []
     for w in words:
@@ -117,19 +178,20 @@ def paint_caption(img: Image.Image, words, t: float) -> None:
             group = g
     if not group:
         return
-    # The CapCut look viewers already read without thinking: heavy white
-    # caps, thick black outline, the spoken word in yellow.
-    f = font(CAPTION_FONT, 70)
-    texts = [w["text"].strip('"\u201c\u201d').upper() for w in group]
-    space = f.getlength(" ") + 16
+    # Handwritten caption, with a highlighter swipe behind the spoken word.
+    f = font(CAPTION_FONT, 72)
+    texts = [w["text"].strip('"“”') for w in group]
+    space = f.getlength(" ")
     widths = [f.getlength(s) for s in texts]
     x = (W - sum(widths) - space * (len(texts) - 1)) / 2
     d = ImageDraw.Draw(img, "RGBA")
     for w, s, wd in zip(group, texts, widths):
         active = w["start"] - 0.03 <= t <= w["end"] + 0.05 or (
             w is group[-1] and t > w["end"])
-        d.text((x, CAPTION_Y), s, font=f, fill=YELLOW if active else (255, 255, 255),
-               anchor="lm", stroke_width=8, stroke_fill=INK)
+        if active:
+            d.polygon([(x - 8, CAPTION_Y - 4), (x + wd + 10, CAPTION_Y - 8),
+                       (x + wd + 6, CAPTION_Y + 34), (x - 6, CAPTION_Y + 37)], fill=HIGHLIGHT)
+        d.text((x, CAPTION_Y), s, font=f, fill=INK, anchor="ls")
         x += wd + space
 
 
@@ -142,22 +204,54 @@ def scene_frame(base: Image.Image, scene: dict, t: float, frame: int) -> Image.I
         tip = it.tip(t)
         if tip is not None:
             pen = tip
-    if pen is not None:
+    if SHOW_HAND and pen is not None:
         paint_hand(img, pen)
     return img
+
+
+# The eraser zig-zags down the drawing area; whatever it has passed over
+# shows clean board again.
+_ERASE_PATH = [(-160, 300), (1240, 400), (-160, 600), (1240, 720), (-160, 900),
+               (1240, 1020), (-160, 1180), (1240, 1260)]
+_ERASER = None
+
+
+def _erase(prev: Image.Image, fresh: Image.Image, u: float) -> Image.Image:
+    global _ERASER
+    if _ERASER is None:
+        _ERASER = eraser_sprite()
+    pts = np.array(_ERASE_PATH, float)
+    seg = np.hypot(*np.diff(pts, axis=0).T)
+    reach = u * seg.sum()
+    done, path = 0.0, [tuple(pts[0])]
+    for a, b, L in zip(pts[:-1], pts[1:], seg):
+        if done + L <= reach:
+            path.append(tuple(b))
+            done += L
+        else:
+            path.append(tuple(a + (b - a) * (reach - done) / L))
+            break
+    mask = Image.new("L", (W, H), 255)
+    ImageDraw.Draw(mask).line(path, fill=0, width=290, joint="curve")
+    out = fresh.copy()
+    out.paste(prev, (0, 0), mask)
+    if u < 1:
+        x, y = path[-1]
+        out.alpha_composite(_ERASER, (int(x - _ERASER.width / 2), int(y - _ERASER.height / 2)))
+    return out
 
 
 def render(angle, out_path: str) -> dict:
     cache = os.path.join(ROOT, "out", "explainer", angle.ID)
     os.makedirs(cache, exist_ok=True)
-    text = " ".join(t for t, _ in angle.SCRIPT)
+    text = " ".join(t for t, *_ in angle.SCRIPT)
     vo_path, words = voice.synthesize(text, cache)
     scenes = timeline(angle.SCRIPT, words)
     for s in scenes:
         schedule(s)
     total = scenes[-1]["t0"] + scenes[-1]["duration"]
 
-    base = paper()
+    base = board(angle)
     cmd = [ffmpeg_bin(), "-y", "-hide_banner", "-loglevel", "error",
            "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS),
            "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "18",
@@ -174,13 +268,8 @@ def render(angle, out_path: str) -> dict:
         s = scenes[k]
         lt = t - s["t0"]
         img = scene_frame(base, s, lt, f)
-        if prev_last is not None and lt < TRANSITION:
-            u = lt / TRANSITION
-            e = 1 - (1 - u) ** 3
-            frame_img = Image.new("RGBA", (W, H))
-            frame_img.paste(prev_last, (int(-e * W), 0))
-            frame_img.paste(img, (int(W - e * W), 0))
-            img = frame_img
+        if s["erase"] and prev_last is not None and lt < ERASE + 0.05:
+            img = _erase(prev_last, img, min(1.0, lt / ERASE))
         paint_caption(img, s["words"], lt)
         enc.stdin.write(img.convert("RGB").tobytes())
     enc.stdin.close()
@@ -206,64 +295,57 @@ def render(angle, out_path: str) -> dict:
 
 # ------------------------------------------------------------------ sound
 
-def _pop() -> np.ndarray:
-    n = int(0.12 * audio.SR)
-    t = np.arange(n) / audio.SR
-    f = 900 * np.exp(-t * 18) + 220
-    return np.sin(2 * np.pi * np.cumsum(f) / audio.SR) * np.exp(-t * 30)
-
-
-def _scribble(dur: float, seed: int) -> np.ndarray:
-    """Marker-on-paper: filtered noise with a stroke rhythm."""
-    n = int(dur * audio.SR)
-    rng = np.random.default_rng(seed)
-    x = rng.standard_normal(n)
-    x = np.diff(np.concatenate([[0], x]))             # tilt toward hiss
-    t = np.arange(n) / audio.SR
-    am = 0.55 + 0.45 * np.sin(2 * np.pi * rng.uniform(5, 8) * t) ** 2
-    fade = np.minimum(1, np.minimum(t, dur - t) / 0.03).clip(0, 1)
-    return x * am * fade * 0.05
+def _put(track: np.ndarray, sound: np.ndarray, at: float) -> None:
+    start = int(at * foley.SR)
+    end = min(start + len(sound), len(track))
+    if end > start >= 0:
+        track[start:end] += sound[:end - start]
 
 
 def _read_voice(path: str) -> np.ndarray:
     raw = subprocess.run([ffmpeg_bin(), "-v", "error", "-i", path, "-f", "s16le",
-                          "-ac", "1", "-ar", str(audio.SR), "-"],
+                          "-ac", "1", "-ar", str(foley.SR), "-"],
                          capture_output=True, check=True).stdout
     return np.frombuffer(raw, dtype="<i2").astype(float) / 32768
 
 
 def mix(scenes, total, vo_path, path):
-    bed = audio._bed(total)[:int(total * audio.SR)]
-    track = bed * (0.45 if vo_path else 1.0)
-    effects = {"whoosh": audio.whoosh, "ding": audio.ding, "buzz": audio.buzz, "pop": _pop}
+    """Voice, plus quiet foley for what is happening on the board. No music."""
+    # A faint room tone under everything: pure digital silence between
+    # sentences sounds like the audio cut out.
+    rng = np.random.default_rng(1)
+    hiss = np.convolve(rng.standard_normal(int(total * foley.SR) + foley.SR),
+                       np.ones(24) / 24, mode="same")
+    track = hiss * (10 ** (-56 / 20) / (np.sqrt(np.mean(hiss ** 2)) + 1e-12))
     for k, s in enumerate(scenes):
-        if k:
-            audio._mix(track, audio.whoosh() * 0.30, s["t0"])
-        for j, it in enumerate(s["items"]):
+        if s["erase"]:
+            _put(track, foley.sample("eraser"), s["t0"])
+        for j, it in enumerate(s["new"]):
             at = s["t0"] + it.start
             if it.sound:
-                audio._mix(track, effects[it.sound]() * audio.SFX_GAIN, at)
+                _put(track, foley.sample(it.sound), at)
             if it.scribble and it.duration > 0.12:
-                audio._mix(track, _scribble(it.duration, k * 100 + j), at)
+                _put(track, foley.marker(it.duration, k * 100 + j), at)
     if vo_path:
-        audio._mix(track, _read_voice(vo_path), 0.0)
+        _put(track, _read_voice(vo_path), 0.0)
+    track = track[:int(total * foley.SR)]
     peak = np.abs(track).max()
-    if peak > 0.95:
-        track = np.tanh(track / peak * 1.4) * 0.92
+    if peak > 0.98:
+        track *= 0.98 / peak
     pcm = (np.clip(track, -1, 1) * 32767).astype("<i2")
     with wave.open(path, "wb") as f:
         f.setnchannels(2)
         f.setsampwidth(2)
-        f.setframerate(audio.SR)
+        f.setframerate(foley.SR)
         f.writeframes(np.repeat(pcm[:, None], 2, axis=1).tobytes())
     return path
 
 
 def stills(angle, out_dir: str) -> list[str]:
     """The last frame of every scene, for checking layout by eye."""
-    text = " ".join(t for t, _ in angle.SCRIPT)
+    text = " ".join(t for t, *_ in angle.SCRIPT)
     scenes = timeline(angle.SCRIPT, voice.estimate(text))
-    base, paths = paper(), []
+    base, paths = board(angle), []
     os.makedirs(out_dir, exist_ok=True)
     for k, s in enumerate(scenes):
         schedule(s)

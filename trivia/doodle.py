@@ -29,12 +29,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HAND = os.path.join(ROOT, "assets", "fonts", "PatrickHand-Regular.ttf")
 MARKER = os.path.join(ROOT, "assets", "fonts", "PermanentMarker-Regular.ttf")
 
-INK = (30, 30, 36)
+INK = (34, 38, 48)          # navy-black, softer than pure black on paper
 PAPER = (255, 255, 255)
 
 BOIL_EVERY = 4          # frames between wobble redraws (~7.5 per second)
 BOIL_AMP = 1.7          # pixels
-DRAW_SPEED = 2600.0     # pixels of line per second at natural pace
+DRAW_SPEED = 2300.0     # pixels of line per second at natural pace
 POP = 0.32              # seconds for pictures and stamps to pop in
 
 _fonts: dict[tuple[str, int], ImageFont.FreeTypeFont] = {}
@@ -352,10 +352,13 @@ class Text(Item):
 class Picture(Item):
     """An image that pops in with an overshoot: stamps, book pages."""
 
-    def __init__(self, image: Image.Image, center, width=None, angle=0.0, shadow=True):
+    def __init__(self, image: Image.Image, center, width=None, angle=0.0, shadow=True,
+                 tape=False):
         im = image.convert("RGBA")
         if width:
             im = im.resize((int(width), int(im.height * width / im.width)), Image.LANCZOS)
+        if tape:
+            self.sound = "tape"
         if shadow:
             pad = 24
             sh = Image.new("RGBA", (im.width + pad * 2, im.height + pad * 2), (0, 0, 0, 0))
@@ -366,6 +369,16 @@ class Picture(Item):
             sh = sh.filter(ImageFilter.GaussianBlur(9))
             sh.alpha_composite(im, (pad, pad))
             im = sh
+        if tape:
+            # A strip of masking tape across the top edge, as if stuck to the board.
+            tw, th = int(im.width * 0.32), 46
+            strip = Image.new("RGBA", (tw, th), (236, 224, 188, 215))
+            ImageDraw.Draw(strip).line([(0, th - 3), (tw, th - 3)], fill=(214, 200, 160, 160), width=3)
+            canvas = Image.new("RGBA", (im.width, im.height + th // 2), (0, 0, 0, 0))
+            canvas.alpha_composite(im, (0, th // 2))
+            strip = strip.rotate(-3, resample=Image.BICUBIC, expand=True)
+            canvas.alpha_composite(strip, ((im.width - strip.width) // 2, 0))
+            im = canvas
         self.image = im.rotate(angle, resample=Image.BICUBIC, expand=True)
         self.center = center
         self.duration = POP
@@ -494,5 +507,27 @@ def paint_hand(img: Image.Image, xy) -> None:
 # ---------------------------------------------------------------- paper
 
 def paper() -> Image.Image:
-    """Plain whiteboard white: the familiar look, nothing to compete with the ink."""
-    return Image.new("RGBA", (W, H), (*PAPER, 255))
+    """Soft off-white paper, lit from above: bright in the middle, a little
+    grey toward the edges, with a faint grain so it never looks flat."""
+    yy, xx = np.mgrid[0:H, 0:W].astype(float)
+    light = ((xx - W * 0.5) / (W * 0.75)) ** 2 + ((yy - H * 0.38) / (H * 0.8)) ** 2
+    base = 250 - 14 * light
+    grain = np.random.default_rng(5).normal(0, 1.4, (H, W))
+    v = np.clip(base + grain, 0, 255)
+    rgb = np.stack([v - 1, v - 0.5, v - 2.5], axis=2)
+    return Image.fromarray(np.clip(rgb, 0, 255).astype("uint8")).convert("RGBA")
+
+
+def eraser_sprite() -> Image.Image:
+    """A board eraser seen from above: dark grip on a cream felt pad."""
+    w, h, pad = 210, 96, 30
+    im = Image.new("RGBA", (w + pad * 2, h + pad * 2), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([pad + 8, pad + 14, pad + w + 8, pad + h + 14], radius=14,
+                        fill=(0, 0, 0, 70))
+    im = im.filter(ImageFilter.GaussianBlur(8))
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([pad, pad, pad + w, pad + h], radius=14, fill=(238, 233, 220, 255))
+    d.rounded_rectangle([pad, pad, pad + w, pad + h * 0.58], radius=14, fill=(64, 69, 80, 255))
+    d.rectangle([pad, pad + h * 0.4, pad + w, pad + h * 0.58], fill=(64, 69, 80, 255))
+    return im.rotate(-6, resample=Image.BICUBIC, expand=True)
