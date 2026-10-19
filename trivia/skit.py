@@ -17,7 +17,7 @@ import subprocess
 import wave
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageFont
 
 from . import brand, foley
 from .render import ffmpeg_bin
@@ -31,19 +31,12 @@ UI_BOLD = "/usr/share/fonts/opentype/inter/Inter-SemiBold.otf"
 TITLE_FONT = os.path.join(FONTS, "Montserrat-Black.ttf")
 EMOJI_FONT = "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf"
 
-OUTLINE = (24, 24, 30)
-NIGHT = (22, 30, 58)
-NIGHT_LIGHT = (36, 48, 88)
-SKIN = (241, 200, 160)
-SKIN_SHADE = (222, 176, 136)
-HAIR = (70, 46, 32)
-HOODIE = (62, 128, 96)
-HOODIE_SHADE = (50, 106, 80)
-COUCH = (150, 82, 52)
-COUCH_DARK = (122, 64, 40)
-BUBBLE_IN = (233, 233, 238)
-BUBBLE_OUT = (32, 138, 255)
-HAND = (10, 12, 18)
+INK = (8, 8, 10)
+GREY = (200, 200, 202)          # the stickman's skin
+NIGHT = (14, 26, 56)
+BUBBLE_IN = (228, 228, 232)
+BUBBLE_OUT = (22, 76, 108)      # dark teal, as the skit channels draw it
+HAND = INK
 
 _fonts: dict = {}
 
@@ -149,117 +142,140 @@ def wrap(text, f, max_w):
 
 
 # ------------------------------------------------------------------ character
+#
+# The round-head stickman many skit channels share: a big light-grey head
+# with a heavy black outline and one hair curl, tube limbs, solid black
+# oval eyes, little arched brows and a wavy mouth. The face sits toward
+# whatever he is looking at, which is most of the acting.
 
-def dad(img, t, mood, look="phone", buzz=0.0, blink=False):
-    """The dad on the couch, holding his phone. Coordinates are 1x."""
+def _tube(d, pts, w=24, o=7):
+    """A limb: grey tube with a black outline."""
+    pts = [tuple(S(*p)) for p in pts]
+    d.line(pts, fill=INK, width=S(w + 2 * o), joint="curve")
+    for p in (pts[0], pts[-1]):
+        r = S(w / 2 + o)
+        d.ellipse((p[0] - r, p[1] - r, p[0] + r, p[1] + r), fill=INK)
+    d.line(pts, fill=GREY, width=S(w), joint="curve")
+    for p in (pts[0], pts[-1]):
+        r = S(w / 2)
+        d.ellipse((p[0] - r, p[1] - r, p[0] + r, p[1] + r), fill=GREY)
+
+
+def _phone_back(img, cx, cy, angle, buzz_dx=0.0):
+    """The phone seen from behind, held up: blue-grey with a camera bump."""
+    w, h = S(170), S(290)
+    ph = Image.new("RGBA", (w + S(20), h + S(20)), (0, 0, 0, 0))
+    pd = ImageDraw.Draw(ph)
+    pd.rounded_rectangle((S(10), S(10), S(10) + w, S(10) + h), radius=S(26), fill=(104, 116, 146),
+                         outline=INK, width=S(8))
+    pd.rounded_rectangle((S(30), S(30), S(30) + S(64), S(30) + S(84)), radius=S(16), fill=(84, 94, 122))
+    for k, (x, y) in enumerate(((48, 52), (76, 52), (48, 92))):
+        pd.ellipse(S(x - 11, y - 11, x + 11, y + 11), fill=(235, 238, 245), outline=INK, width=S(3))
+        pd.ellipse(S(x - 4, y - 4, x + 4, y + 4), fill=INK)
+    ph = ph.rotate(angle, resample=Image.BICUBIC, expand=True)
+    img.alpha_composite(ph, (int(S(cx + buzz_dx) - ph.width / 2), int(S(cy) - ph.height / 2)))
+
+
+def _hand(d, cx, cy, angle, side):
+    """A black silhouette hand: a palm and four short fingers wrapped round the phone."""
+    a = math.radians(angle)
+    d.ellipse(S(cx - 46, cy - 40, cx + 46, cy + 40), fill=INK)
+    for k in range(4):
+        off = -42 + k * 26
+        fx = cx + side * 50 * math.cos(a) - off * math.sin(a)
+        fy = cy + side * 50 * math.sin(a) + off * math.cos(a)
+        d.line([tuple(S(cx, cy + off * 0.6)), tuple(S(fx, fy))], fill=INK, width=S(22))
+        d.ellipse(S(fx - 11, fy - 11, fx + 11, fy + 11), fill=INK)
+
+
+def stickman(img, t, mood, look="phone", buzz=0.0, blink=False, phone_up=False):
     d = ImageDraw.Draw(img)
-    o = S(7)
-    breathe = math.sin(t * 2.2) * 3
+    breathe = math.sin(t * 2.0) * 4
+    hx, hy, r = 600, 760 + breathe, 250
 
-    # couch behind him
-    d.rounded_rectangle(S(60, 1060, 1020, 1700), radius=S(70), fill=COUCH, outline=OUTLINE, width=o)
-    d.rounded_rectangle(S(0, 1420, 1080, 1920), radius=S(50), fill=COUCH_DARK, outline=OUTLINE, width=o)
-
-    # torso: hoodie
-    by = 1180 + breathe
-    d.rounded_rectangle(S(300, by, 780, 1980), radius=S(150), fill=HOODIE, outline=OUTLINE, width=o)
-    d.polygon([tuple(S(470, by + 10)), tuple(S(540, by + 90)), tuple(S(610, by + 10))],
-              fill=HOODIE_SHADE)
-    d.line([tuple(S(510, by + 60)), tuple(S(505, by + 170))], fill=OUTLINE, width=S(4))
-    d.line([tuple(S(570, by + 60)), tuple(S(575, by + 170))], fill=OUTLINE, width=S(4))
-
-    # neck + head
-    hx, hy, r = 540, 860 + breathe * 0.6, 200
-    d.rectangle(S(495, hy + 150, 585, by + 30), fill=SKIN)
-    for ex in (hx - r + 6, hx + r - 6):                          # ears
-        d.ellipse(S(ex - 34, hy - 10, ex + 34, hy + 66), fill=SKIN, outline=OUTLINE, width=o)
-    d.ellipse(S(hx - r, hy - r, hx + r, hy + r), fill=SKIN, outline=OUTLINE, width=o)
-    # hair: a cap over the top of the head
-    d.chord(S(hx - r - 4, hy - r - 14, hx + r + 4, hy + r - 10), 192, 348, fill=HAIR,
-            outline=OUTLINE, width=o)
-    d.polygon([tuple(S(hx - 120, hy - 150)), tuple(S(hx - 40, hy - 95)), tuple(S(hx + 10, hy - 150))],
-              fill=HAIR)
-
-    face(img, hx, hy, mood, look, blink)
-
-    # arms and phone held at chest height
-    px, py = 540, 1330 + breathe
-    jx = math.sin(t * 90) * 6 * buzz
-    for side in (-1, 1):
-        sx = 540 + side * 210
-        d.line([tuple(S(sx, by + 90)), tuple(S(sx + side * 40, by + 240)),
-                tuple(S(px + side * 95, py + 40))], fill=OUTLINE, width=S(70), joint="curve")
-        d.line([tuple(S(sx, by + 90)), tuple(S(sx + side * 40, by + 240)),
-                tuple(S(px + side * 95, py + 40))], fill=HOODIE, width=S(56), joint="curve")
-    d.rounded_rectangle(S(px - 95 + jx, py - 110, px + 95 + jx, py + 120), radius=S(22),
-                        fill=(30, 32, 40), outline=OUTLINE, width=o)
-    d.rounded_rectangle(S(px - 82 + jx, py - 97, px + 82 + jx, py + 107), radius=S(16),
-                        fill=(120, 180, 255) if buzz else (70, 110, 170))
-    for side in (-1, 1):
-        d.ellipse(S(px + side * 95 - 38 + jx, py + 5, px + side * 95 + 38 + jx, py + 80),
-                  fill=SKIN, outline=OUTLINE, width=o)
+    # body: a tube from under the head down into the blanket
+    _tube(d, [(640, hy + 200), (655, 1700)], w=30)
+    # far arm reaches the phone
+    px, py, pa = (330, 1150, 18) if not phone_up else (420, 980, 8)
+    jx = math.sin(t * 95) * 7 * buzz
+    _tube(d, [(625, hy + 330), (520, 1360), (px + 40, py + 90)])
+    _phone_back(img, px, py, pa, jx)
+    _hand(d, px + 52 + jx, py + 95, pa, 1)
+    _tube(d, [(660, hy + 330), (560, 1420), (px - 10, py + 150)])
+    _hand(d, px - 50 + jx, py + 130, pa, -1)
     if buzz:
-        for side in (-1, 1):
-            for k in range(2):
-                x0 = px + side * (130 + k * 26) + jx
-                d.arc(S(x0 - 30, py - 60 - k * 12, x0 + 30, py + 40 + k * 12),
-                      -40 if side > 0 else 140, 40 if side > 0 else 220, fill=(255, 255, 255),
-                      width=S(6))
+        for k in range(2):
+            rr = 150 + k * 34
+            d.arc(S(px - rr, py - rr, px + rr, py + rr), 200, 250, fill=(235, 240, 255), width=S(7))
+            d.arc(S(px - rr, py - rr, px + rr, py + rr), 290, 340, fill=(235, 240, 255), width=S(7))
+
+    # head
+    d.ellipse(S(hx - r, hy - r, hx + r, hy + r), fill=GREY, outline=INK, width=S(11))
+    d.arc(S(hx - 40, hy - r - 50, hx + 60, hy - r + 70), 160, 300, fill=INK, width=S(9))   # hair curl
+    stick_face(img, hx, hy, mood, look, blink)
 
 
-def face(img, hx, hy, mood, look, blink):
+def stick_face(img, hx, hy, mood, look, blink):
     d = ImageDraw.Draw(img)
-    o = S(6)
+    # where the face sits on the head: toward the phone, or straight at us
+    fx, fy = {"phone": (hx - 70, hy + 55), "camera": (hx - 10, hy + 20)}[look]
     big = mood == "shock"
-    ex, ey = 82, hy - 6
-    rx, ry = (48, 58) if big else (38, 44)
-    dy = {"phone": 14, "camera": 0, "up": -12}[look]
+    ex = 70
+    erx, ery = (38, 64) if big else (28, 50)
     for side in (-1, 1):
-        cx = hx + side * ex
+        cx = fx + side * ex + (8 if side > 0 else 0)
         if blink:
-            d.arc(S(cx - rx, ey - 10, cx + rx, ey + 30), 200, 340, fill=OUTLINE, width=o)
+            d.line([tuple(S(cx - 22, fy)), tuple(S(cx + 22, fy))], fill=INK, width=S(9))
             continue
-        d.ellipse(S(cx - rx, ey - ry, cx + rx, ey + ry), fill=(255, 255, 255), outline=OUTLINE, width=o)
-        pr = 10 if big else 16
-        d.ellipse(S(cx - pr, ey + dy - pr, cx + pr, ey + dy + pr), fill=OUTLINE)
-        if mood == "smug":                                   # heavy lids
-            d.chord(S(cx - rx, ey - ry, cx + rx, ey + ry), 180, 360, fill=SKIN, outline=OUTLINE, width=o)
-    # brows
+        d.ellipse(S(cx - erx, fy - ery, cx + erx, fy + ery), fill=INK)
+        if mood in ("bored", "smug"):                  # heavy upper lid
+            lid = fy - ery * (0.05 if mood == "bored" else 0.2)
+            d.rectangle(S(cx - erx - 4, fy - ery - 6, cx + erx + 4, lid), fill=GREY)
+            d.line([tuple(S(cx - erx - 6, lid)), tuple(S(cx + erx + 6, lid))], fill=INK, width=S(8))
+    # brows: small arcs
     for side in (-1, 1):
-        cx = hx + side * ex
-        if mood == "smug":
-            lift = -18 if side > 0 else 0
-            d.line([tuple(S(cx - 42, ey - 72 + lift + (6 if side < 0 else 0))),
-                    tuple(S(cx + 42, ey - 70 + lift - (8 if side > 0 else 0)))], fill=OUTLINE, width=S(12))
-        elif mood == "shock":
-            d.arc(S(cx - 50, ey - 120, cx + 50, ey - 50), 200, 340, fill=OUTLINE, width=S(12))
-        else:
-            d.line([tuple(S(cx - 40, ey - 70)), tuple(S(cx + 40, ey - 70))], fill=OUTLINE, width=S(12))
-    # nose
-    d.arc(S(hx - 22, hy + 20, hx + 22, hy + 62), 20, 160, fill=OUTLINE, width=o)
+        cx = fx + side * ex + (8 if side > 0 else 0)
+        lift = {"shock": -36, "smug": -14 if side > 0 else 6}.get(mood, 0)
+        by = fy - 80 + lift
+        d.arc(S(cx - 30, by - 14, cx + 30, by + 26), 205, 335, fill=INK, width=S(8))
     # mouth
-    my = hy + 112
-    if mood == "smug":
-        d.line([tuple(S(hx - 60, my + 6)), tuple(S(hx + 10, my + 4)), tuple(S(hx + 62, my - 18))],
-               fill=OUTLINE, width=S(9), joint="curve")
-    elif mood == "shock":
-        d.ellipse(S(hx - 42, my - 30, hx + 42, my + 62), fill=(110, 30, 36), outline=OUTLINE, width=o)
-        d.chord(S(hx - 28, my + 20, hx + 28, my + 58), 180, 360, fill=(226, 104, 110))
+    my = fy + 120
+    if mood == "shock":
+        d.ellipse(S(fx - 40, my - 30, fx + 44, my + 58), fill=(52, 22, 26), outline=INK, width=S(8))
+    elif mood == "smug":
+        d.line([tuple(S(fx - 60, my + 8)), tuple(S(fx, my + 10)), tuple(S(fx + 62, my - 16))],
+               fill=INK, width=S(8), joint="curve")
     else:
-        d.line([tuple(S(hx - 40, my)), tuple(S(hx + 40, my))], fill=OUTLINE, width=S(9))
+        # the wavy "ugh" mouth with a little chin bump under it
+        xs = np.linspace(-62, 62, 60)
+        ys = my + 6 * np.sin(xs / 62 * 2 * np.pi) * (1 - (xs / 62) ** 2) - 18 * (np.abs(xs) / 62) ** 4
+        d.line([tuple(S(fx + x, y)) for x, y in zip(xs, ys)], fill=INK, width=S(8), joint="curve")
+        for side in (-1, 1):                                        # curled corners
+            cx = fx + side * 62
+            d.arc(S(cx - 14, my - 34, cx + 14, my - 8), 90 if side > 0 else 0,
+                  180 if side > 0 else 90, fill=INK, width=S(7))
+        d.arc(S(fx - 26, my + 10, fx + 22, my + 40), 20, 160, fill=INK, width=S(7))  # chin
 
 
-def room(img):
-    """Night-time living room wall behind the couch."""
+def bedroom(img):
+    """Flat night bedroom, no outlines: wall, headboard, pillow, blanket."""
     d = ImageDraw.Draw(img)
     d.rectangle(S(0, 0, W, H), fill=NIGHT)
-    d.rounded_rectangle(S(700, 330, 960, 560), radius=S(10), fill=NIGHT_LIGHT, outline=OUTLINE, width=S(7))
-    d.polygon([tuple(S(720, 540)), tuple(S(800, 430)), tuple(S(860, 500)), tuple(S(940, 400)),
-               tuple(S(940, 540))], fill=(52, 70, 120))
-    # lamp glow on the left
-    glow = Image.new("RGBA", img.size, (0, 0, 0, 0))
-    ImageDraw.Draw(glow).ellipse(S(-260, 120, 360, 900), fill=(255, 210, 140, 46))
-    img.alpha_composite(glow.filter(ImageFilter.GaussianBlur(S(80))))
+    d.rectangle(S(0, 1030, W, 1250), fill=(30, 52, 98))                 # headboard
+    d.rectangle(S(0, 1010, W, 1040), fill=(40, 66, 118))
+    d.rounded_rectangle(S(-60, 1160, 1140, 1420), radius=S(120), fill=(66, 112, 176))   # pillow
+
+
+def blanket(img):
+    d = ImageDraw.Draw(img)
+    pts = [(0, 1520)]
+    for x in range(0, W + 1, 40):
+        pts.append((x, 1500 + 34 * math.sin(x / 130) + 20 * math.sin(x / 47)))
+    pts += [(W, H), (0, H)]
+    d.polygon([tuple(S(*p)) for p in pts], fill=(78, 136, 204))
+    pts2 = [(0, 1700)] + [(x, 1680 + 30 * math.sin(x / 110 + 1)) for x in range(0, W + 1, 40)] + [(W, H), (0, H)]
+    d.polygon([tuple(S(*p)) for p in pts2], fill=(98, 156, 220))
+    d.ellipse(S(-200, 1580, 520, 1780), fill=(176, 200, 238))              # sheet fold
 
 
 # ------------------------------------------------------------------ phone
@@ -418,7 +434,7 @@ CAPTION = "POV: you lose trivia to your 8-year-old \U0001F62D"
 CONTACT = "Lily"
 
 SHOTS = [                          # (kind, start, end, options)
-    ("dad", 0.0, 2.0, {"mood": "smug", "buzz": (0.6, 1.3)}),
+    ("dad", 0.0, 2.0, {"mood": "bored", "buzz": (0.6, 1.3)}),
     ("phone", 2.0, 5.6, {}),
     ("dad", 5.6, 6.9, {"mood": "smug", "look": "camera"}),
     ("phone", 6.9, 10.4, {}),
@@ -476,18 +492,19 @@ def frame(t, crop_img, cover):
     img = Image.new("RGBA", (W * SS, H * SS), (*NIGHT, 255))
     lt = t - a
     if kind == "dad":
-        room(img)
-        mood, look = opt.get("mood", "neutral"), opt.get("look", "phone")
-        zoom = 1.0 + 0.04 * ease(lt / (b - a))
+        bedroom(img)
+        mood, look = opt.get("mood", "bored"), opt.get("look", "phone")
+        zoom = 1.2 + 0.04 * ease(lt / (b - a))      # framed close, like the reference
         sh = opt.get("shock_at")
         if sh and t >= sh:
             mood, look = "shock", "camera"
-            zoom = 1.04 + 0.22 * ease((t - sh) / 0.14)
+            zoom = 1.24 + 0.14 * ease((t - sh) / 0.14)
         bz = opt.get("buzz")
         buzz = 1.0 if bz and bz[0] <= t < bz[1] else 0.0
         blink = (lt % 2.3) < 0.11 and mood != "shock"
-        dad(img, t, mood, look, buzz, blink)
-        img = _camera(img, zoom, 540, 900)
+        stickman(img, t, mood, look, buzz, blink)
+        blanket(img)
+        img = _camera(img, zoom, 540, 1000)
     elif kind == "phone":
         typed, key = _typed(t)
         dots = next((t for x, y in DOTS if x <= t < y), None)
