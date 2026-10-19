@@ -94,8 +94,10 @@ trivia/pages.py     find and crop panels, title and background from a page
 trivia/scenes.py    compose 1080x1920 stills
 trivia/audio.py     procedural score and effects -> WAV
 trivia/render.py    ffmpeg assembly: motion, guess timer, mux
-trivia/doodle.py    whiteboard-doodle engine: strokes, boil, pen, pop-ins
-trivia/explainer.py the parent-value doodle video: script, scenes, mix
+trivia/doodle.py    whiteboard engine: strokes, boil, drawing hand, pop-ins
+trivia/explainer.py narrated whiteboard video: timing, captions, render, mix
+trivia/figures.py   stick figures and props for whiteboard scenes
+trivia/angles/      one module per video angle (reading.py, ...)
 trivia/voice.py     ElevenLabs narration with word timings (cached)
 tools/              synthetic test pages; delete once real scans are in
 ```
@@ -177,32 +179,35 @@ hooks under seven words and specific.
 - Post the video *and* the carousel for the same round; they reach
   differently.
 
-## Doodle explainer (sells to parents)
+## Whiteboard videos (one angle each)
 
 ```bash
-python make.py explainer            # -> out/parent-value-doodle.mp4
-python make.py explainer stills     # last frame of every scene, for layout checks
+python make.py explainer reading            # -> out/reading.mp4 + out/reading.txt
+python make.py explainer reading stills     # last frame of every scene
 ```
 
-A ~40s whiteboard-doodle video aimed at the parent, not the kid. Hook with
-a fact adults get wrong (polar bear fur), name the feeling ("NO WAY!"),
-explain the game in one breath, then the three reasons parents buy:
-screen-free, sneaky learning, fun anywhere. The only full-colour image in
-the whole video is the real book page, so it lands as the payoff.
+The familiar whiteboard format: black marker on white, stick figures, a
+drawing hand, and bold word-by-word captions. Each video sells ONE thing
+the book does for a family, not the whole listing: the pain, why it
+happens, how the book fixes it (shown on a real page), the result, then
+one clear ask ("Search Trick Trivia on Amazon").
 
-The script and drawings live in `trivia/explainer.py`; the engine in
-`trivia/doodle.py` (pen-on-paper strokes, line boil, a marker riding the
-tip). Items pinned with `.at("word")` land on the spoken word.
+An angle is a module in `trivia/angles/` (`reading.py` is the first):
+`SCRIPT` pairs each narration line with the drawing made while it is
+spoken; `.at("word")` pins a drawing to that spoken word. Stick figures and
+props live in `trivia/figures.py`; the engine in `trivia/doodle.py` and
+`trivia/explainer.py`.
 
-**Narration** comes from ElevenLabs (`trivia/voice.py`): the whole script
-is read in one request with character timestamps, which then drive the
-cut points, the cues and the burned-in captions. Set `ELEVENLABS_API_KEY`
-(plus optional `ELEVENLABS_VOICE_ID`, `ELEVENLABS_MODEL`); results are
-cached in `out/explainer/` so re-renders cost nothing. Without a key the
-same timings are estimated and the render is a silent-voice draft.
+**Narration** comes from ElevenLabs (`trivia/voice.py`), default voice
+Siren on `eleven_v4`, read in one request with character timestamps that
+drive the cuts, the drawing cues and the captions. Set
+`ELEVENLABS_API_KEY` (optional `ELEVENLABS_VOICE_ID`, `ELEVENLABS_MODEL`);
+results are cached per angle in `out/explainer/<angle>/`. Without a key the
+timings are estimated and the render is a silent-voice draft. The final
+mix is loudness-normalised to -14 LUFS.
 
-Fonts: Patrick Hand (OFL) and Permanent Marker (Apache 2.0), in
-`assets/fonts/` with their licences.
+Fonts: Patrick Hand and Montserrat (OFL), Permanent Marker (Apache 2.0),
+in `assets/fonts/` with their licences.
 
 ## Still to do
 

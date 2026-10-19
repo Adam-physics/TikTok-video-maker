@@ -4,8 +4,8 @@
     python make.py rounds/round01.json      # render a round as video
     python make.py carousel rounds/round01.json   # ...or as a Photo Mode carousel
     python make.py calibrate <page.png>     # check panel detection by eye
-    python make.py explainer                # doodle video selling to parents
-    python make.py explainer stills         # ...or its last frame per scene
+    python make.py explainer reading        # whiteboard video for one angle
+    python make.py explainer reading stills # ...or its last frame per scene
 
 A round is three claims and their three reveals, cut straight from the
 printed pages. The output is out/<id>.mp4 plus out/<id>.txt holding the
@@ -193,12 +193,19 @@ def main(argv: list[str]) -> int:
         print(pages.calibrate(page, out))
         return 0
     if argv[1] == "explainer":
-        if argv[2:] == ["stills"]:
-            for p in explainer.stills(os.path.join(OUT, "explainer", "stills")):
+        import importlib
+        rest = argv[2:]
+        want_stills = "stills" in rest
+        names = [a for a in rest if a != "stills"] or ["reading"]
+        angle = importlib.import_module(f"trivia.angles.{names[0]}")
+        if want_stills:
+            for p in explainer.stills(angle, os.path.join(OUT, "explainer", angle.ID, "stills")):
                 print(p)
             return 0
         os.makedirs(OUT, exist_ok=True)
-        result = explainer.render(os.path.join(OUT, "parent-value-doodle.mp4"))
+        result = explainer.render(angle, os.path.join(OUT, f"{angle.ID}.mp4"))
+        with open(os.path.join(OUT, f"{angle.ID}.txt"), "w") as f:
+            f.write(angle.CAPTION + "\n\n" + " ".join(angle.HASHTAGS) + "\n")
         print(result["path"], f"{result['duration']:.1f}s",
               "narrated" if result["voiced"] else "DRAFT: no ELEVENLABS_API_KEY, no voice")
         return 0

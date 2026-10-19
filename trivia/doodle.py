@@ -10,8 +10,9 @@ Two details sell the hand-drawn look and are worth keeping:
 
 - **Line boil.** Every few frames each stroke is redrawn with a slightly
   different wobble, the way a flipbook drawn by hand never sits still.
-- **The pen.** A marker rides the tip of whatever is being drawn, so the
-  viewer watches the drawing happen rather than seeing it fade in.
+- **The hand.** A hand holding a marker rides the tip of whatever is being
+  drawn, so the viewer watches the drawing happen rather than seeing it
+  fade in.
 """
 from __future__ import annotations
 
@@ -19,7 +20,7 @@ import math
 import os
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 from . import brand
 
@@ -29,7 +30,7 @@ HAND = os.path.join(ROOT, "assets", "fonts", "PatrickHand-Regular.ttf")
 MARKER = os.path.join(ROOT, "assets", "fonts", "PermanentMarker-Regular.ttf")
 
 INK = (30, 30, 36)
-PAPER = (253, 251, 244)
+PAPER = (255, 255, 255)
 
 BOIL_EVERY = 4          # frames between wobble redraws (~7.5 per second)
 BOIL_AMP = 1.7          # pixels
@@ -362,7 +363,6 @@ class Picture(Item):
             blk = Image.new("RGBA", im.size, (0, 0, 0, 255))
             blk.putalpha(alpha)
             sh.alpha_composite(blk, (pad + 10, pad + 14))
-            from PIL import ImageFilter
             sh = sh.filter(ImageFilter.GaussianBlur(9))
             sh.alpha_composite(im, (pad, pad))
             im = sh
@@ -399,44 +399,100 @@ def stamp(text, color, size=150, angle=-8, face=MARKER) -> Image.Image:
     return im.rotate(angle, resample=Image.BICUBIC, expand=True)
 
 
-# ---------------------------------------------------------------- pen
+# ---------------------------------------------------------------- hand
+#
+# The drawing hand is what makes a whiteboard video read as one at a glance.
+# It is drawn here rather than shot, so it costs nothing to license.
 
-def _pen_sprite() -> Image.Image:
-    """A chunky marker held at an angle; its nib sits at the image origin."""
-    im = Image.new("RGBA", (260, 260), (0, 0, 0, 0))
+HAND_NIB = 40           # the nib's position inside the sprite
+HAND_SCALE = 0.8
+
+
+def hand_sprite(scale=1.0):
+    """A cartoon right hand gripping a marker; the nib sits at (HAND_NIB, HAND_NIB)."""
+    SS = 2                      # supersample, then shrink for clean edges
+    size, nib = 1100, 40
+    im = Image.new("RGBA", (size * SS, size * SS), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
-    # Body runs down-right from the nib at (0, 0).
-    def rot(pts, a=math.radians(38)):
-        return [(x * math.cos(a) - y * math.sin(a), x * math.sin(a) + y * math.cos(a))
-                for x, y in pts]
-    nib = rot([(0, 0), (22, -9), (22, 9)])
-    body = rot([(22, -15), (210, -19), (210, 19), (22, 15)])
-    cap = rot([(150, -20), (212, -20), (212, 20), (150, 20)])
-    for shape, fill in ((body, (245, 245, 245, 255)), (cap, (*brand.ORANGE, 255)),
-                        (nib, (*INK, 255))):
-        d.polygon(shape, fill=fill, outline=(*INK, 255))
-        d.line(shape + [shape[0]], fill=(*INK, 255), width=5)
-    return im
+    skin, shade, line = (244, 205, 172, 255), (226, 178, 142, 255), (110, 70, 50, 255)
+    a = math.radians(38)
+    ux, uy = math.cos(a), math.sin(a)          # along the marker, nib -> back
+    nx, ny = -uy, ux                           # across it, toward the palm side
+
+    def P(u, v):
+        return ((nib + u * ux + v * nx) * SS, (nib + u * uy + v * ny) * SS)
+
+    def capsule(u0, v0, u1, v1, w, fill, outline=line, ow=4):
+        (x0, y0), (x1, y1) = P(u0, v0), P(u1, v1)
+        r = w * SS / 2
+        L = math.hypot(x1 - x0, y1 - y0)
+        ex, ey = (x1 - x0) / L, (y1 - y0) / L
+        px, py = -ey * r, ex * r
+        poly = [(x0 + px, y0 + py), (x1 + px, y1 + py), (x1 - px, y1 - py), (x0 - px, y0 - py)]
+        for (cx, cy) in ((x0, y0), (x1, y1)):
+            d.ellipse([cx - r - ow, cy - r - ow, cx + r + ow, cy + r + ow], fill=outline)
+        d.polygon(poly, fill=outline, outline=outline, width=ow * 2 * SS)
+        for (cx, cy) in ((x0, y0), (x1, y1)):
+            d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=fill)
+        d.polygon(poly, fill=fill)
+
+    def blob(cu, cv, ru, rv, fill, ow=4):
+        pts = [P(cu + ru * math.cos(t), cv + rv * math.sin(t))
+               for t in [k * 2 * math.pi / 64 for k in range(64)]]
+        d.polygon(pts, fill=fill, outline=line, width=ow * SS)
+
+    # forearm and sleeve run off the bottom-right of the frame
+    arm_dir = math.radians(55)
+    ax, ay = math.cos(arm_dir), math.sin(arm_dir)
+    cx, cy = P(250, 70)
+    def band(r0, r1, half0, half1, fill):
+        b0 = (-ay * half0 * SS, ax * half0 * SS)
+        b1 = (-ay * half1 * SS, ax * half1 * SS)
+        p0 = (cx + ax * r0 * SS, cy + ay * r0 * SS)
+        p1 = (cx + ax * r1 * SS, cy + ay * r1 * SS)
+        d.polygon([(p0[0] + b0[0], p0[1] + b0[1]), (p0[0] - b0[0], p0[1] - b0[1]),
+                   (p1[0] - b1[0], p1[1] - b1[1]), (p1[0] + b1[0], p1[1] + b1[1])],
+                  fill=fill, outline=line, width=4 * SS)
+    band(0, 380, 70, 84, skin)
+    band(330, 1500, 112, 130, (64, 120, 196, 255))                   # sleeve
+    # marker: the back end pokes out past the fist
+    capsule(26, 0, 360, 0, 40, (40, 40, 46, 255), ow=3)
+    capsule(300, 0, 360, 0, 42, (230, 60, 50, 255), ow=3)           # cap
+    d.polygon([P(0, 0), P(30, -15), P(30, 15)], fill=(25, 25, 30, 255))
+    # fist
+    blob(235, 62, 125, 100, skin)
+    for k, u in enumerate((175, 228, 281)):
+        blob(u, 140, 34, 26, shade if k == 1 else skin, ow=3)
+    # index finger along the marker, thumb across it
+    capsule(118, -20, 238, -34, 46, skin)
+    d.ellipse([*[c - 11 * SS for c in P(122, -22)], *[c + 11 * SS for c in P(122, -22)]],
+              fill=(255, 236, 224, 255))
+    capsule(135, 30, 240, 52, 50, skin)
+    out = im.resize((size, size), Image.LANCZOS)
+    if scale != 1.0:
+        out = out.resize((int(size * scale), int(size * scale)), Image.LANCZOS)
+    sh = Image.new("RGBA", out.size, (0, 0, 0, 0))
+    sh.paste((0, 0, 0, 60), (0, 0), out.getchannel("A"))
+    sh = sh.filter(ImageFilter.GaussianBlur(10))
+    canvas = Image.new("RGBA", out.size, (0, 0, 0, 0))
+    canvas.alpha_composite(sh, (14, 18))
+    canvas.alpha_composite(out)
+    return canvas
 
 
-_PEN = None
+_HAND = None
 
 
-def paint_pen(img: Image.Image, xy) -> None:
-    global _PEN
-    if _PEN is None:
-        _PEN = _pen_sprite()
-    img.alpha_composite(_PEN, (int(xy[0]) - 2, int(xy[1]) - 2))
+def paint_hand(img: Image.Image, xy) -> None:
+    global _HAND
+    if _HAND is None:
+        _HAND = hand_sprite(HAND_SCALE)
+    off = HAND_NIB * HAND_SCALE
+    img.alpha_composite(_HAND, (int(xy[0] - off), int(xy[1] - off)))
 
 
 # ---------------------------------------------------------------- paper
 
 def paper() -> Image.Image:
-    """Off-white sheet with a faint grain, so flat colour never looks digital."""
-    rng = np.random.default_rng(3)
-    grain = rng.normal(0, 3.2, (H, W, 1))
-    base = np.array(PAPER, dtype=float)[None, None, :] + grain
-    yy, xx = np.mgrid[0:H, 0:W]
-    vignette = ((xx - W / 2) / W) ** 2 + ((yy - H / 2) / H) ** 2
-    base -= vignette[..., None] * 26
-    return Image.fromarray(np.clip(base, 0, 255).astype("uint8")).convert("RGBA")
+    """Plain whiteboard white: the familiar look, nothing to compete with the ink."""
+    return Image.new("RGBA", (W, H), (*PAPER, 255))

@@ -10,8 +10,8 @@ Without a key the same word timings are *estimated* from a reading pace,
 so the visuals can be developed and reviewed before any audio exists.
 
     ELEVENLABS_API_KEY   required for real narration
-    ELEVENLABS_VOICE_ID  optional; defaults to a warm premade voice
-    ELEVENLABS_MODEL     optional; defaults to eleven_v3
+    ELEVENLABS_VOICE_ID  optional; defaults to Siren from the voice library
+    ELEVENLABS_MODEL     optional; defaults to eleven_v4
 """
 from __future__ import annotations
 
@@ -23,8 +23,8 @@ import re
 import urllib.request
 
 API = "https://api.elevenlabs.io/v1/text-to-speech/{voice}/with-timestamps"
-DEFAULT_VOICE = "21m00Tcm4TlvDq8ikWAM"
-DEFAULT_MODEL = "eleven_v3"
+DEFAULT_VOICE = "eXpIbVcVbLo8ZJQDlDnl"   # "Siren": natural, conversational, social-first
+DEFAULT_MODEL = "eleven_v4"
 
 
 def _words_from_alignment(al: dict) -> list[dict]:
@@ -77,12 +77,8 @@ def synthesize(text: str, cache_dir: str) -> tuple[str | None, list[dict]]:
         with open(meta) as f:
             return mp3, json.load(f)
 
-    body = json.dumps({
-        "text": text,
-        "model_id": model,
-        "voice_settings": {"stability": 0.45, "similarity_boost": 0.8,
-                           "style": 0.35, "use_speaker_boost": True},
-    }).encode()
+    # No voice_settings: library voices ship tuned by their creators.
+    body = json.dumps({"text": text, "model_id": model}).encode()
     req = urllib.request.Request(
         API.format(voice=voice) + "?output_format=mp3_44100_128", data=body,
         headers={"xi-api-key": key, "Content-Type": "application/json"})
