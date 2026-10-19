@@ -11,8 +11,7 @@ from ..doodle import (INK, MARKER, Picture, Shape, Text, arrow, check, circle, c
                       poly, rrect)
 from ..explainer import KEEP
 from ..figures import bubble, bumpy, cover, kid
-from .reading import (BLUE, GOLD, GREEN, GREY, RED, TEAL, W, mini_card, note, small_book,
-                      tag)
+from .reading import BLUE, GOLD, GREEN, GREY, RED, TEAL, W, note, small_book, tag
 
 ID = "school"
 CHIP = "FOR PARENTS OF KIDS 6–12"
@@ -161,15 +160,28 @@ def l_example():
     ]
 
 
+def table():
+    """The dinner table the whole tip happens at, with a cloth that hides legs."""
+    return [Shape(rrect(110, 1050, 970, 1235, r=14), width=W, fill=(255, 255, 255),
+                  fill_offset=(0, 0)),
+            Shape([line((330, 1095), (322, 1230)), line((540, 1095), (540, 1230)),
+                   line((750, 1095), (758, 1230))], color=GREY, width=5),
+            Shape([ellipse(450, 1044, 64, 14, wobble=0.6), ellipse(680, 1044, 64, 14, wobble=0.6)],
+                  width=6)]
+
+
 def l_book():
+    """End on the family moment; the book is a small prop with a credit, not a display."""
     return [
-        Picture(cover(), (540, 590), width=310, angle=-3, tape=True).at("trick"),
-        mini_card(215, 1000, w=250, h=130), mini_card(540, 1000, w=250, h=130),
-        mini_card(865, 1000, w=250, h=130),
-        Shape(check(215, 1010, 30), color=GREEN, width=11).at("three"),
-        Shape([line((515, 980), (565, 1030)), line((565, 980), (515, 1030))], color=RED, width=11),
-        tag("?", (865, 1010), size=64, color=GOLD),
-        tag("on Amazon", (540, 1160), size=60).at("amazon"),
+        *kid(300, 970, 1.0, "happy", "hold"),
+        *kid(800, 1000, 0.8, "happy", "up"),
+        *table(),
+        Picture(cover(), (300, 915), width=118, angle=-4).at("book"),
+        note("Trick Trivia", (560, 700), size=44, color=GREY).at("trick"),
+        note("(on Amazon)", (560, 752), size=36, color=GREY),
+        Shape(arrow((480, 790), (378, 880), bend=-20, head=20), color=GREY, width=6),
+        bubble(790, 560, 175, 82, (790, 740)).at("three"),
+        Text("NO WAY!", (790, 565), size=64, face=MARKER, color=RED),
     ]
 
 
