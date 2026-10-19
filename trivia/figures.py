@@ -91,6 +91,10 @@ def bubble(cx, cy, rx, ry, tail, seed=0):
     ang = math.atan2(tail[1] - cy, tail[0] - cx)
     base = [(cx + rx * 0.85 * math.cos(ang + d), cy + ry * 0.85 * math.sin(ang + d))
             for d in (-0.22, 0.22)]
+    # A short tail that points at the speaker, not a spike all the way to them.
+    edge = (cx + rx * math.cos(ang), cy + ry * math.sin(ang))
+    reach = min(70.0, math.hypot(tail[0] - edge[0], tail[1] - edge[1]))
+    tail = (edge[0] + reach * math.cos(ang), edge[1] + reach * math.sin(ang))
     return Shape([poly(pts, wobble=1.6, seed=seed), poly([base[0], tail, base[1]], wobble=0.8)],
                  width=8)
 
