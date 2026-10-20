@@ -30,7 +30,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FONTS = os.path.join(ROOT, "assets", "fonts")
 KEEP = "keep"           # third element of a SCRIPT entry: draw on the same board
 ERASE = 0.45            # one quick left-to-right pass, as in the reference
-TAIL = 1.6              # hold on the last frame after the voice ends
+TAIL = 0.35             # a beat after the last word, no dead air
 SHOW_HAND = False       # the reference style draws with no visible hand
 
 CAPTION_Y = 1330
