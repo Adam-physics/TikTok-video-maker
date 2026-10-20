@@ -163,6 +163,9 @@ def overlay(angle) -> Image.Image:
         f = font(LABEL_FONT, 40 * SS)
         w = f.getlength(chip) / SS
         x0, y0 = (W - w) / 2 - 26, 150
+        # A solid backing, so drawings pushed up by the camera pass behind it.
+        d.rounded_rectangle([(x0 - 30) * SS, (y0 - 26) * SS, (x0 + w + 82) * SS, (y0 + 100) * SS],
+                            radius=40 * SS, fill=(250, 251, 252, 255))
         d.rounded_rectangle([x0 * SS, y0 * SS, (x0 + w + 52) * SS, (y0 + 78) * SS],
                             radius=18 * SS, outline=TEAL, width=5 * SS)
         d.text((W / 2 * SS, (y0 + 41) * SS), chip, font=f, fill=TEAL, anchor="mm")

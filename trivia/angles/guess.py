@@ -12,10 +12,10 @@ import math
 
 import numpy as np
 
-from ..doodle import MARKER, Picture, Shape, Text, arrow, circle, ellipse, line, poly, rrect
+from ..doodle import INK, MARKER, Picture, Shape, Text, arrow, circle, ellipse, line, poly, rrect, star
 from ..explainer import KEEP
 from ..figures import bubble, bumpy, cover, kid
-from .reading import GOLD, GREEN, GREY, RED, TEAL, W, lightbulb, note, tag
+from .reading import BLUE, GOLD, GREEN, GREY, RED, TEAL, W, lightbulb, note, tag
 from .school import PINK, speech, table
 
 ID = "guess"
@@ -58,16 +58,42 @@ def calendar(cx, cy):
 # ------------------------------------------------------------------ boards
 
 def l_hook():
-    """Frame one is a finished board; the red X lands on "Stop"."""
-    tell = speech(430, 560, 270, 96, (330, 810), "The answer is...", size=56)
+    """Frame one is a finished board: the parent explaining, the kid blank.
+    The facts fly out on "gone"; the sticky note slaps on for the promise."""
+    explain = speech(340, 540, 270, 92, (270, 800), "...and that's why the moon...", size=40)
+    flying = [
+        Shape(star(860, 840, 26, seed=3), color=GOLD, fill=GOLD, width=5),
+        Text("2+2", (950, 930), size=46, face=MARKER, color=BLUE),
+        Text("?", (880, 1010), size=70, face=MARKER, color=GREY),
+        Shape([line((770, 900), (820, 880)), line((775, 930), (835, 935)), line((770, 960), (820, 985))],
+              color=GREY, width=6),
+    ]
+    flying[0].at("gone")
+    note_card = Shape(rrect(160, 1060, 900, 1200, r=14), color=(200, 160, 30), width=6,
+                      fill=(255, 226, 120), fill_offset=(0, 0))
+    note_card.at("stick").focus(1.06)
     return [
-        Text("STOP TELLING THEM", (540, 345), size=72, face=MARKER, color=RED, max_width=1020).ready(),
-        *[it.ready() for it in tell],
-        *[it.ready() for it in kid(300, 1050, 0.95, "happy", "down")],
-        Shape([line((190, 470), (670, 655)), line((670, 470), (190, 655))], color=RED,
-              width=16, speed=2.5).at("stop"),
-        Text("GUESS", (820, 800), size=110, face=MARKER, color=GREEN).at("guess").focus(1.08).pop(),
-        Text("FIRST", (820, 920), size=110, face=MARKER, color=GREEN).pop(),
+        Text("IN ONE EAR...", (540, 330), size=84, face=MARKER, color=RED).ready(),
+        *[it.ready() for it in explain],
+        *[it.ready() for it in kid(260, 1070, 0.95, "happy", "point")],
+        *[it.ready() for it in kid(700, 1080, 0.75, "bored", "down")],
+        tag("...OUT THE OTHER.", (760, 690), size=50, color=RED).at("later"),
+        *flying,
+        note_card,
+        Text("MAKE IT STICK", (530, 1132), size=78, face=MARKER, color=INK).pop(),
+    ]
+
+
+def l_trick():
+    tell = speech(430, 520, 270, 96, (330, 800), "The answer is...", size=56)
+    tell[0].at("tell")
+    return [
+        *kid(300, 1050, 0.95, "happy", "down"),
+        *tell,
+        Shape([line((190, 430), (670, 615)), line((670, 430), (190, 615))], color=RED,
+              width=16, speed=2.5).at("answer"),
+        Text("GUESS", (820, 790), size=110, face=MARKER, color=GREEN).at("guess").focus(1.1).pop(),
+        Text("FIRST", (820, 910), size=110, face=MARKER, color=GREEN).pop(),
     ]
 
 
@@ -151,7 +177,9 @@ def l_close():
 
 
 SCRIPT = [
-    ("Stop telling your kid the answer. Make them guess first.", l_hook),
+    ("You explain something to your kid… and five minutes later, it's gone. Here's how to "
+     "make it stick.", l_hook),
+    ("The trick: before you tell them the answer, make them guess first.", l_trick),
     ("It sounds backwards, but learning research keeps finding the same thing.", l_research),
     ("When kids guess before you tell them, they remember the real answer better. Even when "
      "their guess is wrong.", l_remember, KEEP),
@@ -167,7 +195,8 @@ SCRIPT = [
 ]
 
 CAPTION = (
-    "Stop telling your kid the answer. Make them guess first. Learning research keeps finding "
+    "You explain something to your kid, and five minutes later it's gone. The fix: before you "
+    "tell them the answer, make them guess first. Learning research keeps finding "
     "that a guess before the answer, even a wrong one, helps kids remember it better, because "
     "now they care what the answer is. Try it with any fact: \"How long can a snail sleep? A "
     "day, a week, or three years?\" (It's three years.) We get a lot of ours from Trick "
