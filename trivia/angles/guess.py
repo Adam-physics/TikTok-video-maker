@@ -61,13 +61,13 @@ def l_hook():
     """Frame one is a finished board; the red X lands on "Stop"."""
     tell = speech(430, 560, 270, 96, (330, 810), "The answer is...", size=56)
     return [
-        Text("STOP TELLING THEM", (540, 345), size=84, face=MARKER, color=RED, max_width=1020).ready(),
+        Text("STOP TELLING THEM", (540, 345), size=72, face=MARKER, color=RED, max_width=1020).ready(),
         *[it.ready() for it in tell],
         *[it.ready() for it in kid(300, 1050, 0.95, "happy", "down")],
         Shape([line((190, 470), (670, 655)), line((670, 470), (190, 655))], color=RED,
               width=16, speed=2.5).at("stop"),
-        Text("GUESS", (820, 800), size=110, face=MARKER, color=GREEN).at("guess"),
-        Text("FIRST", (820, 920), size=110, face=MARKER, color=GREEN),
+        Text("GUESS", (820, 800), size=110, face=MARKER, color=GREEN).at("guess").focus(1.08).pop(),
+        Text("FIRST", (820, 920), size=110, face=MARKER, color=GREEN).pop(),
     ]
 
 
@@ -83,15 +83,15 @@ def l_research():
 
 def l_remember():
     return [
-        tag("REMEMBERS BETTER", (540, 960), size=60).at("remember"),
-        note("(even wrong guesses!)", (540, 1050), size=50, color=RED).at("wrong"),
+        tag("REMEMBERS BETTER", (540, 960), size=60).at("remember").focus(1.14).pop(),
+        note("(even wrong guesses!)", (540, 1050), size=50, color=RED).at("wrong").pop(),
     ]
 
 
 def l_why():
     return [
         *lightbulb(800, 430, r=52),
-        Text("?", (545, 735), size=150, face=MARKER, color=GOLD).at("waiting"),
+        Text("?", (545, 735), size=150, face=MARKER, color=GOLD).at("waiting").focus(1.2).pop(),
     ]
 
 
@@ -106,7 +106,7 @@ def l_choices():
         *kid(880, 1110, 0.68, "think", "chin"),
         note("A)  a day", (560, 590), size=60, anchor="lm").at("day"),
         note("B)  a week", (560, 710), size=60, anchor="lm").at("week"),
-        note("C)  3 years", (560, 830), size=60, anchor="lm").at("three"),
+        note("C)  3 years", (560, 830), size=60, anchor="lm").at("three").pop(),
     ]
 
 
@@ -115,15 +115,15 @@ def l_reveal():
         *snail(360, 760, 1.0),
         note("z z z", (230, 520), size=60, color=GREY),
         *calendar(820, 560),
-        Shape(ellipse(820, 572, 150, 150, sweep=400), color=GREEN, width=9).at("three"),
+        Shape(ellipse(820, 572, 150, 150, sweep=400), color=GREEN, width=9).at("three").focus(1.2),
         *kid(800, 1150, 0.62, "shock", "up"),
     ]
 
 
 def l_sticks():
     return [
-        bubble(470, 1020, 220, 74, (760, 1030)).at("wait"),
-        Text("WAIT, WHAT?!", (470, 1022), size=50, face=MARKER, color=RED),
+        bubble(470, 1020, 220, 74, (760, 1030)).at("wait").focus(1.16),
+        Text("WAIT, WHAT?!", (470, 1022), size=50, face=MARKER, color=RED).pop(),
         tag("that's when it sticks", (470, 1150), size=46, color=TEAL).at("sticks"),
     ]
 
@@ -145,7 +145,7 @@ def l_book():
 
 def l_close():
     return [
-        tag("GUESS FIRST.", (540, 330), size=80, color=GREEN).at("guess"),
+        tag("GUESS FIRST.", (540, 330), size=80, color=GREEN).at("guess").focus(1.12).pop(),
         note("(the easiest learning trick there is)", (540, 410), size=40, color=GREY).at("easiest"),
     ]
 

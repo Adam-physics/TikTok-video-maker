@@ -150,6 +150,13 @@ def board(angle) -> Image.Image:
     """Paper plus everything that never changes: the audience label on top
     and the small line at the bottom."""
     img = paper()
+    img.alpha_composite(overlay(angle))
+    return img
+
+
+def overlay(angle) -> Image.Image:
+    """The label and footer on a clear layer, kept outside the camera."""
+    img = Image.new("RGBA", (W * SS, H * SS), (0, 0, 0, 0))
     d = ImageDraw.Draw(img, "RGBA")
     chip = getattr(angle, "CHIP", None)
     if chip:
@@ -218,6 +225,66 @@ def scene_frame(base: Image.Image, scene: dict, t: float, frame: int) -> Image.I
     return img
 
 
+# ------------------------------------------------------------------ camera
+#
+# A still board loses people. The camera drifts in slowly across each board,
+# and punches in toward an item marked .focus() while it is drawn, then eases
+# back. The label and captions sit outside the camera and never move.
+
+PUSH = 0.06                       # slow zoom across a whole board
+FOCUS_IN, FOCUS_HOLD, FOCUS_OUT = 0.35, 1.2, 0.5
+HOME = (540, 760)                 # centre of the drawing area
+
+
+def plan_camera(scenes, total):
+    """Board spans for the slow push, and every focus event on the timeline."""
+    bounds = [i for i, sc in enumerate(scenes) if i == 0 or sc["erase"]] + [len(scenes)]
+    for a, b in zip(bounds[:-1], bounds[1:]):
+        t0 = scenes[a]["t0"]
+        t1 = scenes[b]["t0"] if b < len(scenes) else total
+        for sc in scenes[a:b]:
+            sc["board"] = (t0, t1)
+    events = []
+    for sc in scenes:
+        for it in sc["new"]:
+            if it.focus_zoom:
+                events.append((sc["t0"] + it.start, it.focus_zoom, it.center()))
+    return events
+
+
+def _ease(u):
+    u = min(max(u, 0.0), 1.0)
+    return u * u * (3 - 2 * u)
+
+
+def camera_at(sc, t, events):
+    b0, b1 = sc["board"]
+    zoom = 1 + PUSH * _ease((t - b0) / max(b1 - b0, 1e-6))
+    cx, cy = HOME
+    for start, fz, (fx, fy) in events:
+        if not (b0 <= start < b1):
+            continue
+        u = t - start
+        if u < 0 or u > FOCUS_IN + FOCUS_HOLD + FOCUS_OUT:
+            continue
+        e = _ease(u / FOCUS_IN) if u < FOCUS_IN else (
+            1.0 if u < FOCUS_IN + FOCUS_HOLD else 1 - _ease((u - FOCUS_IN - FOCUS_HOLD) / FOCUS_OUT))
+        zoom *= 1 + (fz - 1) * e
+        cx += (fx - cx) * 0.5 * e
+        cy += (fy - cy) * 0.5 * e
+    return zoom, (cx, cy)
+
+
+def apply_camera(img, zoom, center):
+    if zoom <= 1.0005:
+        return img
+    w, h = img.size
+    cw, ch = w / zoom, h / zoom
+    x0 = min(max(center[0] * SS - cw / 2, 0), w - cw)
+    y0 = min(max(center[1] * SS - ch / 2, 0), h - ch)
+    return img.crop((int(x0), int(y0), int(x0 + cw), int(y0 + ch))).resize((w, h), Image.BILINEAR)
+
+
 # The eraser makes one quick pass from left to right through the middle of
 # the board, bobbing a little, and everything behind it is wiped clean: the
 # same move as the reference video.
@@ -257,7 +324,8 @@ def render(angle, out_path: str) -> dict:
         schedule(s)
     total = scenes[-1]["t0"] + scenes[-1]["duration"]
 
-    base = board(angle)
+    base, top = paper(), overlay(angle)
+    events = plan_camera(scenes, total)
     cmd = [ffmpeg_bin(), "-y", "-hide_banner", "-loglevel", "error",
            "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS),
            "-i", "-", "-c:v", "libx264", "-preset", "slow", "-crf", "14",
@@ -270,13 +338,16 @@ def render(angle, out_path: str) -> dict:
     for f in range(n_frames):
         t = f / FPS
         while k + 1 < len(scenes) and t >= scenes[k + 1]["t0"]:
-            prev_last = scene_frame(base, scenes[k], scenes[k]["duration"], f)
+            end = scenes[k]["t0"] + scenes[k]["duration"]
+            prev_last = apply_camera(scene_frame(base, scenes[k], scenes[k]["duration"], f),
+                                     *camera_at(scenes[k], end, events))
             k += 1
         s = scenes[k]
         lt = t - s["t0"]
-        img = scene_frame(base, s, lt, f)
+        img = apply_camera(scene_frame(base, s, lt, f), *camera_at(s, t, events))
         if s["erase"] and prev_last is not None and lt < ERASE + 0.05:
             img = _erase(prev_last, img, min(1.0, lt / ERASE))
+        img.alpha_composite(top)
         paint_caption(img, s["words"], lt)
         enc.stdin.write(img.reduce(SS).convert("RGB").tobytes())
     enc.stdin.close()

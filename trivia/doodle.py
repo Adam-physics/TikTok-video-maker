@@ -190,6 +190,22 @@ class Item:
     sound: str | None = None        # effect to fire when the item starts
     scribble = False                # draws with pen noise
 
+    focus_zoom = None               # camera punch-in when this item is drawn
+    bounce = False                  # a quick scale bump when it finishes
+
+    def focus(self, zoom: float = 1.16):
+        """Push the camera in toward this item while it is being drawn."""
+        self.focus_zoom = zoom
+        return self
+
+    def pop(self):
+        """Give the finished item a small bounce, so it lands with a beat."""
+        self.bounce = True
+        return self
+
+    def center(self):
+        return (W / 2, H / 2)
+
     def ready(self):
         """Already on the board at the scene's first frame: a cold open."""
         self.pre = True
@@ -225,6 +241,10 @@ class Shape(Item):
         self.total = sum(self.lengths) or 1.0
         self.duration = max(0.18, self.total / (DRAW_SPEED * speed))
         self.seed = int(self.total * 7) % 997
+
+    def center(self):
+        pts = np.vstack(self.paths)
+        return tuple((pts.min(0) + pts.max(0)) / 2)
 
     def _boiled(self, p: np.ndarray, boil: int, k: int) -> np.ndarray:
         s = self.seed + k * 13
@@ -336,6 +356,9 @@ class Text(Item):
             done -= n
         return len(self.line_spans), None
 
+    def center(self):
+        return (self.x + self.w / 2, self.y + self.h / 2)
+
     def tip(self, t):
         if not (self.start < t < self.start + self.duration):
             return None
@@ -350,6 +373,14 @@ class Text(Item):
             return
         i, x = self._reveal(t)
         if i >= len(self.line_spans):
+            u = (t - self.start - self.duration) / 0.28
+            if self.bounce and 0 <= u < 1:
+                k = 1 + 0.14 * math.sin(math.pi * u)
+                big = self.layer.resize((int(self.layer.width * k), int(self.layer.height * k)),
+                                        Image.BILINEAR)
+                img.alpha_composite(big, (int(self.x * SS - (big.width - self.layer.width) / 2),
+                                          int(self.y * SS - (big.height - self.layer.height) / 2)))
+                return
             img.alpha_composite(self.layer, (self.x * SS, self.y * SS))
             return
         mask = Image.new("L", self.layer.size, 0)
@@ -396,8 +427,11 @@ class Picture(Item):
             canvas.alpha_composite(strip, ((im.width - strip.width) // 2, 0))
             im = canvas
         self.image = im.rotate(angle, resample=Image.BICUBIC, expand=True)
-        self.center = center
+        self.center_xy = center
         self.duration = POP
+
+    def center(self):
+        return self.center_xy
 
     def paint(self, img, t, boil):
         if t <= self.start:
@@ -409,7 +443,7 @@ class Picture(Item):
         im = self.image
         if abs(s - 1) > 1e-3:
             im = im.resize((max(1, int(im.width * s)), max(1, int(im.height * s))), Image.BILINEAR)
-        cx, cy = self.center[0] * SS, self.center[1] * SS
+        cx, cy = self.center_xy[0] * SS, self.center_xy[1] * SS
         img.alpha_composite(im, (int(cx - im.width / 2), int(cy - im.height / 2)))
 
 
