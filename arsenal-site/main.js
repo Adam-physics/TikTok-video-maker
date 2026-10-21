@@ -19,51 +19,54 @@
   });
   $$('a', mnav).forEach(function (a) { a.addEventListener('click', function () { burger.setAttribute('aria-expanded', 'false'); mnav.classList.remove('is-open'); }); });
 
-  /* ── reveals ── */
+  /* ── reveals + counters ── */
+  function count(el) {
+    var to = parseFloat(el.dataset.count), dec = +(el.dataset.dec || 0), pre = el.dataset.prefix || '', suf = el.dataset.suffix || '';
+    if (REDUCED) { el.textContent = pre + to.toFixed(dec) + suf; return; }
+    var t0 = performance.now(), dur = 1500;
+    (function step(now) {
+      var k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 4);
+      el.textContent = pre + (to * e).toFixed(dec) + suf;
+      if (k < 1) requestAnimationFrame(step);
+    })(t0);
+  }
   var io = new IntersectionObserver(function (es) {
-    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: .15 });
-  $$('.reveal').forEach(function (n) { io.observe(n); });
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in'); io.unobserve(e.target);
+      $$('[data-count]', e.target).forEach(count);
+      if (e.target.matches('[data-count]')) count(e.target);
+      var g = $('.growth', e.target); if (g) setTimeout(function () { g.classList.remove('pre'); }, 150);
+    });
+  }, { threshold: .2 });
+  $('#growth').classList.add('pre');
+  $$('.reveal').forEach(function (el) { io.observe(el); });
 
   /* ── hero star chart ── */
+  function goTo(id) { var el = $(id); if (el) el.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth' }); }
   if (window.ArsenalSky) {
-    ArsenalSky.create($('#sky'), { constellation: true, named: false, box: $('#chartBox') });
+    ArsenalSky.create($('#sky'), {
+      constellation: true, box: $('#chartBox'), card: $('#skyCard'),
+      onPick: function (info) {
+        if (info.k) selectPick(info.k);
+        if (info.f) selectTab($('#ft-' + info.f));
+        goTo(info.href);
+      }
+    });
     ArsenalSky.create($('#miniSky'), {});
   }
+  var hint = $('.hero__hint');
+  if (hint) $('.hero').addEventListener('pointermove', function once() { hint.style.opacity = '0'; $('.hero').removeEventListener('pointermove', once); });
 
-  /* ── what we build: a typical job at each company ── */
-  var A = 'agent', P = 'human';
-  var COMPANIES = {
-    accounting: { name: 'AI for Accountants', line: 'Software that runs an accounting firm. The agent prepares; the partner signs.', task: 'Month-end close',
-      wf: [['Bank feeds in', A], ['Reconcile accounts', A], ['Match invoices', A], ['Draft statements', A], ['Partner review', P], ['Sign-off', P]] },
-    mfo: { name: 'Multi-Family Office Platform', line: 'One AI tool unifying accounting, legal, insurance and wealth for a family.', task: 'A client asks: “What happens to my estate if I sell this year?”',
-      wf: [['Client asks a question', P], ['Pull the books', A], ['Check legal & insurance', A], ['Model the wealth impact', A], ['Draft one answer', A], ['Advisor approves', P]] },
-    insurance: { name: 'AI Insurance Servicing', line: 'Policy management, autopay, life settlements on-chain and life-expectancy analysis.', task: 'Servicing a life policy',
-      wf: [['Policy onboarded', A], ['Premiums on autopay', A], ['Life-expectancy analysis', A], ['Settlement recorded on-chain', A], ['Servicing team review', P]] },
-    implementation: { name: 'AI Implementation', line: 'A build-grow-sell practice for businesses adopting AI.', task: 'Bringing AI into an owner’s business',
-      wf: [['Owner sets the goal', P], ['Map the workflows', A], ['Deploy agents', A], ['Move AI into the offering', A], ['Grow, or sell', P]] },
-    publishing: { name: 'Publishing & Marketing', line: 'AI-native content and agencies that ship at the speed of software.', task: 'A week of client content',
-      wf: [['Editor sets the brief', P], ['Research', A], ['Draft', A], ['Edit & approve', P], ['Publish & distribute', A]] },
-    twins: { name: 'Digital Twins / Legacy AI', line: 'Human expertise turned into lasting intelligence.', task: 'Capturing a founder’s judgment',
-      wf: [['Expert interviews', P], ['Capture decisions', A], ['Train the twin', A], ['Answer new questions', A], ['Expert reviews', P]] },
-    robotics: { name: 'Agentic Entities & Robotics', line: 'Autonomous builders, and service and advertising robots.', task: 'An autonomous build',
-      wf: [['Task assigned', P], ['Builder agent plans', A], ['Autonomous build', A], ['Robots deploy', A], ['Approve the next task', P]] }
-  };
-  var ORDER = Object.keys(COMPANIES);
-  var picks = $$('.pick');
+  /* ── portfolio explorer (tabs) ── */
+  var picks = $$('.pick'), title = $('#deviceTitle');
   function selectPick(k) {
-    var c = COMPANIES[k]; if (!c) return;
-    picks.forEach(function (p) { var on = p.dataset.k === k; p.setAttribute('aria-selected', on); p.tabIndex = on ? 0 : -1; if (on) $('#chart').setAttribute('aria-labelledby', p.id); });
-    $('#chartName').textContent = c.name; $('#chartLine').textContent = c.line; $('#jobTask').textContent = c.task;
-    var agents = c.wf.filter(function (s) { return s[1] === A; }).length;
-    $('#jobSplit').innerHTML = '<b>' + agents + ' of ' + c.wf.length + '</b> steps by agents';
-    var wf = $('#wf'); wf.innerHTML = '';
-    c.wf.forEach(function (s, i) {
-      var li = document.createElement('li'); li.className = 'wf__n wf__n--' + s[1]; li.style.setProperty('--i', i);
-      li.innerHTML = '<span class="wf__num">' + (i + 1) + '</span><span class="wf__t"></span><span class="wf__who">' + (s[1] === A ? 'Agent' : 'Person') + '</span>';
-      li.querySelector('.wf__t').textContent = s[0]; wf.appendChild(li);
+    picks.forEach(function (p) {
+      var on = p.dataset.k === k;
+      p.setAttribute('aria-selected', on); p.tabIndex = on ? 0 : -1;
+      var m = $('#mock-' + p.dataset.k); m.hidden = !on;
+      if (on) { title.textContent = 'arsenal · ' + $('b', p).textContent.toLowerCase(); m.style.animation = 'none'; m.offsetHeight; m.style.animation = ''; }
     });
-    wf.classList.remove('run'); void wf.offsetWidth; wf.classList.add('run');
   }
   picks.forEach(function (p, i) {
     p.tabIndex = i ? -1 : 0;
@@ -74,34 +77,43 @@
       var n = picks[(i + d + picks.length) % picks.length]; n.focus(); selectPick(n.dataset.k);
     });
   });
-  selectPick('accounting');
 
-  /* ── cross-sell: one relationship, every company ── */
+  /* ── cross-sell flywheel ── */
   var NS = 'http://www.w3.org/2000/svg';
-  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var a in attrs) e.setAttribute(a, attrs[a]); if (parent) parent.appendChild(e); return e; }
-  var svg = $('#flySvg'), C = 280, RAD = 205;
+  var svg = $('#flySvg');
   var COS = ['Accounting AI', 'Family Office', 'Insurance', 'Implementation', 'Publishing', 'Legacy AI', 'Robotics'];
-  var CHANNELS = [{ name: 'Accountant', first: 0 }, { name: 'Attorney', first: 5 }, { name: 'RIA', first: 1 }, { name: 'Insurance broker', first: 2 }];
+  var CHANNELS = [
+    { name: 'Accountant', first: 0 }, { name: 'Attorney', first: 5 },
+    { name: 'RIA', first: 1 }, { name: 'Insurance broker', first: 2 }
+  ];
+  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+  var C = 260, RAD = 180, nodes = [], links = [];
   el('circle', { cx: C, cy: C, r: RAD, class: 'fl-orbit' }, svg);
-  var links = [], nodes = [];
+  el('circle', { cx: C, cy: C, r: RAD * .55, class: 'fl-orbit' }, svg);
   COS.forEach(function (name, i) {
-    var a = -Math.PI / 2 + i / COS.length * Math.PI * 2, x = C + Math.cos(a) * RAD, y = C + Math.sin(a) * RAD;
-    var path = el('path', { d: 'M' + C + ' ' + C + ' L' + x + ' ' + y, class: 'fl-link' }, svg);
+    var a = -Math.PI / 2 + i / COS.length * Math.PI * 2;
+    var x = C + Math.cos(a) * RAD, y = C + Math.sin(a) * RAD;
+    var path = el('path', { d: 'M' + C + ' ' + C + ' Q ' + (C + Math.cos(a + .5) * RAD * .5) + ' ' + (C + Math.sin(a + .5) * RAD * .5) + ' ' + x + ' ' + y, class: 'fl-link' }, svg);
     var len = path.getTotalLength(); path.style.strokeDasharray = len; path.style.strokeDashoffset = len; path.dataset.len = len;
     links.push(path);
-    var g = el('g', { class: 'fl-node', transform: 'translate(' + x + ' ' + y + ')' }, svg);
-    var w = Math.max(112, name.length * 10.4 + 34);
-    el('rect', { x: -w / 2, y: -21, width: w, height: 42, rx: 21 }, g);
-    var t = el('text', { y: 6, 'text-anchor': 'middle' }, g); t.textContent = name;
+    var g = el('g', { class: 'fl-node' }, svg);
+    el('circle', { cx: x, cy: y, r: 26 }, g);
+    el('path', { d: 'M' + x + ' ' + (y - 8) + ' L' + (x + 8) + ' ' + (y + 6) + ' L' + (x - 8) + ' ' + (y + 6) + ' Z', class: 'glyph' }, g);
+    var lx = C + Math.cos(a) * (RAD + 46), ly = C + Math.sin(a) * (RAD + 46) + 4;
+    var tx = el('text', { x: lx, y: ly, 'text-anchor': Math.abs(Math.cos(a)) < .3 ? 'middle' : (Math.cos(a) > 0 ? 'start' : 'end') }, g);
+    if (Math.abs(Math.cos(a)) >= .3) tx.setAttribute('x', C + Math.cos(a) * (RAD + 34));
+    tx.textContent = name;
     nodes.push(g);
   });
-  var core = el('g', { class: 'fl-core' }, svg);
-  el('circle', { cx: C, cy: C, r: 70 }, core);
-  var coreT = el('text', { x: C, y: C + 2, 'text-anchor': 'middle', class: 'fl-core__name' }, core);
-  var coreS = el('text', { x: C, y: C + 24, 'text-anchor': 'middle', class: 'fl-core__sub' }, core); coreS.textContent = 'one relationship';
+  var core = el('g', { class: 'fl-chan' }, svg);
+  el('circle', { cx: C, cy: C, r: 62 }, core);
+  var coreT = el('text', { x: C, y: C - 2, 'text-anchor': 'middle' }, core);
+  var coreS = el('text', { x: C, y: C + 16, 'text-anchor': 'middle', style: 'font-weight:500;opacity:.7;font-size:11px' }, core);
+  coreS.textContent = 'one relationship';
   var flyTimers = [];
   function flyTo(ci) {
-    var ch = CHANNELS[ci]; coreT.textContent = ch.name;
+    var ch = CHANNELS[ci];
+    coreT.textContent = ch.name;
     flyTimers.forEach(clearTimeout); flyTimers = [];
     var order = [ch.first].concat(COS.map(function (_, i) { return i; }).filter(function (i) { return i !== ch.first; }));
     links.forEach(function (l) { l.classList.remove('on'); l.style.strokeDashoffset = l.dataset.len; });
@@ -109,25 +121,68 @@
     var lines = $('#flyLines'); lines.textContent = '0';
     order.forEach(function (idx, k) {
       flyTimers.push(setTimeout(function () {
-        links[idx].classList.add('on'); links[idx].style.strokeDashoffset = 0; nodes[idx].classList.add('on'); lines.textContent = k + 1;
-      }, REDUCED ? 0 : (k === 0 ? 150 : 650 + k * 180)));
+        links[idx].classList.add('on'); links[idx].style.strokeDashoffset = 0; nodes[idx].classList.add('on');
+        lines.textContent = k + 1;
+      }, REDUCED ? 0 : (k === 0 ? 150 : 650 + k * 170)));
     });
   }
   var chBtns = $$('#channels button');
-  chBtns.forEach(function (b) { b.addEventListener('click', function () { chBtns.forEach(function (x) { x.setAttribute('aria-checked', x === b); }); flyTo(+b.dataset.c); }); });
-  var flyIO = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { flyTo(0); flyIO.disconnect(); } }, { threshold: .35 });
-  flyIO.observe(svg); coreT.textContent = CHANNELS[0].name;
+  chBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      chBtns.forEach(function (x) { x.setAttribute('aria-checked', x === b); });
+      flyTo(+b.dataset.c);
+    });
+  });
+  var flyIO = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { flyTo(0); flyIO.disconnect(); } }, { threshold: .4 });
+  flyIO.observe(svg);
+  coreT.textContent = CHANNELS[0].name;
+
+  /* ── studio model: sticky steps ── */
+  var steps = $$('.step'), vis = $$('#panel .vis'), bars = $$('#panelBars i'), plabel = $('#panelLabel');
+  // small screens get each visual inline under its step
+  steps.forEach(function (s, i) {
+    var holder = $('.step__vis-m', s), clone = vis[i].cloneNode(true);
+    clone.classList.add('is-on'); holder.appendChild(clone);
+  });
+  function setStep(i) {
+    steps.forEach(function (s, k) { s.classList.toggle('is-cur', k === i); });
+    vis.forEach(function (v, k) { v.classList.toggle('is-on', k === i); });
+    bars.forEach(function (b, k) { b.classList.toggle('on', k === i); });
+    plabel.textContent = 'Step ' + (i + 1) + ' of 4';
+  }
+  // The visual on the right always matches the step whose heading sits closest to the
+  // middle of the sticky panel, so text and picture line up at any screen height.
+  var panel = $('#panel'), curStep = 0, stepTick = false;
+  function syncStep() {
+    stepTick = false;
+    if (!panel.offsetParent) return; // panel hidden on small screens
+    var pr = panel.getBoundingClientRect(), mid = pr.top + pr.height / 2, best = 0, bestD = Infinity;
+    steps.forEach(function (s, k) {
+      var h = $('h3', s).getBoundingClientRect(), d = Math.abs(h.top + h.height / 2 - mid);
+      if (d < bestD) { bestD = d; best = k; }
+    });
+    if (best !== curStep) { curStep = best; setStep(best); }
+  }
+  addEventListener('scroll', function () { if (!stepTick) { stepTick = true; requestAnimationFrame(syncStep); } }, { passive: true });
+  addEventListener('resize', syncStep);
+  syncStep();
 
   /* ── foundation tabs ── */
   var tabs = $$('#fTabs [role=tab]');
   function selectTab(t) {
     if (!t) return;
-    tabs.forEach(function (x) { var on = x === t; x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1; $('#' + x.getAttribute('aria-controls')).hidden = !on; });
+    tabs.forEach(function (x) {
+      var on = x === t; x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1;
+      $('#' + x.getAttribute('aria-controls')).hidden = !on;
+    });
   }
   tabs.forEach(function (t, i) {
     t.tabIndex = i ? -1 : 0;
     t.addEventListener('click', function () { selectTab(t); });
-    t.addEventListener('keydown', function (e) { var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!d) return; var n = tabs[(i + d + tabs.length) % tabs.length]; n.focus(); selectTab(n); });
+    t.addEventListener('keydown', function (e) {
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return; var n = tabs[(i + d + tabs.length) % tabs.length]; n.focus(); selectTab(n);
+    });
   });
 
   /* ── underwriting: weeks → days ── */
@@ -135,6 +190,7 @@
   function uwSet() {
     var v = uw.value / 100;
     uw.style.setProperty('--p', uw.value + '%');
+    // sequential hand-offs (manual) collapse into overlapping automated work (platform)
     tl.style.setProperty('--step', (25 - v * 21) + '%');
     tl.style.setProperty('--w', (25 - v * 3) + '%');
     uwl.textContent = v < .34 ? 'Weeks' : v < .67 ? 'Weeks → Days' : 'Days';
