@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=JetBrains+Mono:wght@400;600&family=Unbounded:wght@500;800&display=swap">
 <style>
-/* Layout: product grid is the page. Hairline 1px rules, 12-col grid, imagery does the shouting, type stays small. */
+/* Layout: product grid is the page. Hairline 1px rules, zero-gutter grid, imagery does the shouting, UI type stays small, product type stays readable. */
 :root{
   --bg:#ECECEE;      /* matches the studio sweep in Jaded's product shots */
   --fg:#0A0A0B;
@@ -17,6 +17,7 @@
   --soft:#DEDEE2;
   --uv:#4B2BFF;      /* UV club light: the one accent, used for live/drop states and focus */
   --sale:#B3001B;
+  --scrim:rgba(10,10,11,.45);
   --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
   --f-ui:"Archivo","Helvetica Neue",Arial,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
@@ -25,26 +26,33 @@
   --gutr:max(16px, env(safe-area-inset-right, 0px));
   color-scheme:light;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#060607;--fg:#EDEDF0;--mute:#8E8E98;--soft:#18181C;--uv:#9581FF;--sale:#FF5C6E;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#060607;--fg:#EDEDF0;--mute:#8E8E98;--soft:#18181C;--uv:#9581FF;--sale:#FF5C6E;color-scheme:dark}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#060607;--fg:#EDEDF0;--mute:#8E8E98;--soft:#18181C;--uv:#9581FF;--sale:#FF5C6E;--scrim:rgba(0,0,0,.6);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#060607;--fg:#EDEDF0;--mute:#8E8E98;--soft:#18181C;--uv:#9581FF;--sale:#FF5C6E;--scrim:rgba(0,0,0,.6);color-scheme:dark}
 *{box-sizing:border-box}
 html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-body{margin:0;background:var(--bg);color:var(--fg);font:400 12px/1.45 var(--f-ui);letter-spacing:.01em;-webkit-font-smoothing:antialiased;transition:background .4s,color .4s}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 12.5px/1.45 var(--f-ui);letter-spacing:.01em;-webkit-font-smoothing:antialiased;transition:background .4s,color .4s}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
+body.lock{overflow:hidden}
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;letter-spacing:inherit}
+input{font:inherit;color:var(--fg)}
 :focus-visible{outline:2px solid var(--uv);outline-offset:2px}
 .u{text-transform:uppercase;letter-spacing:.06em}
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums;letter-spacing:0}
 .pad{padding-left:var(--gut);padding-right:var(--gutr)}
-.proto{background:var(--fg);color:var(--bg);font:500 10px/1 var(--f-mono);display:flex;gap:16px;justify-content:space-between;padding-block:7px;flex-wrap:wrap}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.proto{background:var(--fg);color:var(--bg);font:500 10px/1.3 var(--f-mono);display:flex;gap:6px 16px;justify-content:space-between;padding-block:7px;flex-wrap:wrap}
 .proto a{text-decoration:underline}
+/* header */
 header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--bg);border-bottom:var(--hair)}
 .bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding-block:12px}
-.nav{display:flex;gap:18px;flex-wrap:wrap}
-.nav a{font-weight:600}
+.nav{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.nav>div{position:static}
+.nav a,.nav button{font-weight:600}
 .nav a[aria-current="page"]{text-decoration:underline;text-underline-offset:3px}
+.nav a.drop-link{color:var(--uv)}
+.nav a.drop-link::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--uv);margin-right:6px;vertical-align:1px;animation:pulse 1.6s infinite}
 .mark{font:800 clamp(16px,2.2vw,22px)/1 var(--f-display);letter-spacing:-.02em;white-space:nowrap}
 .mark span{font-weight:500;letter-spacing:.18em;font-size:.5em;vertical-align:middle;margin-left:.6em}
 .tools{display:flex;gap:16px;justify-content:flex-end;align-items:center}
@@ -52,87 +60,140 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;backgroun
 .dn button{padding:4px 7px;font:600 10px/1 var(--f-mono)}
 .dn button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
 .clock{color:var(--mute)}
-.burger{display:none}
-@media (max-width:860px){
+.burger{display:none;font-weight:600}
+/* mega menu */
+.mega{position:absolute;left:0;right:0;top:100%;background:var(--bg);border-bottom:var(--hair);border-top:var(--hair);display:none;grid-template-columns:repeat(4,minmax(0,1fr)) minmax(0,1.2fr);gap:0;z-index:49}
+.has-mega>a{display:inline-block;padding-block:14px;margin-block:-14px}
+.has-mega:hover .mega,.has-mega:focus-within .mega,.has-mega.open .mega{display:grid}
+.has-mega.shut .mega{display:none!important}
+.mega section{padding:18px 16px 22px;border-right:var(--hair);display:grid;align-content:start;gap:7px}
+.mega h3{margin:0 0 4px;font:700 10.5px/1 var(--f-mono);color:var(--mute);text-transform:uppercase}
+.mega a{font-weight:500;text-transform:none;letter-spacing:0;font-size:13px}
+.mega a:hover{text-decoration:underline;text-underline-offset:3px}
+.mega a .new{font:600 9px var(--f-mono);color:var(--uv);margin-left:6px}
+.mega figure{margin:0;position:relative;overflow:hidden;background:var(--soft)}
+.mega figure img{width:100%;height:100%;object-fit:cover;max-height:300px}
+.mega figcaption{position:absolute;left:10px;bottom:10px;background:var(--bg);padding:4px 6px;font:600 10px var(--f-mono)}
+@media (max-width:900px){
   .bar{grid-template-columns:auto 1fr auto}
-  .nav{display:none}.burger{display:block;font-weight:600}
-  .mark{justify-self:center}.clock,.tools .hide-s{display:none}
-  .nav.open{display:flex;grid-column:1/-1;order:3;flex-direction:column;gap:10px;padding-top:8px}
+  .nav{display:none}.burger{display:block}
+  .mark{justify-self:center}.clock,.tools .hide-s,.dn{display:none}
 }
-main{min-height:60vh}
-/* HOME */
-.hero{position:relative;display:grid;grid-template-columns:1.3fr 1fr;border-bottom:var(--hair)}
-.hero figure{margin:0;position:relative;overflow:hidden;background:var(--soft);aspect-ratio:4/5;max-height:86vh;width:100%}
-.hero figure img{width:100%;height:100%;object-fit:cover}
-.hero figcaption{position:absolute;left:12px;bottom:12px;background:var(--bg);padding:4px 6px;font:500 10px/1.2 var(--f-mono)}
-.drop{display:flex;flex-direction:column;justify-content:space-between;gap:28px;padding:20px var(--gutr) 20px 20px;border-left:var(--hair)}
-.drop h1{font:800 clamp(40px,7vw,104px)/.86 var(--f-display);letter-spacing:-.04em;margin:0;text-wrap:balance}
-.drop .live{display:inline-flex;align-items:center;gap:8px;color:var(--uv);font:600 11px/1 var(--f-mono)}
-.drop .live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--uv);animation:pulse 1.6s infinite}
+/* drawers and overlays */
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:89}
+.drawer{position:fixed;top:0;bottom:0;right:0;width:min(420px,100%);background:var(--bg);z-index:90;border-left:var(--hair);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.drawer.left{right:auto;left:0;border-left:0;border-right:var(--hair);padding-right:0;padding-left:env(safe-area-inset-left,0px)}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:var(--hair)}
+.dh b{font-weight:700}
+.db{flex:1;overflow:auto}
+.df{border-top:var(--hair);padding:14px 16px;display:grid;gap:10px}
+.ship{display:grid;gap:6px}
+.ship .track{height:4px;background:var(--soft);position:relative}
+.ship .track i{position:absolute;inset:0 auto 0 0;background:var(--uv)}
+.line{display:grid;grid-template-columns:76px 1fr auto;gap:12px;padding:12px 16px;border-bottom:1px solid var(--soft)}
+.line img{width:76px;aspect-ratio:4/5;object-fit:cover;background:var(--soft)}
+.line .q{display:inline-flex;border:var(--hair);margin-top:8px}
+.line .q button{width:26px;height:24px;font:600 12px var(--f-mono)}
+.line .q span{min-width:24px;text-align:center;line-height:24px;font:600 12px var(--f-mono)}
+.empty-bag{padding:40px 16px;display:grid;gap:12px;text-align:center;justify-items:center}
+.mnav{padding:6px 0}
+.mnav details{border-bottom:1px solid var(--soft);padding:0}
+.mnav summary,.mnav>a{display:flex;justify-content:space-between;padding:14px 16px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;list-style:none}
+.mnav>a{border-bottom:1px solid var(--soft)}
+.mnav summary::after{content:"+";font-family:var(--f-mono)}
+.mnav details[open] summary::after{content:"–"}
+.mnav details div{display:grid;gap:10px;padding:0 16px 16px 28px;font-size:14px}
+.search{position:fixed;inset:0 0 auto;z-index:90;background:var(--bg);border-bottom:var(--hair);max-height:100%;overflow:auto;padding-top:env(safe-area-inset-top,0px)}
+.sbar{display:flex;align-items:center;gap:12px;padding-block:14px;border-bottom:var(--hair)}
+.sbar input{flex:1;min-width:0;background:transparent;border:0;font:500 clamp(18px,3vw,28px)/1.1 var(--f-ui);padding:4px 0}
+.sbar input:focus{outline:none}
+.sugs{display:flex;gap:6px;flex-wrap:wrap;padding-block:12px}
+/* shared bits */
 @keyframes pulse{50%{opacity:.25}}
+.live{display:inline-flex;align-items:center;gap:8px;color:var(--uv);font:600 11px/1 var(--f-mono);text-transform:uppercase}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--uv);animation:pulse 1.6s infinite}
+.btn{display:inline-block;background:var(--fg);color:var(--bg);padding:13px 16px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;text-align:center}
+.btn.o{background:transparent;color:var(--fg);border:var(--hair)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.chip{border:var(--hair);padding:5px 8px;font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.note{color:var(--mute);font:400 10.5px/1.4 var(--f-mono)}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-block:14px;border-bottom:var(--hair)}
+.sec-h h2{margin:0;font:700 12px/1 var(--f-ui)}
+.wait{display:flex;border:var(--hair)}
+.wait input{flex:1;min-width:0;background:transparent;border:0;padding:12px}
+.wait button{background:var(--fg);color:var(--bg);padding:0 16px;font-weight:700}
 .count{display:grid;grid-template-columns:repeat(4,1fr);border:var(--hair)}
 .count div{padding:10px;border-right:var(--hair)}
 .count div:last-child{border-right:0}
-.count b{display:block;font:600 clamp(22px,3vw,36px)/1 var(--f-mono)}
+.count b{display:block;font:600 clamp(22px,3vw,34px)/1 var(--f-mono)}
 .count small{color:var(--mute)}
-.wait{display:flex;border:var(--hair)}
-.wait input{flex:1;min-width:0;background:transparent;border:0;padding:12px;font:inherit;color:var(--fg)}
-.wait button{background:var(--fg);color:var(--bg);padding:0 16px;font-weight:700}
-.note{color:var(--mute);font:400 10px/1.4 var(--f-mono)}
-.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-block:14px;border-bottom:var(--hair)}
-.sec-h h2{margin:0;font:700 12px/1 var(--f-ui)}
+/* product grid */
 .gw{overflow:hidden}
 .grid{display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));width:calc(100% + 1px)}
-.card{border-right:var(--hair);border-bottom:var(--hair);position:relative}
+.card{border-right:var(--hair);border-bottom:var(--hair);position:relative;display:flex;flex-direction:column}
+.card>a{display:block}
 .card .ph{position:relative;aspect-ratio:4/5;background:var(--soft);overflow:hidden}
 .card .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .25s}
 .card .ph img+img{opacity:0}
 .card:hover .ph img+img{opacity:1}
 .card .meta{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:8px 10px 12px}
 .card .t{font-weight:500;font-size:13px}
-@media (max-width:860px){body{font-size:13px}.card .t{font-size:14px}.card .sub{font-size:12px}details ul,details p,.facts{font-size:14px}}
 .card .pr{font-family:var(--f-mono)}
-.card .sub{grid-column:1/-1;color:var(--mute);font-size:10.5px}
+.card .pr s{color:var(--mute);margin-left:4px}
+.card .pr .now{color:var(--sale)}
+.card .sub{grid-column:1/-1;color:var(--mute);font-size:11px}
+.qbtn{position:absolute;right:8px;top:8px;width:30px;height:30px;background:var(--bg);font:600 16px/30px var(--f-mono);text-align:center;z-index:3}
+.qpanel{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-top:var(--hair);z-index:4;padding:8px;display:grid;gap:6px}
+.qpanel .ss{display:flex;flex-wrap:wrap;gap:4px}
+.qpanel .ss button{border:var(--hair);padding:5px 6px;font:600 10.5px var(--f-mono)}
+.qpanel .ss button:disabled{opacity:.35;text-decoration:line-through;cursor:not-allowed}
 .flag{position:absolute;top:8px;left:8px;background:var(--bg);font:600 9.5px/1 var(--f-mono);padding:4px 5px;z-index:2}
 .flag.uv{background:var(--uv);color:#fff}
-.para{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);border-bottom:var(--hair)}
-.para .word{padding:20px;border-right:var(--hair);display:flex;flex-direction:column;justify-content:space-between;gap:24px}
-.para .word h2{font:800 clamp(34px,6vw,88px)/.85 var(--f-display);letter-spacing:-.05em;margin:0;word-break:break-word}
-.para .word p{max-width:42ch;margin:0}
-.strip{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(160px,1fr);overflow-x:auto;scrollbar-width:thin}
+.flag.out{background:var(--fg);color:var(--bg)}
+.strip{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(170px,1fr);overflow-x:auto;scrollbar-width:thin}
 .strip .card{border-bottom:0}
+/* home */
+.hero{position:relative;border-bottom:var(--hair);background:var(--soft)}
+.hero picture img{width:100%;height:auto;max-height:82vh;object-fit:cover;object-position:50% 40%}
+.hero .panel{position:absolute;left:var(--gut);bottom:20px;background:var(--bg);border:var(--hair);padding:18px;display:grid;gap:12px;max-width:min(520px,46%)}
+.hero h1{font:800 clamp(30px,3.9vw,58px)/.86 var(--f-display);letter-spacing:-.045em;margin:0}
+.hero .ctas{display:flex;gap:8px;flex-wrap:wrap}
+.band{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);border-bottom:var(--hair)}
+.band>figure{margin:0;background:var(--soft);position:relative;overflow:hidden;min-height:260px}
+.band>figure img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.band>div{padding:22px var(--gutr) 22px 22px;border-left:var(--hair);display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+.band h2{font:800 clamp(28px,4vw,56px)/.9 var(--f-display);letter-spacing:-.04em;margin:0;text-wrap:balance}
+.band p{margin:0;max-width:46ch;font-size:13.5px;line-height:1.5}
+.band.flip{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)}
+.band.flip>div{order:-1;border-left:0;border-right:var(--hair);padding:22px 22px 22px var(--gut)}
+.para{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);border-bottom:var(--hair)}
+.para .word{padding:20px;border-right:var(--hair);display:flex;flex-direction:column;justify-content:space-between;gap:24px;padding-left:var(--gut)}
+.para .word h2{font:800 clamp(34px,6vw,88px)/.85 var(--f-display);letter-spacing:-.05em;margin:0;word-break:break-word}
+.para .word p{max-width:42ch;margin:0;font-size:13.5px}
 .rail{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,24%);overflow-x:auto;border-bottom:var(--hair);scrollbar-width:thin}
-.rail a{border-right:var(--hair);display:block}
+.rail>*{border-right:var(--hair);display:block}
 .rail .ph{aspect-ratio:3/4;overflow:hidden;background:var(--soft)}
 .rail img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);transition:filter .3s}
-.rail a:hover img{filter:none}
+.rail>*:hover img,.rail a img{filter:none}
 .rail .cap{padding:8px 10px 12px;display:flex;justify-content:space-between;gap:8px}
 .ugc{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:var(--hair)}
 .ugc div{aspect-ratio:3/4;border-right:var(--hair);display:flex;align-items:flex-end;padding:8px;color:var(--mute);font:500 10px/1.3 var(--f-mono);background:repeating-linear-gradient(135deg,transparent 0 10px,var(--soft) 10px 11px)}
 .ugc div:last-child{border-right:0}
 .stores{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:var(--hair)}
-.stores div{padding:14px 10px 18px;border-right:var(--hair);display:grid;gap:4px}
-.stores div:nth-child(4n){border-right:0}
+.stores>div{padding:14px 10px 18px;border-right:var(--hair);border-bottom:var(--hair);display:grid;gap:4px;margin-bottom:-1px}
+.stores>div:nth-child(4n){border-right:0}
 .stores b{font:700 13px/1.1 var(--f-ui);font-stretch:85%}
-footer{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding-block:28px 40px}
+.stores .uv{color:var(--uv)}
+footer{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding-block:28px 40px;border-top:var(--hair)}
 footer h3{margin:0 0 8px;font:700 11px/1 var(--f-ui)}
 footer ul{list-style:none;margin:0;padding:0;display:grid;gap:5px;color:var(--mute)}
-@media (max-width:860px){
-  .hero{grid-template-columns:1fr}.drop{border-left:0;border-top:var(--hair);padding:16px var(--gutr) 20px var(--gut)}
-  .hero figure{aspect-ratio:4/5;max-height:none}
-  .grid{--cols:2!important}.para{grid-template-columns:1fr}.para .word{border-right:0;border-bottom:var(--hair);padding-left:var(--gut)}
-  .ugc{grid-template-columns:repeat(3,1fr)}.ugc div:nth-child(3){border-right:0}.ugc div:nth-child(n+4){display:none}
-  .stores{grid-template-columns:repeat(2,1fr)}.stores div:nth-child(2n){border-right:0}
-  .rail{grid-auto-columns:70%}footer{grid-template-columns:1fr 1fr}
-}
 /* PLP */
 .plp-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding-block:22px 12px;border-bottom:var(--hair);flex-wrap:wrap}
 .plp-head h1{margin:0;font:800 clamp(28px,4.5vw,56px)/.9 var(--f-display);letter-spacing:-.04em}
 .crumbs{color:var(--mute);margin-bottom:8px}
 .filters{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hh,49px));z-index:40;background:var(--bg);border-bottom:var(--hair);display:flex;gap:6px 18px;align-items:center;flex-wrap:wrap;padding-block:9px}
 .chips{display:flex;gap:6px;flex-wrap:wrap}
-.chip{border:var(--hair);padding:5px 8px;font-weight:600;font-size:10.5px}
-.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
 .filters select{font:inherit;color:var(--fg);background:var(--bg);border:var(--hair);padding:4px 6px;text-transform:uppercase}
 .filters .sp{flex:1}
 .dens button{padding:2px 5px;font:600 10px var(--f-mono)}
@@ -140,10 +201,10 @@ footer ul{list-style:none;margin:0;padding:0;display:grid;gap:5px;color:var(--mu
 .empty{padding:60px 16px;text-align:center;color:var(--mute)}
 /* PDP */
 .pdp{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,1fr);border-bottom:var(--hair)}
-.gal{display:grid;grid-template-columns:1fr 1fr;border-right:var(--hair)}
+.gal{display:grid;grid-template-columns:1fr 1fr;border-right:var(--hair);align-content:start}
 .gal figure{margin:0;background:var(--soft);aspect-ratio:4/5;overflow:hidden;border-bottom:var(--hair)}
-.gal figure:nth-child(odd){border-right:var(--hair)}
-.gal figure:first-child{grid-column:1/-1;border-right:0;aspect-ratio:4/5}
+.gal figure:nth-child(even){border-right:var(--hair)}
+.gal figure:first-child{grid-column:1/-1}
 .gal img{width:100%;height:100%;object-fit:cover}
 .buy{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hh,49px));align-self:start;padding:20px var(--gutr) 28px 20px;display:grid;gap:18px}
 .buy h1{margin:0;font:700 clamp(22px,2.4vw,30px)/1 var(--f-ui);font-stretch:80%;letter-spacing:-.01em;text-transform:uppercase;text-wrap:balance}
@@ -157,129 +218,300 @@ footer ul{list-style:none;margin:0;padding:0;display:grid;gap:5px;color:var(--mu
 .sizes button.oos{color:var(--mute);text-decoration:line-through}
 .atc{background:var(--fg);color:var(--bg);padding:15px;font-weight:700;width:100%;text-transform:uppercase;letter-spacing:.08em}
 .atc.notify{background:transparent;color:var(--fg);border:var(--hair)}
-.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;border-top:var(--hair);padding-top:14px}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;border-top:var(--hair);padding-top:14px;margin:0}
 .facts dt{color:var(--mute)}
 .facts dd{margin:0}
-details{border-top:var(--hair);padding-block:11px}
-details summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between}
-details summary::after{content:"+";font-family:var(--f-mono)}
-details[open] summary::after{content:"–"}
-details ul{margin:10px 0 0;padding-left:16px;display:grid;gap:3px}
-details p{margin:10px 0 0;max-width:60ch}
-.toast{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:12px 14px;font:600 11px/1.3 var(--f-mono);z-index:80;max-width:320px}
+details.acc{border-top:var(--hair);padding-block:11px}
+details.acc summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between}
+details.acc summary::after{content:"+";font-family:var(--f-mono)}
+details.acc[open] summary::after{content:"–"}
+details.acc ul{margin:10px 0 0;padding-left:16px;display:grid;gap:3px}
+details.acc p{margin:10px 0 0;max-width:60ch}
 .mbuy{display:none}
-@media (max-width:860px){
+/* drop + campaign + stores */
+.drophead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-bottom:var(--hair)}
+.drophead figure{margin:0;background:var(--soft);border-right:var(--hair);max-height:88vh;overflow:hidden}
+.drophead figure img{width:100%;height:100%;object-fit:cover}
+.drophead>div{padding:22px var(--gutr) 22px 22px;display:flex;flex-direction:column;gap:22px;justify-content:space-between}
+.drophead h1{font:800 clamp(36px,6vw,92px)/.86 var(--f-display);letter-spacing:-.045em;margin:0;text-wrap:balance}
+.legend{display:grid;gap:8px;border-top:var(--hair);padding-top:12px}
+.legend div{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:baseline}
+.state{font:600 10px/1 var(--f-mono);padding:4px 6px;border:1px solid currentColor;text-transform:uppercase;justify-self:start}
+.state.uv{color:var(--uv)}
+.restock{border-top:var(--hair);padding:10px;display:grid;gap:6px}
+.camp-hero{position:relative;border-bottom:var(--hair);background:#000}
+.camp-hero img{width:100%;max-height:86vh;object-fit:cover}
+.camp-hero .ttl{position:absolute;left:var(--gut);bottom:18px;right:var(--gutr);color:#fff;display:grid;gap:6px}
+.camp-hero h1{margin:0;font:800 clamp(44px,10vw,150px)/.8 var(--f-display);letter-spacing:-.05em;text-shadow:0 2px 30px rgba(0,0,0,.4)}
+.camp-hero .note{color:#e4e4ea}
+.story{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);border-bottom:var(--hair)}
+.story>div{padding:22px 22px 22px var(--gut);border-right:var(--hair);display:grid;gap:14px;align-content:start}
+.story p{margin:0;font-size:15px;line-height:1.55;max-width:52ch}
+.story dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0}
+.story dt{color:var(--mute)}
+.story dd{margin:0}
+.looks{display:grid;grid-template-columns:1fr 1fr}
+.looks figure{margin:0;border-bottom:var(--hair);background:var(--soft);overflow:hidden}
+.looks figure:nth-child(odd){border-right:var(--hair)}
+.looks figure.w{grid-column:1/-1;border-right:0}
+.looks img{width:100%;height:100%;object-fit:cover}
+.shops{display:grid;grid-template-columns:1fr 1fr;border-bottom:var(--hair)}
+.shop{padding:22px var(--gutr) 26px var(--gut);display:grid;gap:12px;align-content:start}
+.shop+.shop{border-left:var(--hair)}
+.shop h2{margin:0;font:800 clamp(30px,4.5vw,64px)/.9 var(--f-display);letter-spacing:-.04em}
+.shop .open{font:600 11px var(--f-mono);text-transform:uppercase}
+.shop .open.y{color:var(--uv)}
+.shop table{border-collapse:collapse;font-family:var(--f-mono);font-size:12px;max-width:340px}
+.shop td{padding:4px 18px 4px 0;border-bottom:1px solid var(--soft)}
+.shop tr.today td{font-weight:700}
+.djs{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));border-top:var(--hair)}
+.djs div{padding:10px;border-right:var(--hair);border-bottom:var(--hair);display:grid;gap:2px}
+.archive{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));border-bottom:var(--hair)}
+.archive div{padding:12px 10px 16px;border-right:var(--hair);border-bottom:var(--hair);margin-bottom:-1px;display:grid;gap:3px}
+.archive .yr{font:600 10px var(--f-mono);color:var(--mute)}
+.toast{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:12px 14px;font:600 11px/1.35 var(--f-mono);z-index:99;max-width:330px}
+@media (max-width:900px){
+  .hero .panel{position:static;max-width:none;border:0;border-top:var(--hair)}
+  .grid{--cols:2!important}.para,.band,.band.flip,.drophead,.story,.shops{grid-template-columns:1fr}
+  .para .word,.band>div,.band.flip>div,.drophead figure,.story>div{border-right:0;border-left:0;border-bottom:var(--hair)}
+  .band>div,.band.flip>div,.drophead>div{padding:18px var(--gutr) 20px var(--gut)}
+  .band>figure{min-height:0;aspect-ratio:16/10}
+  .ugc{grid-template-columns:repeat(3,1fr)}.ugc div:nth-child(3){border-right:0}.ugc div:nth-child(n+4){display:none}
+  .stores{grid-template-columns:repeat(2,1fr)}.stores>div:nth-child(2n){border-right:0}
+  .rail{grid-auto-columns:70%}footer{grid-template-columns:1fr 1fr}
+  .shop+.shop{border-left:0;border-top:var(--hair)}
   .pdp{grid-template-columns:1fr}
   .gal{display:grid;grid-auto-flow:column;grid-auto-columns:88%;grid-template-columns:none;overflow-x:auto;scroll-snap-type:x mandatory;border-right:0;border-bottom:var(--hair)}
   .gal figure,.gal figure:first-child{grid-column:auto;scroll-snap-align:start;border-bottom:0;border-right:var(--hair)!important}
-  .buy{position:static;padding:16px var(--gutr) 24px var(--gut)}
+  .buy{position:static;padding:16px var(--gutr) 90px var(--gut)}
   .mbuy{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--bg);border-top:var(--hair);padding:10px var(--gutr) calc(10px + env(safe-area-inset-bottom,0px)) var(--gut);gap:10px;align-items:center}
   .mbuy .atc{padding:12px}
+  body{font-size:13px}.card .t{font-size:14px}.card .sub{font-size:12px}details.acc ul,details.acc p,.facts{font-size:14px}
+  .qbtn{width:36px;height:36px;line-height:36px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div class="proto pad"><span>CONCEPT PROTOTYPE · NOT THE LIVE STORE · NO CHECKOUT</span><span>Real products, prices (GBP) and imagery from the Jaded London Shopify catalogue, 21 Oct 2026 · <a href="index.html">Back to the report</a></span></div>
+<div class="proto pad"><span>CONCEPT PROTOTYPE · NOT THE LIVE STORE · NO CHECKOUT</span><span>Real products, prices (UK store, GBP), stock and imagery from the Jaded London catalogue, 21 Oct 2026 · <a href="index.html">Back to the report</a></span></div>
 <header class="top" id="hdr">
   <div class="bar pad">
-    <button class="burger u" id="burger" aria-expanded="false" aria-controls="nav">Menu</button>
+    <button class="burger u" id="burger" aria-expanded="false" aria-controls="mnav">Menu</button>
     <nav class="nav u" id="nav" aria-label="Primary">
-      <a href="#plp" data-g="Jaded London">Women</a>
-      <a href="#plp" data-g="Jaded Man">Men</a>
-      <a href="#plp" data-g="all">New in</a>
-      <a href="#pdp">Parachute</a>
-      <a href="#home" data-to="camp">Campaigns</a>
-      <a href="#home" data-to="stores">Stores</a>
+      <div class="has-mega"><a href="#plp" data-g="Jaded London" aria-haspopup="true">Women</a>
+        <div class="mega" role="menu" aria-label="Women">
+          <section><h3>Shop</h3><a href="#plp" data-g="Jaded London">New arrivals</a><a href="#plp" data-g="Jaded London">Bestsellers</a><a href="#drop">Shearling boots<span class="new">LIVE</span></a><a href="#campaign">Nolita<span class="new">NEW</span></a><a href="#plp" data-g="Jaded London">Party edit</a><a href="#plp" data-g="Jaded London">Back in stock</a></section>
+          <section><h3>Clothing</h3><a href="#plp" data-g="Jaded London">Dresses</a><a href="#plp" data-g="Jaded London">Tops &amp; corsets</a><a href="#plp" data-g="Jaded London">Knitwear</a><a href="#plp" data-g="Jaded London">Outerwear</a><a href="#plp" data-g="Jaded London">Joggers</a><a href="#plp" data-g="Jaded London">Swim</a></section>
+          <section><h3>Denim &amp; cargo</h3><a href="#plp" data-g="Jaded London" data-t="Baggy Jeans">Baggy / Colossus</a><a href="#plp" data-g="Jaded London">Bootcut</a><a href="#plp" data-g="Jaded London">Slim / straight</a><a href="#pdp" data-h="khaki-parachute-cargo-pants">Parachute</a><a href="#plp" data-g="Jaded London">Denim fit guide</a></section>
+          <section><h3>Edits</h3><a href="#plp" data-g="Jaded London">Cleo</a><a href="#plp" data-g="Jaded London">Camo</a><a href="#plp" data-g="Jaded London">Bandage</a><a href="#plp" data-g="Jaded London">Lace</a><a href="#plp" data-g="Jaded London">Animal print</a><a href="#plp" data-g="Jaded London">Sale</a></section>
+          <figure><img src="img/nol0.jpg" alt="Nolita campaign cover" loading="lazy"><figcaption>NOLITA · NEW COLLECTION</figcaption></figure>
+        </div></div>
+      <div class="has-mega"><a href="#plp" data-g="Jaded Man" aria-haspopup="true">Men</a>
+        <div class="mega" role="menu" aria-label="Men">
+          <section><h3>Shop</h3><a href="#plp" data-g="Jaded Man">New arrivals</a><a href="#plp" data-g="Jaded Man">Bestsellers</a><a href="#drop">Shearling boots<span class="new">LIVE</span></a><a href="#plp" data-g="Jaded Man">block.exe<span class="new">NEW</span></a><a href="#plp" data-g="Jaded Man">Rock Revival by Jaded</a><a href="#plp" data-g="Jaded Man">Back in stock</a></section>
+          <section><h3>Clothing</h3><a href="#plp" data-g="Jaded Man">T-shirts &amp; vests</a><a href="#plp" data-g="Jaded Man">Hoodies</a><a href="#plp" data-g="Jaded Man">Knitwear</a><a href="#plp" data-g="Jaded Man">Outerwear</a><a href="#plp" data-g="Jaded Man">Tailoring</a><a href="#plp" data-g="Jaded Man">Tracksuits</a></section>
+          <section><h3>Denim &amp; cargo</h3><a href="#plp" data-g="Jaded Man" data-t="Baggy Jeans">Colossus</a><a href="#plp" data-g="Jaded Man">Jude bootcut</a><a href="#plp" data-g="Jaded Man">Slim / straight</a><a href="#pdp" data-h="khaki-parachute-cargo-pants">Parachute</a><a href="#plp" data-g="Jaded Man">Jorts</a></section>
+          <section><h3>More</h3><a href="#plp" data-g="Jaded Man">Footwear</a><a href="#plp" data-g="Jaded Man">Accessories</a><a href="#plp" data-g="Jaded Man">Unisex</a><a href="#plp" data-g="Jaded Man">Denim fit guide</a><a href="#plp" data-g="Jaded Man">Sale</a></section>
+          <figure><img src="img/hero_shearling_m.jpg" alt="Shearling boots campaign" loading="lazy"><figcaption>DRUMMER SHEARLING BOOTS</figcaption></figure>
+        </div></div>
+      <a href="#drop" class="drop-link">Shearling</a>
+      <a href="#pdp" data-h="khaki-parachute-cargo-pants">Parachute</a>
+      <a href="#campaign">Campaigns</a>
+      <a href="#stores">Stores</a>
     </nav>
     <a class="mark" href="#home" aria-label="Jaded London home">JADED<span>LONDON</span></a>
     <div class="tools u">
       <span class="clock mono" id="clock" title="London time">LDN --:--</span>
-      <a href="#plp" class="hide-s">Search</a>
+      <button id="searchBtn">Search</button>
       <span class="dn" role="group" aria-label="Day or night mode"><button id="dDay" aria-pressed="false">DAY</button><button id="dNight" aria-pressed="false">NIGHT</button></span>
-      <button id="bagBtn">Bag (<span id="bagN" class="mono">0</span>)</button>
+      <button id="bagBtn" aria-haspopup="dialog">Bag (<span id="bagN" class="mono">0</span>)</button>
     </div>
   </div>
 </header>
 <main id="app"></main>
 <footer class="pad u" id="foot">
-  <div><h3>Help</h3><ul><li>Delivery · free UK over £80</li><li>Returns &amp; exchanges</li><li>Track your order</li><li>Size &amp; fit</li><li>Klarna</li></ul></div>
-  <div><h3>Jaded</h3><ul><li>Campaign archive</li><li>Collabs</li><li>Stores &amp; pop-ups</li><li>Careers</li><li>Download the app</li></ul></div>
-  <div><h3>Club</h3><ul><li>Drop waitlists</li><li>Community rewards</li><li>Student discount</li><li>TikTok · Instagram</li></ul></div>
-  <div><h3>Region</h3><ul><li>United Kingdom · GBP £</li><li>United States · USD $</li><li>Ships to 190+ countries</li><li>Accessibility statement</li></ul></div>
+  <div><h3>Help</h3><ul><li>Delivery · free UK over £80</li><li>Returns · 30 days</li><li>Track your order</li><li>Size &amp; fit</li><li>Klarna · Afterpay</li></ul></div>
+  <div><h3>Jaded</h3><ul><li><a href="#campaign">Campaign archive</a></li><li>Editions &amp; collabs</li><li><a href="#stores">Stores &amp; pop-ups</a></li><li>About Jaded</li><li>Careers</li></ul></div>
+  <div><h3>Club</h3><ul><li>Drop waitlists</li><li>Community rewards</li><li>Jaded app · iOS · Android</li><li>Student discount</li><li>TikTok · Instagram · YouTube</li></ul></div>
+  <div><h3>Region</h3><ul><li>United Kingdom · GBP £</li><li>United States · USD $</li><li>Ships to 190 countries</li><li>Accessibility statement</li></ul></div>
 </footer>
+<div id="layer"></div>
 <div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
 <script src="data.js"></script>
 <script>
-const D=window.JADED, CAMP=[{"h":"nolita-jaded-london","n":"Nolita","img":"img/camp0.jpg","alt":"Woman in a backless dress adorned with floral designs, posing in a dim setting."},{"h":"vol-1-jaded-london","n":"Vol. 1","img":"img/camp1.jpg","alt":"Shirtless musician with long hair playing a bass guitar on stage."},{"h":"jaded-x-nothing-nyc","n":"Jaded x Nothing","img":"img/camp2.jpg","alt":"Two women interacting in a lively, stylish setting with music elements."},{"h":"violet-jaded-london","n":"Violet","img":"img/camp3.jpg","alt":"A man in a chair and a woman in a patterned outfit."},{"h":"la-casting-call","n":"LA Casting Call","img":"img/camp4.jpg","alt":"People queueing outside the Jaded London LA casting call."},{"h":"ibiza-2026-jaded-london","n":"Ibiza","img":"img/camp5.jpg","alt":"A boat with a thatched roof and people enjoying the water."},{"h":"campaign-romie","n":"Romie","img":"img/camp6.jpg","alt":"A person in a blue dress poses in front of a door."},{"h":"campaign-karmen","n":"Karmen","img":"img/camp7.jpg","alt":"A woman in stylish attire poses on a chair against a textured wall."},{"h":"spring-campaign","n":"Spring","img":"img/camp8.jpg","alt":"Models wearing oversized plaid and cargo pieces from new season collection"},{"h":"ruine-campaign","n":"Ruiné","img":"img/camp9.jpg","alt":"Models styling denim, blazer and graphic tee in urban fashion campaign"}];
-const STORES=[["NYC Store","434 Broadway · 11am–7pm","New York"],["LA Store","8483 Melrose Ave · 11am–7pm","Los Angeles"],["ENG Pop-up","December 2025","Hangzhou"],["ENG Pop-up","December 2025","Chengdu"],["Nubian Pop-up","November 2025","Tokyo"],["World Tour: Miami","May 2025","Miami"],["World Tour: LA","April 2025","Los Angeles"],["Selfridges London","November 2024","London"],];
-const $=(s,r=document)=>r.querySelector(s), app=$('#app');
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const D=window.JADED;
+const CAMP=[{"h":"nolita-jaded-london","n":"Nolita","img":"img/camp0.jpg","alt":"Woman in a backless dress adorned with floral designs, posing in a dim setting.","live":1},{"h":"vol-1-jaded-london","n":"Vol. 1","img":"img/camp1.jpg","alt":"Shirtless musician with long hair playing a bass guitar on stage."},{"h":"jaded-x-nothing-nyc","n":"Jaded x Nothing","img":"img/camp2.jpg","alt":"Two women interacting in a lively, stylish setting with music elements."},{"h":"violet-jaded-london","n":"Violet","img":"img/camp3.jpg","alt":"A man in a chair and a woman in a patterned outfit."},{"h":"la-casting-call","n":"LA Casting Call","img":"img/camp4.jpg","alt":"People queueing outside the Jaded London LA casting call."},{"h":"ibiza-2026-jaded-london","n":"Ibiza","img":"img/camp5.jpg","alt":"A boat with a thatched roof and people enjoying the water."},{"h":"campaign-romie","n":"Romie","img":"img/camp6.jpg","alt":"A person in a blue dress poses in front of a door."},{"h":"campaign-karmen","n":"Karmen","img":"img/camp7.jpg","alt":"A woman in stylish attire poses on a chair against a textured wall."},{"h":"spring-campaign","n":"Spring","img":"img/camp8.jpg","alt":"Models wearing oversized plaid and cargo pieces from new season collection"},{"h":"ruine-campaign","n":"Ruiné","img":"img/camp9.jpg","alt":"Models styling denim, blazer and graphic tee in urban fashion campaign"}];
+/* store facts from the live US store pages, 21 Oct 2026 */
+const SHOPS=[{n:"New York",a:"434 Broadway, New York, NY 10013",tz:"America/New_York",q:"434+Broadway+New+York+NY+10013"},{n:"Los Angeles",a:"8483 Melrose Avenue, CA 90069",tz:"America/Los_Angeles",q:"8483+Melrose+Avenue+Los+Angeles+CA+90069"}];
+const HOURS=[[12,18],[11,19],[11,19],[11,19],[11,19],[11,19],[11,19]]; /* Sun..Sat */
+const POPUPS=[["NYC Store opening","Sep 2025","New York"],["ENG Pop-up","Dec 2025","Hangzhou"],["ENG Pop-up","Dec 2025","Chengdu"],["Nubian Pop-up","Nov 2025","Tokyo"],["World Tour: Miami","May 2025","Miami"],["World Tour: LA","Apr 2025","Los Angeles"],["London Pop-up","Dec 2024","London"],["Jaded London / Selfridges","Nov 2024","London"],["Japan Pop-up","Oct 2024","Japan"],["NYC Pop-up","Sep 2024","New York"],["LA Pop-up","Apr 2024","Los Angeles"],["Jaded London x 2000Archives","Apr 2024","Seoul"],["Shanghai Pop-up","Mar 2024","Shanghai"],["London Pop-up","Sep 2023","London"],["LA Pop-up","Apr 2023","Los Angeles"],["LDN to NYC · VFILES","Sep 2022","New York"]];
+const DJS=[["Manuka Honey","@mariimals"],["The Twins","@waitareyoutwins"],["João Lágrima de Ouro","@joao.lagrima.de.ouro"],["Boy Pillow","@boy___pillow"],["Océane","@oceane2u"]];
+const $=(s,r=document)=>r.querySelector(s), app=$('#app'), layer=$('#layer');
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const gbp=n=>'£'+(Math.round(n)===n?n:n.toFixed(2));
-const loc=(p,j)=>`img/p_${p.h}_${j}.jpg`;
-let state={g:'all',type:'all',sort:'merch',cols:4,sys:'w',size:null,bag:0};
-try{const s=JSON.parse(localStorage.getItem('jd-proto')||'{}');if(s.cols)state.cols=s.cols}catch(e){}
-function save(){try{localStorage.setItem('jd-proto',JSON.stringify({cols:state.cols}))}catch(e){}}
-function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2600)}
-function sizeNote(p){const a=p.sizes.filter(s=>s[1]).length,n=p.sizes.length;if(!n)return'';if(a===0)return'Sold out · notify me';if(a<=2)return`Only ${a} of ${n} sizes left`;return`${a}/${n} sizes`}
-function card(p,i,opt={}){const two=opt.one?'':`<img src="${loc(p,1)}" alt="" loading="lazy" onerror="this.remove()">`;
-  const flag=p.tags.some(t=>/unisex/i.test(t))||/parachute/i.test(p.t)?'<span class="flag">UNISEX</span>':(i<4&&!opt.noflag?'<span class="flag uv">NEW</span>':'');
-  return `<a class="card" href="#pdp" data-h="${p.h}"><div class="ph">${flag}<img src="${loc(p,0)}" alt="${esc(p.t)}, ${esc(p.v==='Jaded Man'?'menswear':'womenswear')}" loading="${i<4?'eager':'lazy'}">${two}</div><div class="meta"><span class="t">${esc(p.t)}</span><span class="pr">${gbp(p.p)}</span><span class="sub">${esc(p.v==='Jaded Man'?'Men':'Women')} · ${esc(p.type)} · ${sizeNote(p)}</span></div></a>`}
-/* countdown: an example timer set 2 days ahead so the module reads as it would in production; the real date comes from the drop metaobject */
-const dropAt=Date.now()+ (2*864e5) + (5*36e5) + (17*6e4);
+/* one product index across every list in the data file */
+const ALL={};[...D.plp,...D.parachute,...D.boots,...D.nolita,...D.twin].forEach(p=>{if(!ALL[p.h])ALL[p.h]={...p};else if((p.img||[]).length>(ALL[p.h].img||[]).length)ALL[p.h].img=p.img});
+const RICH=D.pdp.h; ALL[RICH]={...ALL[RICH],...D.pdp};
+const pimg=(p,j)=>p.h===RICH?`img/pdp_${j}.jpg`:`img/p_${p.h}_${j}.jpg`;
+const nimg=p=>p.h===RICH?7:Math.min((p.img||[]).length,3);
+let state={g:'all',type:'all',sort:'merch',cols:4,sys:'w',size:null,cur:RICH,bag:[]};
+try{const s=JSON.parse(localStorage.getItem('jd-proto')||'{}');if(s.cols)state.cols=s.cols;if(Array.isArray(s.bag))state.bag=s.bag.filter(l=>ALL[l.h])}catch(e){}
+function save(){try{localStorage.setItem('jd-proto',JSON.stringify({cols:state.cols,bag:state.bag}))}catch(e){}}
+function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2800)}
+const avail=p=>p.sizes.filter(s=>s[1]).length;
+function sizeNote(p){const a=avail(p),n=p.sizes.length;if(!n)return'';if(a===0)return'Sold out · restock list';if(a<=2)return`Only ${a} of ${n} sizes left`;return`${a}/${n} sizes`}
+const isUnisex=p=>p.tags.some(t=>/unisex/i.test(t))||/parachute/i.test(p.t)||/unisex/i.test((p.d&&p.d.lead)||'');
+function priceHTML(p){return p.c?`<span class="now">${gbp(p.p)}</span><s>${gbp(p.c)}</s>`:gbp(p.p)}
+function card(p,i,opt={}){
+  const out=avail(p)===0&&p.sizes.length;
+  const two=opt.one||nimg(p)<2?'':`<img src="${pimg(p,1)}" alt="" loading="lazy" onerror="this.remove()">`;
+  const flag=out?'<span class="flag out">SOLD OUT</span>':opt.live?'<span class="flag uv">LIVE</span>':isUnisex(p)?'<span class="flag">UNISEX</span>':(i<4&&!opt.noflag?'<span class="flag uv">NEW</span>':'');
+  return `<div class="card" data-h="${p.h}"><a href="#pdp" data-h="${p.h}"><div class="ph">${flag}<img src="${pimg(p,0)}" alt="${esc(p.t)}" loading="${i<4?'eager':'lazy'}">${two}</div><div class="meta"><span class="t">${esc(p.t)}</span><span class="pr">${priceHTML(p)}</span><span class="sub">${esc(p.v==='Jaded Man'?'Men':p.v==='Jaded Swim'?'Swim':'Women')} · ${sizeNote(p)}</span></div></a>${out?'':`<button class="qbtn" data-qa="${p.h}" aria-label="Quick add ${esc(p.t)}">+</button>`}</div>`}
+function grid(list,cols,opt){return `<div class="gw"><div class="grid" style="--cols:${cols}">${list.map((p,i)=>card(p,i,opt)).join('')}</div></div>`}
+/* quick add: size row inside the card */
+document.addEventListener('click',e=>{const b=e.target.closest('[data-qa]');if(!b)return;e.preventDefault();const c=b.closest('.card'),p=ALL[b.dataset.qa];
+  const open=c.querySelector('.qpanel');document.querySelectorAll('.qpanel').forEach(x=>x.remove());if(open)return;
+  c.querySelector('.ph').insertAdjacentHTML('beforeend',`<div class="qpanel"><span class="u note">Quick add · pick a size</span><div class="ss">${p.sizes.map(s=>`<button data-qs="${esc(s[0])}" ${s[1]?'':'disabled'}>${esc(s[0])}</button>`).join('')}</div></div>`);
+  c.querySelector('.qpanel').addEventListener('click',ev=>{ev.preventDefault();ev.stopPropagation();const s=ev.target.closest('[data-qs]');if(!s||s.disabled)return;addToBag(p.h,s.dataset.qs);ev.currentTarget.remove()})});
+/* bag */
+function bagCount(){return state.bag.reduce((n,l)=>n+l.q,0)}
+function bagTotal(){return state.bag.reduce((n,l)=>n+ALL[l.h].p*l.q,0)}
+function paintBag(){$('#bagN').textContent=bagCount();save()}
+function addToBag(h,s){const l=state.bag.find(x=>x.h===h&&x.s===s);l?l.q++:state.bag.push({h,s,q:1});paintBag();openBag(`Added ${ALL[h].t}, ${s}`)}
+function closeLayer(){layer.innerHTML='';document.body.classList.remove('lock');const f=closeLayer.ret;closeLayer.ret=null;f&&f.focus()}
+function openLayer(html,focusSel){closeLayer.ret=document.activeElement;layer.innerHTML=`<div class="scrim" data-close></div>${html}`;document.body.classList.add('lock');const f=layer.querySelector(focusSel||'[data-close-btn]');f&&f.focus()}
+layer.addEventListener('click',e=>{if(e.target.closest('[data-close-btn]')||e.target.classList.contains('scrim'))closeLayer();else if(e.target.closest('[data-close]'))setTimeout(closeLayer,0)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&layer.innerHTML)closeLayer()});
+function openBag(msg){
+  const tot=bagTotal(),free=80,left=Math.max(0,free-tot),pct=Math.min(100,tot/free*100);
+  const lines=state.bag.map((l,i)=>{const p=ALL[l.h];return `<div class="line"><img src="${pimg(p,0)}" alt=""><div><b>${esc(p.t)}</b><div class="note u">Size ${esc(l.s)}</div><div class="q" role="group" aria-label="Quantity"><button data-dq="${i}" aria-label="Decrease">−</button><span>${l.q}</span><button data-iq="${i}" aria-label="Increase">+</button></div></div><span class="mono">${gbp(p.p*l.q)}</span></div>`}).join('');
+  const rec=D.boots.find(b=>avail(b)>0&&!state.bag.some(l=>l.h===b.h));
+  openLayer(`<aside class="drawer" role="dialog" aria-modal="true" aria-label="Your bag"><div class="dh u"><b>Bag (${bagCount()})</b><button data-close-btn>Close</button></div>
+   <div class="db">${msg?`<p class="note" style="padding:10px 16px;margin:0;border-bottom:1px solid var(--soft)">${esc(msg)}</p>`:''}${state.bag.length?lines:`<div class="empty-bag"><b class="u">Your bag is empty</b><span class="note">The drop is live. Start with the shearling boots.</span><a class="btn" href="#drop" data-close>Shop the drop</a></div>`}
+   ${rec?`<div style="padding:14px 16px;display:grid;gap:8px"><span class="u note">Finish the look</span><a href="#pdp" data-h="${rec.h}" data-close style="display:grid;grid-template-columns:60px 1fr auto;gap:10px;align-items:center"><img src="${pimg(rec,0)}" alt="" style="aspect-ratio:4/5;object-fit:cover"><span>${esc(rec.t)}</span><span class="mono">${gbp(rec.p)}</span></a></div>`:''}</div>
+   <div class="df"><div class="ship"><span class="u" style="font-weight:600">${left?`${gbp(Math.round(left*100)/100)} to free UK delivery`:'Free UK delivery unlocked'}</span><div class="track"><i style="width:${pct}%"></i></div></div>
+   <div style="display:flex;justify-content:space-between" class="u"><b>Subtotal</b><b class="mono">${gbp(Math.round(tot*100)/100)}</b></div>
+   <button class="btn" disabled>Checkout · disabled in prototype</button><span class="note">Taxes and duties included at checkout. 30-day returns. Klarna and Afterpay available.</span></div></aside>`);
+  layer.querySelector('.drawer').addEventListener('click',e=>{const d=e.target.closest('[data-dq]'),u=e.target.closest('[data-iq]');if(!d&&!u)return;const i=+(d||u).dataset[d?'dq':'iq'];state.bag[i].q+=d?-1:1;if(state.bag[i].q<=0)state.bag.splice(i,1);paintBag();openBag()});
+}
+/* search */
+const SUGS=['Parachute','Shearling boots','Colossus','Camo','Corset','Faux fur','Bootcut'];
+function openSearch(){openLayer(`<div class="search" role="dialog" aria-modal="true" aria-label="Search"><div class="sbar pad"><label for="q" class="sr">Search products</label><input id="q" type="search" placeholder="Search Jaded" autocomplete="off"><button class="u" data-close-btn>Close</button></div><div class="pad"><div class="sugs" id="sugs">${SUGS.map(s=>`<button class="chip" data-sq="${s}">${s}</button>`).join('')}</div></div><div id="sres"></div></div>`,'#q');
+  const q=$('#q'),run=()=>{const v=q.value.trim().toLowerCase();if(!v){$('#sres').innerHTML='';return}
+    const words=v.replace(/s\b/g,'').split(/\s+/);const L=Object.values(ALL).filter(p=>words.every(w=>(p.t+' '+p.type+' '+p.colors.join(' ')).toLowerCase().includes(w)));
+    $('#sres').innerHTML=`<div class="sec-h pad u"><h2>${L.length} result${L.length===1?'':'s'} for “${esc(q.value.trim())}”</h2><span>Prototype searches ${Object.keys(ALL).length} products</span></div>`+(L.length?grid(L.slice(0,8),4,{noflag:1}):`<p class="empty u">Nothing matches. Try “parachute” or “boots”.</p>`)};
+  q.addEventListener('input',run);$('#sugs').addEventListener('click',e=>{const b=e.target.closest('[data-sq]');if(b){q.value=b.dataset.sq;run();q.focus()}});
+  $('#sres').addEventListener('click',e=>{if(e.target.closest('a[href^="#"]'))setTimeout(closeLayer,0)});
+}
+/* mobile nav */
+function openMenu(){openLayer(`<aside class="drawer left" role="dialog" aria-modal="true" aria-label="Menu"><div class="dh u"><b>Menu</b><button data-close-btn>Close</button></div><div class="db mnav">
+  <a href="#drop" data-close style="color:var(--uv)">Shearling boots · live</a>
+  <details><summary>Women</summary><div><a href="#plp" data-g="Jaded London" data-close>New arrivals</a><a href="#campaign" data-close>Nolita</a><a href="#plp" data-g="Jaded London" data-close>Dresses</a><a href="#plp" data-g="Jaded London" data-t="Baggy Jeans" data-close>Denim</a><a href="#plp" data-g="Jaded London" data-close>Sale</a></div></details>
+  <details><summary>Men</summary><div><a href="#plp" data-g="Jaded Man" data-close>New arrivals</a><a href="#plp" data-g="Jaded Man" data-t="Baggy Jeans" data-close>Colossus denim</a><a href="#plp" data-g="Jaded Man" data-close>Outerwear</a><a href="#plp" data-g="Jaded Man" data-close>Sale</a></div></details>
+  <a href="#pdp" data-h="${RICH}" data-close>Parachute</a><a href="#campaign" data-close>Campaigns</a><a href="#stores" data-close>Stores</a>
+  <div style="padding:16px;display:grid;gap:12px"><span class="dn" role="group" aria-label="Day or night mode" style="display:inline-flex;justify-self:start"><button data-dn="light">DAY</button><button data-dn="dark">NIGHT</button></span><span class="note u">United Kingdom · GBP £</span></div></div></aside>`);
+  layer.querySelectorAll('[data-dn]').forEach(b=>b.onclick=()=>{root.dataset.theme=b.dataset.dn;paintDN()});}
+/* example countdown, two days ahead; production reads the drop metaobject */
+const dropAt=Date.now()+(2*864e5)+(5*36e5)+(17*6e4);
 function tick(){const el=$('#cd');if(!el)return;let s=Math.max(0,Math.floor((dropAt-Date.now())/1000));const v=[Math.floor(s/86400),Math.floor(s%86400/3600),Math.floor(s%3600/60),s%60];el.querySelectorAll('b').forEach((b,i)=>b.textContent=String(v[i]).padStart(2,'0'))}
 setInterval(tick,1000);
+function waitForms(){app.querySelectorAll('form.wait').forEach(f=>f.addEventListener('submit',e=>{e.preventDefault();toast('Prototype: nothing was stored or sent.')}))}
 function home(){
-  const nw=D.plp.slice(0,8), para=D.parachute.slice(0,10);
+  const nw=D.plp.slice(0,8),para=D.parachute.slice(0,10),bootsFrom=Math.min(...D.boots.map(b=>b.p));
   app.innerHTML=`
-  <section class="hero" aria-label="Current drop">
-    <figure><img src="${CAMP[0].img}" alt="${esc(CAMP[0].alt)}" fetchpriority="high"><figcaption class="u">Campaign · Nolita · Jaded London</figcaption></figure>
-    <div class="drop">
-      <div style="display:grid;gap:14px"><span class="live u">Drop live · New in 21.10.26</span>
-      <h1>NEW<br>IN.</h1>
-      <p style="max-width:40ch;margin:0">${D.counts.newin}+ pieces this drop across womenswear and Jaded Man. Parachute cargos, Colossus denim, camo and faux leather.</p></div>
-      <div style="display:grid;gap:10px">
-        <span class="u" style="font-weight:700">Next drop opens in</span>
-        <div class="count mono" id="cd" role="timer" aria-label="Countdown to next drop"><div><b>00</b><small>DAYS</small></div><div><b>00</b><small>HRS</small></div><div><b>00</b><small>MIN</small></div><div><b>00</b><small>SEC</small></div></div>
-        <form class="wait" id="wait"><label for="em" class="u" style="position:absolute;left:-9999px">Email for waitlist</label><input id="em" type="email" required placeholder="EMAIL FOR FIRST ACCESS"><button class="u">Join list</button></form>
-        <span class="note">Example timer. In production the date and waitlist come from the drop metaobject and Klaviyo; this prototype stores and sends nothing.</span>
-        <a href="#plp" class="atc" style="text-align:center">Shop new in</a>
-      </div>
-    </div>
+  <section class="hero" aria-label="Current drop: shearling boots">
+    <picture><source media="(max-width:900px)" srcset="img/hero_shearling_m.jpg"><img src="img/hero_shearling_d.jpg" alt="Two models sit on a white studio floor wearing Jaded shearling boots: black leather drummer boots and pink studded boots" fetchpriority="high"></picture>
+    <div class="panel"><span class="live">Drop live · Shearling boots</span><h1>SHEARLING<br>BOOTS</h1>
+      <p style="margin:0;max-width:40ch">Sheepskin-lined drummer and bolted-stud boots in five colourways, unisex sizing UK 3–12. From ${gbp(bootsFrom)}.</p>
+      <div class="ctas"><a class="btn" href="#drop">Shop the drop</a><a class="btn o" href="#plp">New in</a></div></div>
   </section>
+  <div class="sec-h pad u"><h2>The drop · ${D.boots.length} styles</h2><a href="#drop">Restock list for sold-out styles</a></div>
+  ${grid(D.boots.slice(0,4),4,{live:1})}
   <div class="sec-h pad u"><h2>New in</h2><a href="#plp">View all ${D.counts.newin}</a></div>
-  <div class="gw"><div class="grid" style="--cols:4">${nw.map((p,i)=>card(p,i)).join('')}</div></div>
+  ${grid(nw,4)}
+  <section class="band" aria-label="Nolita campaign"><figure><img src="img/nol_a.jpg" alt="Nolita campaign: models posed around a car in an industrial workshop" loading="lazy"></figure>
+    <div><div style="display:grid;gap:12px"><span class="u note">New collection · photographed by Dion Bal</span><h2>NOLITA</h2><p>A downtown take on after-dark dressing. Delicate sheers, embroidery and jewelled trims, toughened up with studs, PU leather and bandage.</p></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" href="#campaign">See the campaign</a><a class="btn o" href="#campaign">Shop ${D.nolita.length} looks</a></div></div></section>
   <section class="para" aria-label="Parachute">
     <div class="word"><div><span class="u note">The franchise · since 2022</span><h2>PARA&shy;CHUTE</h2></div>
       <p>The new wardrobe staple. Inspired by the M-51 and M-65 field pants worn by the U.S. Army in 1951 and 1965. One pant, two size systems: women’s S equals men’s XS.</p>
-      <a href="#pdp" class="u" style="font-weight:700;text-decoration:underline">Shop Parachute · from ${gbp(Math.min(...para.map(p=>p.p)))}</a></div>
+      <a href="#pdp" data-h="${RICH}" class="u" style="font-weight:700;text-decoration:underline">Shop Parachute · from ${gbp(Math.min(...para.map(p=>p.p)))}</a></div>
     <div class="strip">${para.map((p,i)=>card(p,i,{one:1,noflag:1})).join('')}</div>
   </section>
+  <section class="band flip" aria-label="The Sound Room NYC"><figure><img src="img/soundroom_d.jpg" alt="DJ booth inside The Sound Room at the Jaded London New York store" loading="lazy"></figure>
+    <div><div style="display:grid;gap:12px"><span class="u note">IRL · New York store</span><h2>THE SOUND ROOM</h2><p>A listening room with NOTHING at 434 Broadway. Five DJs, entry only through the Jaded app.</p></div>
+    <a class="btn o" href="#stores">Stores &amp; events</a></div></section>
+  <div class="sec-h pad u" style="border-top:0"><h2>Next drop</h2><span class="note">Example timer · production reads the drop calendar</span></div>
+  <div class="pad" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px;padding-block:16px 20px;border-bottom:var(--hair)">
+    <div class="count mono" id="cd" role="timer" aria-label="Countdown to next drop"><div><b>00</b><small>DAYS</small></div><div><b>00</b><small>HRS</small></div><div><b>00</b><small>MIN</small></div><div><b>00</b><small>SEC</small></div></div>
+    <form class="wait"><label for="em" class="sr">Email for early access</label><input id="em" type="email" required placeholder="EMAIL FOR FIRST ACCESS"><button class="u">Join list</button></form>
+  </div>
   <div class="sec-h pad u" id="camp"><h2>Campaigns</h2><span>Archive · 130+ stories</span></div>
-  <div class="rail">${CAMP.map(c=>`<a href="#home" title="/pages/campaigns/${c.h}"><div class="ph"><img src="${c.img}" alt="${esc(c.alt)}" loading="lazy"></div><div class="cap u"><b>${esc(c.n)}</b><span class="mono">→</span></div></a>`).join('')}</div>
-  <div class="sec-h pad u"><h2>Worn by you</h2><span>#jadedlondon</span></div>
-  <div class="ugc">${['TikTok post','Creator edit','Instagram post','TikTok post','Store opening','Creator edit'].map(x=>`<div>${x}<br>slot · shoppable</div>`).join('')}</div>
-  <div class="sec-h pad u" id="stores"><h2>Stores &amp; IRL</h2><span>Physical stores, pop-ups and parties</span></div>
-  <div class="stores u">${STORES.map(s=>`<div><b>${s[0]}</b><span class="mono">${s[1]}</span><span>${s[2]}</span></div>`).join('')}</div>`;
-  tick();
-  $('#wait').addEventListener('submit',e=>{e.preventDefault();toast('Prototype: nothing was stored or sent.')});
+  <div class="rail">${CAMP.map(c=>c.live?`<a href="#campaign"><div class="ph"><img src="${c.img}" alt="${esc(c.alt)}" loading="lazy"></div><div class="cap u"><b>${esc(c.n)}</b><span class="mono" style="color:var(--uv)">OPEN →</span></div></a>`:`<div title="Archive story: /pages/campaigns/${c.h}"><div class="ph"><img src="${c.img}" alt="${esc(c.alt)}" loading="lazy"></div><div class="cap u"><b>${esc(c.n)}</b><span class="note">ARCHIVE</span></div></div>`).join('')}</div>
+  <div class="sec-h pad u"><h2>Worn by you</h2><span>#jadedlondon · 1.5M on Instagram · 423K on TikTok</span></div>
+  <div class="ugc">${['TikTok reply · “what are these boots?!”','NYC street walk','Instagram carousel','Sound Room clip','Creator edit','Store opening'].map(x=>`<div>${x}<br>shoppable slot</div>`).join('')}</div>
+  <div class="sec-h pad u"><h2>Stores &amp; IRL</h2><a href="#stores">All stores</a></div>
+  <div class="stores u">${[["NYC Store","434 Broadway"],["LA Store","8483 Melrose Ave"]].map(s=>`<div><b>${s[0]}</b><span class="mono">${s[1]}</span><span class="uv" data-open="${s[0]}"></span></div>`).join('')}${POPUPS.slice(1,7).map(s=>`<div><b>${s[0]}</b><span class="mono">${s[1]}</span><span>${s[2]}</span></div>`).join('')}</div>`;
+  tick();waitForms();paintOpen();
+}
+function drop(){
+  const live=D.boots.filter(b=>avail(b)>0),out=D.boots.filter(b=>!avail(b));
+  app.innerHTML=`<section class="drophead"><figure><img src="img/camo_shearling_d.jpg" alt="Model crouched against a white wall wearing a black corset and camo studded shearling boots" fetchpriority="high"></figure>
+   <div><div style="display:grid;gap:14px"><div class="crumbs u">Home / Drops / Shearling boots</div><span class="live">Live now</span><h1>SHEARLING BOOTS</h1>
+     <p style="margin:0;max-width:46ch;font-size:14px;line-height:1.5">Drummer boots in real suede and textured leather with braided trim and a sheepskin lining. Bolted Stud boots in cow suede, mid-calf, with antique silver studs. Designed for unisex: standard fit, order your usual size.</p></div>
+     <div class="legend u"><div><span class="state uv">Live</span><span>${live.length} styles in stock now</span></div><div><span class="state">Sold out</span><span>${out.length} styles · join the restock list</span></div><div><span class="state">Archive</span><span>After the drop, this page becomes the campaign story</span></div></div></div></section>
+  <div class="sec-h pad u"><h2>The drop · ${D.boots.length} styles</h2><span>${live.length} live · ${out.length} sold out · sizes UK 3–12</span></div>
+  <div class="gw"><div class="grid" style="--cols:${D.boots.length}">${[...live,...out].map((p,i)=>avail(p)?card(p,i,{live:1}):card(p,i).replace('</a>',`</a><form class="wait restock" style="border:0;border-top:var(--hair);margin-top:auto"><label class="sr" for="rs${i}">Email for ${esc(p.t)} restock</label><input id="rs${i}" type="email" required placeholder="EMAIL"><button class="u">Notify me</button></form>`)).join('')}</div></div>
+  <div class="pad note" style="padding-block:14px">Stock and sizes are the real figures from the catalogue on 21 Oct 2026. The restock form is a prototype and sends nothing.</div>`;
+  waitForms();
+}
+function campaign(){
+  app.innerHTML=`<section class="camp-hero"><img src="img/nol0.jpg" alt="Nolita campaign: woman in a backless dress with floral appliqué, crouched in a dim workshop" fetchpriority="high"><div class="ttl"><span class="u note">Campaign · new collection</span><h1>NOLITA</h1></div></section>
+  <section class="story"><div><p>A downtown take on after-dark dressing, Nolita is effortlessly rebellious and feminine, provocative and sensual, and a little undone. Delicate sheers, intricate embroidery, jewelled trims and lingerie-inspired details are toughened up with studs, PU leather and bandage styles.</p><p>Shot in an industrial car workshop. Gritty, oil-slick and slightly unhinged.</p>
+    <dl class="u"><dt>Photography</dt><dd>Dion Bal</dd><dt>Location</dt><dd>Industrial car workshop</dd><dt>Pieces</dt><dd class="mono">${D.nolita.length} shown · from ${gbp(Math.min(...D.nolita.map(p=>p.p)))}</dd></dl>
+    <a class="btn" href="#shoplook" data-to="shoplook">Shop the looks</a></div>
+    <div class="looks"><figure class="w"><img src="img/nol_b.jpg" alt="Model reclining on a concrete slab in a black leather look, sparks behind" loading="lazy"></figure><figure><img src="img/nol_c.jpg" alt="Model in a zebra faux fur coat" loading="lazy"></figure><figure><img src="img/nol_d.jpg" alt="Models in pink faux fur, lace and satin in a concrete room" loading="lazy"></figure></div></section>
+  <div class="sec-h pad u" id="shoplook"><h2>Shop the looks</h2><span>${D.nolita.length} pieces</span></div>
+  ${grid(D.nolita,4,{noflag:1})}
+  <div class="looks"><figure class="w"><img src="img/nol_e.jpg" alt="Group shot from the Nolita campaign" loading="lazy"></figure></div>
+  <div class="sec-h pad u"><h2>More campaigns</h2><span>Archive</span></div>
+  <div class="rail">${CAMP.slice(1).map(c=>`<div><div class="ph"><img src="${c.img}" alt="${esc(c.alt)}" loading="lazy"></div><div class="cap u"><b>${esc(c.n)}</b><span class="note">ARCHIVE</span></div></div>`).join('')}</div>`;
+}
+function openInfo(tz){const now=new Date(),parts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:tz,weekday:'short',hour:'numeric',minute:'numeric',hour12:false}).formatToParts(now).map(x=>[x.type,x.value]));
+  const d=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(parts.weekday),h=(+parts.hour%24)+(+parts.minute)/60,[o,c]=HOURS[d];const t=`${String(parts.hour%24).padStart(2,'0')}:${parts.minute}`;
+  const next=h<o?`today ${h12(o)}`:`tomorrow ${h12(HOURS[(d+1)%7][0])}`;return {open:h>=o&&h<c,close:c,openAt:o,day:d,local:t,next}}
+const h12=h=>h===12?'12pm':h>12?(h-12)+'pm':h+'am';
+function paintOpen(){document.querySelectorAll('[data-open]').forEach(el=>{try{const s=SHOPS[el.dataset.open.startsWith('NYC')?0:1],i=openInfo(s.tz);el.textContent=i.open?`Open now · until ${h12(i.close)}`:`Closed · opens ${i.next}`}catch(e){}})}
+function stores(){
+  app.innerHTML=`<div class="plp-head pad"><div><div class="crumbs u">Home / Stores</div><h1>STORES</h1></div><span class="u mono">2 stores · ${POPUPS.length} pop-ups since 2022</span></div>
+  <div class="shops">${SHOPS.map((s,k)=>{let i={};try{i=openInfo(s.tz)}catch(e){};return `<section class="shop"><span class="open ${i.open?'y':''}">${i.open===undefined?'':i.open?`● Open now · until ${h12(i.close)} · ${i.local} local`:`Closed · opens ${i.next} · ${i.local} local`}</span><h2>${s.n.toUpperCase()}</h2><span class="mono">${s.a}</span>
+    <table aria-label="Opening hours"><tbody>${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((d,j)=>{const idx=(j+1)%7;return `<tr class="${idx===i.day?'today':''}"><td>${d}</td><td>${h12(HOURS[idx][0])} – ${h12(HOURS[idx][1])}</td></tr>`}).join('')}</tbody></table>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn o" href="https://www.google.com/maps/search/?api=1&query=${s.q}" target="_blank" rel="noopener">Directions</a>${k===0?'<a class="btn o" href="#soundroom" data-to="soundroom">This week: The Sound Room</a>':''}</div></section>`}).join('')}</div>
+  <section class="band flip" id="soundroom" aria-label="The Sound Room"><figure><img src="img/soundroom_d.jpg" alt="DJ booth inside The Sound Room" loading="lazy"></figure>
+   <div><div style="display:grid;gap:12px"><span class="u note">New York store × NOTHING</span><h2>THE SOUND ROOM</h2><p>An immersive listening experience at 434 Broadway, in collaboration with NOTHING. Entry is only through the Jaded London app: download it to secure an invitation.</p></div>
+   <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="btn o">App Store</span><span class="btn o">Google Play</span></div></div></section>
+  <div class="sec-h pad u"><h2>Line-up</h2><span>${DJS.length} DJs</span></div>
+  <div class="djs u">${DJS.map(d=>`<div><b>${d[0]}</b><span class="mono note">${d[1]}</span></div>`).join('')}</div>
+  <div class="sec-h pad u"><h2>Pop-up archive</h2><span>Newest first</span></div>
+  <div class="archive u">${POPUPS.map(p=>`<div><span class="yr">${p[1]}</span><b>${p[0]}</b><span>${p[2]}</span></div>`).join('')}</div>`;
 }
 function plp(){
-  const types=['all',...new Set(D.plp.slice(0,36).map(p=>p.type))];
-  app.innerHTML=`<div class="plp-head pad"><div><div class="crumbs u">Home / New in</div><h1>NEW IN</h1></div><span class="u mono" id="cnt"></span></div>
+  const base=D.plp.slice(0,36),types=['all',...new Set(base.map(p=>p.type))];
+  app.innerHTML=`<div class="plp-head pad"><div><div class="crumbs u">Home / ${state.g==='Jaded Man'?'Men':state.g==='Jaded London'?'Women':'All'} / New in</div><h1>NEW IN</h1></div><span class="u mono" id="cnt"></span></div>
   <div class="filters pad u" id="flt">
     <div class="chips" role="group" aria-label="Department">${[['all','All'],['Jaded London','Women'],['Jaded Man','Men']].map(g=>`<button class="chip" data-g="${g[0]}" aria-pressed="${state.g===g[0]}">${g[1]}</button>`).join('')}</div>
-    <label for="ftype" style="position:absolute;left:-9999px">Category</label><select id="ftype">${types.map(t=>`<option value="${esc(t)}"${state.type===t?' selected':''}>${t==='all'?'All categories':esc(t)}</option>`).join('')}</select>
-    <label for="fsort" style="position:absolute;left:-9999px">Sort</label><select id="fsort"><option value="merch">Sort: Edit</option><option value="lo">Price low–high</option><option value="hi">Price high–low</option><option value="stock">Most sizes</option></select>
+    <label for="ftype" class="sr">Category</label><select id="ftype">${types.map(t=>`<option value="${esc(t)}"${state.type===t?' selected':''}>${t==='all'?'All categories':esc(t)}</option>`).join('')}</select>
+    <label for="fsort" class="sr">Sort</label><select id="fsort"><option value="merch">Sort: Edit</option><option value="lo">Price low–high</option><option value="hi">Price high–low</option><option value="stock">Most sizes</option></select>
     <span class="sp"></span>
     <span class="dens" role="group" aria-label="Grid density">VIEW ${[2,4,6].map(c=>`<button data-c="${c}" aria-pressed="${state.cols===c}">${c}</button>`).join(' ')}</span>
   </div><div id="pgrid"></div>`;
   $('#fsort').value=state.sort;
-  const draw=()=>{let L=D.plp.slice(0,36).filter(p=>(state.g==='all'||p.v===state.g)&&(state.type==='all'||p.type===state.type));
+  const draw=()=>{let L=base.filter(p=>(state.g==='all'||p.v===state.g)&&(state.type==='all'||p.type===state.type));
     if(state.sort==='lo')L=[...L].sort((a,b)=>a.p-b.p);if(state.sort==='hi')L=[...L].sort((a,b)=>b.p-a.p);
-    if(state.sort==='stock')L=[...L].sort((a,b)=>b.sizes.filter(s=>s[1]).length-a.sizes.filter(s=>s[1]).length);
+    if(state.sort==='stock')L=[...L].sort((a,b)=>avail(b)-avail(a));
+    const out=[];L.forEach((p,i)=>{out.push(card(p,i));if(i===7&&L.length>10)out.push(`<a class="card" href="#campaign" style="background:#000;color:#fff"><div class="ph"><img src="img/nol0.jpg" alt="Nolita campaign" loading="lazy"></div><div class="meta"><span class="t" style="color:#fff">NOLITA · the campaign</span><span class="pr" style="color:#fff">→</span><span class="sub" style="color:#c9c9d0">${D.nolita.length} looks · photographed by Dion Bal</span></div></a>`)});
     $('#cnt').textContent=`${L.length} of ${D.counts.newin} shown`;
-    $('#pgrid').innerHTML=L.length?`<div class="gw"><div class="grid" style="--cols:${state.cols}">${L.map((p,i)=>card(p,i)).join('')}</div></div>`:'<p class="empty u">Nothing in this filter. Clear a filter to see more.</p>';};
+    $('#pgrid').innerHTML=L.length?`<div class="gw"><div class="grid" style="--cols:${state.cols}">${out.join('')}</div></div>`:'<p class="empty u">Nothing in this filter. Clear a filter to see more.</p>';};
   $('#flt').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
     if(b.dataset.g){state.g=b.dataset.g;$('#flt').querySelectorAll('[data-g]').forEach(x=>x.setAttribute('aria-pressed',x===b))}
     if(b.dataset.c){state.cols=+b.dataset.c;save();$('#flt').querySelectorAll('[data-c]').forEach(x=>x.setAttribute('aria-pressed',x===b))}draw()});
@@ -287,53 +519,58 @@ function plp(){
   draw();
 }
 function pdp(){
-  const p=D.pdp, tw=D.twin[0];
-  const sys=state.sys, sizes=sys==='w'?p.sizes:tw.sizes, cur=sys==='w'?p:tw;
-  const bul=p.bullets, model=p.paras.find(x=>/wears a size/.test(x))||'', code=(p.paras.find(x=>/Style code/.test(x))||'').replace('Style code: ',''), comp=p.paras.find(x=>/%/.test(x))||'', care=p.paras.find(x=>/wash/i.test(x))||'', dye=p.paras.find(x=>/handmade/i.test(x))||'';
-  const allOut=sizes.every(s=>!s[1]); const sel=state.size&&sizes.find(s=>s[0]===state.size&&s[1]);
+  const base=ALL[state.cur]||ALL[RICH],rich=base.h===RICH,tw=rich?D.twin[0]:null;
+  const sys=rich?state.sys:'w',cur=sys==='m'&&tw?{...base,...tw,p:tw.p}:base,sizes=cur.sizes;
+  const dd=rich?{b:base.bullets,m:base.paras.find(x=>/wears a size/.test(x))||'',code:(base.paras.find(x=>/Style code/.test(x))||'').replace('Style code: ',''),lead:base.paras[0]}:(base.d||{b:[],m:'',code:'',lead:''});
+  const allOut=sizes.length&&sizes.every(s=>!s[1]);const sel=state.size&&sizes.find(s=>s[0]===state.size&&s[1]);
+  const n=nimg(base),gal=Array.from({length:n},(_,i)=>`<figure><img src="${pimg(base,i)}" alt="${esc(base.t)}, view ${i+1}" loading="${i<2?'eager':'lazy'}" onerror="this.parentNode.remove()"></figure>`).join('');
+  const dept=base.v==='Jaded Man'?'Men':base.v==='Jaded Swim'?'Swim':'Women';
+  const related=(D.boots.some(b=>b.h===base.h)?D.boots:D.nolita.some(b=>b.h===base.h)?D.nolita:D.parachute).filter(x=>x.h!==base.h).slice(0,8);
+  const cols=sizes.length>8?5:Math.max(3,Math.min(5,sizes.length));
   app.innerHTML=`<div class="pdp">
-   <div class="gal" aria-label="Product images">${p.img.slice(0,7).map((u,i)=>`<figure><img src="img/pdp_${i}.jpg" alt="${esc(p.t)}, view ${i+1}" loading="${i<2?'eager':'lazy'}"></figure>`).join('')}</div>
+   <div class="gal" aria-label="Product images">${gal}</div>
    <div class="buy">
-     <div class="crumbs u">Home / Parachute / Women</div>
-     <div style="display:grid;gap:10px"><h1>${esc(p.t)}</h1><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><span class="price">${gbp(p.p)}</span><span class="note u">Or 3 payments of ${gbp(Math.round(p.p/3*100)/100)} · Klarna</span></div></div>
-     <div style="display:grid;gap:8px"><span class="u" style="font-weight:700">Size system <span class="note">unisex fit</span></span>
+     <div class="crumbs u">Home / ${dept} / ${esc(base.type)}</div>
+     <div style="display:grid;gap:10px"><h1>${esc(base.t)}</h1><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><span class="price">${priceHTML(cur)}</span><span class="note u">Or 3 payments of ${gbp(Math.round(cur.p/3*100)/100)} · Klarna</span></div></div>
+     ${rich?`<div style="display:grid;gap:8px"><span class="u" style="font-weight:700">Size system <span class="note">unisex fit</span></span>
        <div class="seg u" role="group" aria-label="Size system"><button data-sys="w" aria-pressed="${sys==='w'}">Women’s sizing</button><button data-sys="m" aria-pressed="${sys==='m'}">Men’s sizing</button></div>
-       <span class="note">Women’s S is equivalent to a men’s XS. ${sys==='m'?'Men’s listing: every size currently sold out.':''}</span></div>
-     <div><div class="sizes" role="group" aria-label="Size">${sizes.map(s=>`<button data-s="${s[0]}" class="${s[1]?'':'oos'}" aria-pressed="${state.size===s[0]}" ${s[1]?'':'aria-label="'+s[0]+', sold out, notify me"'}>${s[0]}</button>`).join('')}</div></div>
-     <button class="atc ${allOut?'notify':''}" id="atc">${allOut?'Notify me when back':sel?'Add to bag · '+gbp(cur.p):'Select a size'}</button>
-     <dl class="facts u"><dt>Colour</dt><dd>${esc(p.colors.join(', '))}</dd><dt>Fit</dt><dd>Oversized · ${esc(bul.find(b=>/Inside leg/.test(b))||'')}</dd><dt>Model</dt><dd style="text-transform:none">${esc(model)}</dd><dt>Delivery</dt><dd>Free UK over £80 · worldwide</dd><dt>Style</dt><dd class="mono">${esc(code)}</dd></dl>
-     <details open><summary class="u">Details</summary><ul>${bul.map(b=>`<li>${esc(b)}</li>`).join('')}</ul></details>
-     <details><summary class="u">Composition &amp; care</summary><p>${esc(comp)}. ${esc(care.charAt(0).toUpperCase()+care.slice(1))}.</p><p>${esc(dye.replace(/\*/g,''))}</p></details>
-     <details><summary class="u">About the Parachute</summary><p>${esc(p.paras[0])}</p><p>Inspired by the M-51 and M-65 field pants worn by the U.S. Army in 1951 and 1965.</p></details>
-     <details><summary class="u">Size &amp; fit guide</summary><p>Fit predictor slot (usizy is already installed). Measurements table from the size-guide metaobject.</p></details>
+       <span class="note">Women’s S is equivalent to a men’s XS. ${sys==='m'?'One product page replaces the separate men’s listing, which is sold out in every size today.':''}</span></div>`:isUnisex(base)?`<span class="note u">Designed for unisex · standard fit, order your usual size</span>`:''}
+     ${sizes.length?`<div class="sizes" role="group" aria-label="Size" style="grid-template-columns:repeat(${cols},1fr)">${sizes.map(s=>`<button data-s="${esc(s[0])}" class="${s[1]?'':'oos'}" aria-pressed="${state.size===s[0]}" ${s[1]?'':`aria-label="${esc(s[0])}, sold out, notify me"`}>${esc(s[0])}</button>`).join('')}</div>`:''}
+     ${allOut?`<form class="wait"><label class="sr" for="rsp">Email for restock</label><input id="rsp" type="email" required placeholder="EMAIL FOR RESTOCK"><button class="u">Notify me</button></form><span class="note">Sold out in every size. Restock alerts are not sent from this prototype.</span>`:`<button class="atc" id="atc">${sel?'Add to bag · '+gbp(cur.p):'Select a size'}</button>`}
+     <dl class="facts u">${base.colors.length?`<dt>Colour</dt><dd>${esc(base.colors.join(', '))}</dd>`:''}${dd.m?`<dt>Model</dt><dd style="text-transform:none">${esc(dd.m)}</dd>`:''}<dt>Delivery</dt><dd>Free UK over £80 · worldwide</dd><dt>Returns</dt><dd>30 days</dd>${dd.code?`<dt>Style</dt><dd class="mono">${esc(dd.code)}</dd>`:''}</dl>
+     ${dd.b&&dd.b.length?`<details class="acc" open><summary class="u">Details</summary><ul>${dd.b.map(b=>`<li>${esc(b)}</li>`).join('')}</ul></details>`:''}
+     ${dd.lead?`<details class="acc"${dd.b&&dd.b.length?'':' open'}><summary class="u">${rich?'About the Parachute':'Description'}</summary><p>${esc(dd.lead)}</p>${rich?'<p>Inspired by the M-51 and M-65 field pants worn by the U.S. Army in 1951 and 1965.</p>':''}</details>`:''}
+     <details class="acc"><summary class="u">Size &amp; fit</summary><p>Fit predictor (uSizy) and the measurements table load here from the size-guide metaobject, instead of shipping every category's guide inline.</p></details>
    </div></div>
-   <div class="sec-h pad u"><h2>More cargo, other colours</h2><a href="#plp">Shop Parachute</a></div>
-   <div class="strip">${D.parachute.filter(x=>x.h!==p.h).slice(0,8).map((x,i)=>card(x,i,{one:1,noflag:1})).join('')}</div>
-   <div class="mbuy"><div style="display:grid"><b class="u" style="font-size:11px">${esc(p.t)}</b><span class="mono">${gbp(p.p)}</span></div><button class="atc ${allOut?'notify':''}" id="atc2" style="width:auto;flex:1">${allOut?'Notify me':sel?'Add to bag':'Select size'}</button></div>`;
+   <div class="sec-h pad u"><h2>${related===D.boots?'More from the drop':related===D.nolita?'More from Nolita':'More cargo, other colours'}</h2><a href="#plp">Shop new in</a></div>
+   <div class="strip">${related.map((x,i)=>card(x,i,{one:1,noflag:1})).join('')}</div>
+   ${allOut?'':`<div class="mbuy"><div style="display:grid;min-width:0"><b class="u" style="font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(base.t)}</b><span class="mono">${gbp(cur.p)}</span></div><button class="atc" id="atc2" style="width:auto;flex:1">${sel?'Add to bag':'Select size'}</button></div>`}`;
   app.querySelectorAll('[data-sys]').forEach(b=>b.onclick=()=>{state.sys=b.dataset.sys;state.size=null;pdp()});
-  app.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{state.size=b.dataset.s;pdp();const s=sizes.find(x=>x[0]===b.dataset.s);if(!s[1])toast(`Size ${s[0]} is sold out. In production this opens a back-in-stock alert.`)});
-  const add=()=>{if(allOut){toast('Prototype: back-in-stock alerts are not sent from this page.');return}if(!sel){toast('Pick a size first.');return}state.bag++;$('#bagN').textContent=state.bag;toast(`Added ${p.t}, size ${state.size}. Prototype bag only.`)};
-  $('#atc').onclick=add;$('#atc2').onclick=add;
+  app.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{const s=sizes.find(x=>x[0]===b.dataset.s);state.size=b.dataset.s;pdp();if(!s[1])toast(`Size ${s[0]} is sold out. In production this opens a back-in-stock alert.`)});
+  const add=()=>{if(!sel){toast('Pick a size first.');app.querySelector('.sizes')?.scrollIntoView({behavior:'smooth',block:'center'});return}addToBag(cur.h,state.size)};
+  $('#atc')&&($('#atc').onclick=add);$('#atc2')&&($('#atc2').onclick=add);waitForms();
 }
-const views={home,plp,pdp};
-function route(){const v=(location.hash||'#home').slice(1);(views[v]||home)();document.querySelectorAll('#nav a').forEach(a=>a.removeAttribute('aria-current'));window.scrollTo(0,0);
-  const hh=$('#hdr').offsetHeight;document.documentElement.style.setProperty('--hh',hh+'px')}
+const views={home,plp,pdp,drop,campaign,stores};
+function route(){const v=(location.hash||'#home').slice(1);const known=views[v];(known||home)();window.scrollTo(0,0);
+  document.querySelectorAll('#nav>a,#nav>div>a').forEach(a=>a.getAttribute('href')==='#'+v&&!a.dataset.g&&!a.dataset.h?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
+  document.documentElement.style.setProperty('--hh',$('#hdr').offsetHeight+'px');
+  document.querySelectorAll('.has-mega').forEach(m=>{m.classList.remove('open');m.classList.add('shut');setTimeout(()=>m.classList.remove('shut'),300)});
+  if(document.activeElement&&document.activeElement.closest&&document.activeElement.closest('.mega'))document.activeElement.blur()}
 document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;
-  if(a.dataset.g){state.g=a.dataset.g;state.type='all'}
-  if(a.dataset.to){e.preventDefault();if(location.hash!=='#home'&&location.hash!==''){location.hash='home'}setTimeout(()=>{const t=document.getElementById(a.dataset.to);t&&t.scrollIntoView({behavior:'smooth'})},60);return}
-  if(a.getAttribute('href')===location.hash){e.preventDefault();route()}
-  $('#nav').classList.remove('open');$('#burger').setAttribute('aria-expanded','false');});
+  if(a.dataset.g){state.g=a.dataset.g;state.type=a.dataset.t||'all'}
+  if(a.dataset.h){state.cur=a.dataset.h;state.size=null;state.sys='w'}
+  if(a.dataset.to){e.preventDefault();const t=document.getElementById(a.dataset.to);t&&t.scrollIntoView({behavior:'smooth'});return}
+  if(a.getAttribute('href')===location.hash){e.preventDefault();route()}});
 window.addEventListener('hashchange',route);
-$('#burger').onclick=()=>{const o=$('#nav').classList.toggle('open');$('#burger').setAttribute('aria-expanded',o)};
-$('#bagBtn').onclick=()=>toast(state.bag?`${state.bag} item${state.bag>1?'s':''} in the prototype bag. Checkout is disabled.`:'Your bag is empty.');
+$('#burger').onclick=openMenu;$('#searchBtn').onclick=openSearch;$('#bagBtn').onclick=()=>openBag();
 /* Day / Night: follows the viewer's system theme until they choose */
 const root=document.documentElement;
-function paintDN(){const dark=root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;$('#dDay').setAttribute('aria-pressed',!dark);$('#dNight').setAttribute('aria-pressed',dark)}
+function paintDN(){const dark=root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;document.querySelectorAll('#dDay,[data-dn="light"]').forEach(b=>b.setAttribute('aria-pressed',!dark));document.querySelectorAll('#dNight,[data-dn="dark"]').forEach(b=>b.setAttribute('aria-pressed',dark))}
 $('#dDay').onclick=()=>{root.dataset.theme='light';paintDN()};$('#dNight').onclick=()=>{root.dataset.theme='dark';paintDN()};
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',paintDN);paintDN();
 function clock(){try{$('#clock').textContent='LDN '+new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',hour:'2-digit',minute:'2-digit'}).format(new Date())}catch(e){}}
-clock();setInterval(clock,15000);
-route();
+clock();setInterval(()=>{clock();paintOpen()},15000);
+paintBag();route();
 </script>
 </body>
 </html>
