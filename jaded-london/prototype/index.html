@@ -1,0 +1,454 @@
+<title>Jaded London Rebuild</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=JetBrains+Mono:wght@400;600&family=Unbounded:wght@500;800&display=swap">
+<style>
+/* Layout: a working document in the prototype's own system. Sticky contents rail on the left, 68ch reading column, hairline tables. */
+:root{
+  --bg:#EFEFF1; --paper:#F8F8FA; --fg:#0B0B0D; --mute:#5C5C66; --line:#C9C9D0; --uv:#4B2BFF; --hi:#B3001B; --ok:#1F7A4D; --warn:#9A5B00;
+  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --f-ui:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#08080A;--paper:#111114;--fg:#ECECF0;--mute:#9494A0;--line:#2C2C33;--uv:#9581FF;--hi:#FF6070;--ok:#55C98E;--warn:#E7A64A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#08080A;--paper:#111114;--fg:#ECECF0;--mute:#9494A0;--line:#2C2C33;--uv:#9581FF;--hi:#FF6070;--ok:#55C98E;--warn:#E7A64A;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:400 15px/1.6 var(--f-ui);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--uv);outline-offset:2px}
+.wrap{display:grid;grid-template-columns:220px minmax(0,1fr);gap:48px;max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 80px}
+.toc{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;padding-top:28px;font:500 12px/1.5 var(--f-ui);max-height:100vh;overflow:auto}
+.toc b{display:block;font:800 15px/1 var(--f-display);letter-spacing:-.02em;margin-bottom:18px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:5px;counter-reset:s}
+.toc li a{text-decoration:none;color:var(--mute)}
+.toc li a:hover{color:var(--fg)}
+.toc .sub{padding-left:12px;font-size:11.5px}
+main{min-width:0;padding-top:28px}
+.eyebrow{font:600 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+h1{font:800 clamp(34px,5.4vw,64px)/.92 var(--f-display);letter-spacing:-.045em;margin:14px 0 18px;text-wrap:balance}
+h2{font:800 clamp(22px,2.6vw,30px)/1.05 var(--f-display);letter-spacing:-.03em;margin:0 0 14px;text-wrap:balance}
+h3{font:700 17px/1.25 var(--f-ui);margin:28px 0 8px;text-wrap:balance}
+h4{font:700 12px/1.2 var(--f-ui);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 6px}
+p,li{max-width:68ch}
+section{border-top:1px solid var(--fg);padding-block:34px 10px;scroll-margin-top:12px}
+.lede{font-size:18px;line-height:1.5;max-width:60ch}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border-top:1px solid var(--fg);border-left:1px solid var(--line);margin:22px 0}
+.stats div{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 14px;display:grid;gap:2px}
+.stats b{font:600 26px/1.1 var(--f-mono)}
+.stats span{font-size:12px;color:var(--mute)}
+.tbl{overflow-x:auto;margin:14px 0 20px;border-top:1px solid var(--fg)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px 8px 0;border-bottom:1px solid var(--line)}
+th{font:600 11px/1.3 var(--f-mono);text-transform:uppercase;letter-spacing:.04em;color:var(--mute)}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+code{font:500 .86em var(--f-mono);background:var(--paper);padding:1px 4px;border:1px solid var(--line);word-break:break-word}
+.sev{display:inline-block;font:600 10px/1 var(--f-mono);padding:3px 5px;border:1px solid currentColor;text-transform:uppercase;white-space:nowrap}
+.sev.h{color:var(--hi)}.sev.m{color:var(--warn)}.sev.l{color:var(--ok)}
+.callout{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--uv);padding:14px 16px;margin:18px 0;max-width:76ch}
+.callout p{margin:.3em 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.two>div{min-width:0}
+.is,.isnt{border-top:2px solid var(--fg);padding-top:8px}
+.isnt{border-top-color:var(--mute)}
+ul.tight{padding-left:18px;margin:6px 0}
+ul.tight li{margin:3px 0}
+/* dial */
+.dial{margin:22px 0;max-width:760px}
+.dial .track{position:relative;height:38px;border:1px solid var(--fg);display:grid;grid-template-columns:repeat(10,1fr)}
+.dial .track span{border-right:1px solid var(--line)}
+.dial .track span:last-child{border-right:0}
+.dial .fill{position:absolute;inset:0 auto 0 0;width:60%;background:repeating-linear-gradient(90deg,var(--fg) 0 2px,transparent 2px 6px);opacity:.85}
+.dial .pin{position:absolute;top:-8px;bottom:-8px;left:60%;width:3px;background:var(--uv)}
+.dial .ends{display:flex;justify-content:space-between;font:600 11px/1.3 var(--f-mono);margin-top:8px;text-transform:uppercase;gap:12px}
+.dial .ends span:nth-child(2){color:var(--uv)}
+/* sitemap */
+pre.tree{font:500 12.5px/1.55 var(--f-mono);background:var(--paper);border:1px solid var(--line);padding:16px;overflow-x:auto;margin:14px 0}
+/* wireframes */
+.wfs{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;margin:16px 0}
+.wf{border:1px solid var(--fg);background:var(--paper);display:grid;grid-template-rows:auto 1fr auto;min-width:0}
+.wf h4{margin:0;padding:8px 10px;border-bottom:1px solid var(--fg)}
+.wf .c{padding:8px;display:grid;gap:4px;align-content:start;font:500 9.5px/1.2 var(--f-mono);text-transform:uppercase;color:var(--mute)}
+.wf .c div{border:1px solid var(--mute);padding:5px;display:flex;align-items:center;justify-content:center;text-align:center;min-height:18px}
+.wf .r{display:grid;gap:4px;border:0!important;padding:0!important}
+.wf .k{background:repeating-linear-gradient(135deg,transparent 0 6px,var(--line) 6px 7px)}
+.wf .u{border-color:var(--uv)!important;color:var(--uv)}
+.wf p{margin:0;padding:8px 10px;border-top:1px solid var(--line);font-size:12px;line-height:1.45}
+/* swatches */
+.sw{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0;border:1px solid var(--fg);margin:14px 0}
+.sw div{padding:44px 10px 10px;font:500 11px/1.35 var(--f-mono);border-right:1px solid var(--fg)}
+.sw div:last-child{border-right:0}
+.typespec{display:grid;gap:10px;margin:12px 0;border-top:1px solid var(--line);padding-top:12px}
+.typespec div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;align-items:baseline}
+.typespec span{font:500 11px var(--f-mono);color:var(--mute)}
+/* roadmap */
+.road{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--fg);border-left:1px solid var(--line);margin:16px 0}
+.road div{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px;min-width:0}
+.road b{font:700 13px/1.2 var(--f-ui);display:block}
+.road .mono{font-size:11px;color:var(--uv)}
+.road ul{padding-left:16px;margin:8px 0 0;font-size:13px}
+.shot{border:1px solid var(--fg);margin:16px 0;background:var(--paper)}
+.shot img{display:block;width:100%;height:auto}
+.shot figcaption{padding:8px 10px;font-size:12px;color:var(--mute);border-top:1px solid var(--fg)}
+.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.shots figure{margin:0}
+.cta{display:inline-block;background:var(--fg);color:var(--bg);text-decoration:none;font:700 12px/1 var(--f-ui);text-transform:uppercase;letter-spacing:.08em;padding:14px 18px;margin:8px 12px 8px 0}
+.cta.o{background:transparent;color:var(--fg);border:1px solid var(--fg)}
+.src{font-size:13px}
+.src li{margin:4px 0;word-break:break-word}
+@media (max-width:900px){.wrap{grid-template-columns:1fr;gap:0}.toc{position:static;max-height:none;padding-bottom:8px}.toc ol{grid-template-columns:1fr 1fr}.toc .sub{display:none}.two{grid-template-columns:1fr}.road{grid-template-columns:1fr 1fr}.typespec div{grid-template-columns:1fr;gap:2px}}
+@media (max-width:520px){.road{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <b>JADED<br>REBUILD</b>
+  <ol>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#inventory">1. Inventory</a></li>
+    <li><a href="#audit">2. Audit</a></li>
+    <li><a href="#benchmark">3. Benchmark</a></li>
+    <li><a href="#brand">4. Brand definition</a></li>
+    <li><a href="#plan">5. Rebuild plan</a></li>
+    <li class="sub"><a href="#ia">IA and sitemap</a></li>
+    <li class="sub"><a href="#wireframes">Wireframes</a></li>
+    <li class="sub"><a href="#design">Design system</a></li>
+    <li class="sub"><a href="#dial">Balenciaga dial</a></li>
+    <li class="sub"><a href="#stack">Tech stack</a></li>
+    <li class="sub"><a href="#targets">Performance and a11y</a></li>
+    <li class="sub"><a href="#seo">SEO and Markets</a></li>
+    <li class="sub"><a href="#migration">Migration map</a></li>
+    <li class="sub"><a href="#social">Social and UGC</a></li>
+    <li class="sub"><a href="#drops">Drop mechanics</a></li>
+    <li class="sub"><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#prototype">6. Prototype</a></li>
+    <li><a href="#sources">Sources and limits</a></li>
+  </ol>
+</nav>
+<main>
+<header>
+  <span class="eyebrow">Website teardown and rebuild plan · 21 October 2026</span>
+  <h1>Jaded London, rebuilt around the drop.</h1>
+  <p class="lede">Jaded already has art direction. It's in the campaigns: flash-lit club nights, sleaze-glam, the Parachute army. The website flattens it into a generic Shopify catalogue with 2,058 products, 532 collections and 390 pages that nobody has pruned. The rebuild keeps every product, price, campaign and store, cuts the clutter, and gives the brand a stark stage in the Balenciaga mould, dialled to about 60% so it still feels like a night out in London.</p>
+  <a class="cta" href="prototype.html#home">Open the prototype</a><a class="cta o" href="#plan">Jump to the plan</a>
+</header>
+
+<section id="summary">
+  <h2>Summary</h2>
+  <div class="stats">
+    <div><b>2,058</b><span>live products (1,180 women, 628 Jaded Man, 250 swim)</span></div>
+    <div><b>17,820</b><span>product images, median 8 per product</span></div>
+    <div><b>532</b><span>public collections; 54 are internal drop and reshoot lists</span></div>
+    <div><b>390</b><span>content pages: 108 campaigns, 51 sign-ups, 17 test/copy</span></div>
+    <div><b>44%</b><span>of products on markdown (909)</span></div>
+    <div><b>£48</b><span>median price, £6 to £300</span></div>
+  </div>
+  <h4>Five decisions</h4>
+  <ol>
+    <li><b>Stay on Shopify, rebuild the theme.</b> Build a custom Online Store 2.0 theme and retire the Shogun page builder in favour of metaobjects. Hydrogen buys little here and costs the marketing team its no-code workflow and a dozen apps (<a href="#stack">why</a>).</li>
+    <li><b>Make the drop the unit of the site.</b> One drop metaobject drives the homepage hero, countdown, waitlist, campaign page and the "New in" grid. It replaces 51 one-off sign-up pages (<a href="#drops">mechanics</a>).</li>
+    <li><b>One product per style.</b> Merge the 355 duplicated unisex titles into single PDPs with a Women's / Men's size-system switch. The Parachute pant is the proof: the women's listing is in stock while the identical men's listing is fully sold out (<a href="#audit">evidence</a>).</li>
+    <li><b>Treat campaigns as the brand's magazine.</b> Rebuild the 130+ campaign and collab stories as one archive, with every story linked to the products it shot.</li>
+    <li><b>Prune before migrating.</b> 2,981 URLs mapped. Products keep their URLs; 300+ pages and collections are consolidated, hidden or redirected (<a href="#migration">map</a>).</li>
+  </ol>
+  <div class="callout"><p><b>How the data was gathered.</b> jadedldn.com shows a Cloudflare "Just a moment…" challenge to automated browsers. I didn't try to get past it. The catalogue, collections and pages come from Shopify's public JSON endpoints on the store's own <code>jaded-london.myshopify.com</code> domain, at low volume. The live theme (menus, scripts, Core Web Vitals, current screenshots) still needs the Claude in Chrome capture described in the handoff. Findings that depend on it are marked <span class="sev m">needs capture</span>.</p></div>
+</section>
+
+<section id="inventory">
+  <h2>1. Inventory</h2>
+  <p>The full inventory is in <code>jaded-london/jaded_inventory.md</code> and every URL is in <code>jaded-london/migration_map.csv</code> in the repo. The headline structure:</p>
+  <h3>Catalogue by product type</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Type</th><th>Products</th><th>Price range</th><th>Median</th></tr></thead>
+    <tbody>
+      <tr><td>Tops</td><td class="n">342</td><td class="n">£11–£140</td><td class="n">£39</td></tr>
+      <tr><td>Baggy Jeans</td><td class="n">184</td><td class="n">£33–£150</td><td class="n">£85</td></tr>
+      <tr><td>Joggers</td><td class="n">155</td><td class="n">£20–£120</td><td class="n">£65</td></tr>
+      <tr><td>Jackets</td><td class="n">151</td><td class="n">£33–£300</td><td class="n">£85</td></tr>
+      <tr><td>Shorts</td><td class="n">146</td><td class="n">£13–£100</td><td class="n">£45</td></tr>
+      <tr><td>Mini Dresses</td><td class="n">133</td><td class="n">£15–£300</td><td class="n">£60</td></tr>
+      <tr><td>Bikini Bottoms / Tops</td><td class="n">234</td><td class="n">£7–£65</td><td class="n">£20–£25</td></tr>
+      <tr><td>Pants (incl. Parachute)</td><td class="n">107</td><td class="n">£14–£90</td><td class="n">£65</td></tr>
+      <tr><td>Hoodies</td><td class="n">74</td><td class="n">£33–£120</td><td class="n">£70</td></tr>
+      <tr><td>Skirts · Maxi Dresses · Jorts</td><td class="n">191</td><td class="n">£8–£200</td><td class="n">£36–£60</td></tr>
+      <tr><td>Other denim (Bootcut, Flared, Straight, Skinny)</td><td class="n">95</td><td class="n">£28–£150</td><td class="n">£70–£85</td></tr>
+      <tr><td>Accessories, footwear, eyewear and the rest</td><td class="n">246</td><td class="n">£6–£205</td><td class="n">varies</td></tr>
+    </tbody></table></div>
+  <p>Parachute: 47 products carry the name, £35 to £75; the core Parachute Cargo Pant is £65. Sizes run on three systems at once: letter (XXS–XXL), UK numeric (4–16) and waist (W24–W38).</p>
+  <h3>Templates and content types in use</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Content</th><th>Count</th><th>Where it lives today</th></tr></thead>
+    <tbody>
+      <tr><td>Campaign and editorial stories</td><td class="n">108</td><td>Pages, mostly built in Shogun; index at <code>/pages/campaigns</code></td></tr>
+      <tr><td>Collab stories (2000Archives, Rock Revival, Schott, New Rock, Sleazenation, Gentle Monster, Paul Frank, O Mighty…)</td><td class="n">34</td><td>Pages</td></tr>
+      <tr><td>Drop sign-up / first-access pages</td><td class="n">51</td><td>One page per drop, Klaviyo forms</td></tr>
+      <tr><td>Stores, pop-ups and parties</td><td class="n">35</td><td>Pages; index at <code>/pages/stores</code></td></tr>
+      <tr><td>Careers (one page per role)</td><td class="n">26</td><td>Pages</td></tr>
+      <tr><td>Help, delivery, returns, FAQ</td><td class="n">21</td><td>Pages plus parcelLab embeds</td></tr>
+      <tr><td>Student Beans country pages</td><td class="n">21</td><td>One page per country</td></tr>
+      <tr><td>Landing pages that duplicate a collection</td><td class="n">21</td><td>Pages (womens, mens, swim, app-only)</td></tr>
+      <tr><td>Test, copy and draft pages, published</td><td class="n">17</td><td>Pages, e.g. <code>/pages/test</code>, <code>/pages/careers-jadedlondon-copy-copy</code></td></tr>
+    </tbody></table></div>
+  <h3>Apps and integrations visible in the data</h3>
+  <p>Shogun (page builder, 156 pages), Klaviyo (email/SMS forms), Searchanise (search), Swym (wishlist), usizy (size advice), parcelLab and Parcel Perform (tracking and returns), Gorgias (support), Klarna (instalments), Student Beans, Dash Hudson and Later (social), EqualWeb (accessibility overlay), YouTube and Vimeo embeds, a native iOS and Android app, and Shopify Markets (190 ship-to countries, base currency GBP). Theme-level scripts <span class="sev m">needs capture</span>.</p>
+</section>
+
+<section id="audit">
+  <h2>2. Audit</h2>
+  <p>Each finding cites the data behind it. Severity reflects its effect on conversion, SEO or brand.</p>
+  <div class="tbl"><table>
+    <thead><tr><th style="width:120px">Area</th><th>Finding and evidence</th><th style="width:70px">Severity</th></tr></thead>
+    <tbody>
+      <tr><td>IA</td><td>532 public collections, and 54 of them are internal operations lists with dated handles (<code>/collections/11-2-26-mw-ecom-drop-and-reshoots</code>, <code>/collections/27-10-25-reshoots</code>). 299 have no description, none has an image, and 14 are empty. That leaves crawlers and on-site search with hundreds of thin, overlapping listings.</td><td><span class="sev h">High</span></td></tr>
+      <tr><td>IA</td><td>Gender is split by vendor (<code>Jaded London</code> vs <code>Jaded Man</code>), so one unisex style becomes two products: 355 titles appear more than once. The Khaki Parachute Cargo Pants are listed under women (sizes XS–XL all in stock) and men (every size sold out). A man landing on the men's PDP sees "sold out" for a pant that's in stock.</td><td><span class="sev h">High</span></td></tr>
+      <tr><td>Content</td><td>17 test, copy and draft pages are published (<code>/pages/test</code>, <code>/pages/accordion-test</code>, <code>/pages/bf-test</code>, <code>/pages/returns-draft</code>, <code>/pages/the-parachute-pant-jaded-london-copy</code>). The campaigns index links to a copy page, to a broken <code>sleazenation-for-jaded%20</code> URL and to a raw Dropbox MP4.</td><td><span class="sev m">Medium</span></td></tr>
+      <tr><td>Drops</td><td>51 separate sign-up pages, one per drop (<code>blueprint-sign-up</code>, <code>blueprint-drop-2-sign-up</code>, <code>devon-app-sign-up</code>, <code>vol1-sign-up-page-jaded-app</code>…). Each is a dead end once its drop is over, and there's no shared waitlist pattern.</td><td><span class="sev m">Medium</span></td></tr>
+      <tr><td>Homepage and PLP</td><td>The catalogue is dominated by markdown: 909 of 2,058 products (44%) have a compare-at price, and tags such as <code>WWSUMMERSALE_26</code>, <code>25WINTERSALEWOMENS</code> and <code>bfcm25</code> sit next to <code>new in all</code>. A permanent discount signal pulls against any "drop" positioning. The current homepage composition <span class="sev m">needs capture</span>.</td><td><span class="sev h">High</span></td></tr>
+      <tr><td>PDP</td><td>Product copy uses 1,734 descriptions with inline styles, and the style code is pasted as grey text (1,720 products). The tone is generic: the Parachute pant "delivers refined luxury and ultimate comfort… a timeless and classic silhouette", which is a long way from rave and club. The women's gallery mixes in shots of the men's twin (style JMCP2420 inside JWL2358).</td><td><span class="sev m">Medium</span></td></tr>
+      <tr><td>PDP</td><td>Model info is free text in 1,099 descriptions ("Yenni is 5 ft 10 and wears a size M"). It should be structured metafields so it can drive a fit display and filters.</td><td><span class="sev l">Low</span></td></tr>
+      <tr><td>Search</td><td>Searchanise plus four separate search-results pages (<code>search-results</code>, <code>search-results-1</code>, <code>search-results-page</code>, <code>rapid-search-results</code>) points to a history of swapped search tools.</td><td><span class="sev l">Low</span></td></tr>
+      <tr><td>Performance</td><td>Master images average about 2,048 px wide and 99.6% are JPEG. The CDN does negotiate WebP (a 2,048 px original at 247 KB drops to 77 KB at 800 px WebP), so the gain depends on the theme requesting sized images with <code>srcset</code>. 156 pages load Shogun's CSS and JS on top of the theme. Real Core Web Vitals <span class="sev m">needs capture</span>.</td><td><span class="sev m">Medium</span></td></tr>
+      <tr><td>Accessibility</td><td>The accessibility statement relies on EqualWeb, an overlay. Overlays don't fix the underlying markup, and the US FTC fined the overlay vendor accessiBe $1m in 2025 for claiming they did. Campaign images do carry alt text, for example "Woman in a backless dress adorned with floral designs, posing in a dim setting". Theme-level audit <span class="sev m">needs capture</span>.</td><td><span class="sev m">Medium</span></td></tr>
+      <tr><td>SEO</td><td>Duplicate surfaces: market subfolders (<code>/en-us/…</code>) alongside root, collection-scoped product URLs, two products per unisex style, 21 per-country Student Beans pages and 21 landing pages that duplicate collections. The root <code>robots.txt</code> and <code>sitemap.xml</code> redirect to the Cloudflare-protected domain, so their content wasn't readable here. Canonical and hreflang tags <span class="sev m">needs capture</span>.</td><td><span class="sev h">High</span></td></tr>
+      <tr><td>Brand</td><td>The campaigns have a strong, consistent point of view (see the prototype's campaign rail). The product pages and copy don't carry it, which feeds the "trend-chasing, no art direction" criticism (<a href="https://thegryphon.co.uk/2021/11/16/the-jaded-truth-about-jaded-london">The Gryphon</a>).</td><td><span class="sev h">High</span></td></tr>
+      <tr><td>Compliance</td><td>The ASA banned a 27 May 2026 Jaded email for glamorising smoking (<a href="https://www.asa.org.uk/rulings/jaded-london-ltd-a26-1342047-jaded-london-ltd.html">ASA ruling</a>). The "Smoke Room" and "Smoking Room" activations are part of the brand story, so the design system needs an imagery rule for this.</td><td><span class="sev m">Medium</span></td></tr>
+    </tbody></table></div>
+</section>
+
+<section id="benchmark">
+  <h2>3. Benchmark</h2>
+  <!--BENCHMARK-->
+</section>
+
+<section id="brand">
+  <h2>4. Brand definition</h2>
+  <p>This comes from the brand's own copy (campaign pages, the Parachute story, the stores index), the campaign imagery, the 2026 store launches and press.</p>
+  <div class="two">
+    <div class="is"><h4>Jaded is</h4><ul class="tight">
+      <li>London club culture exported: LDN to NYC, LA, Tokyo, Seoul, Chengdu.</li>
+      <li>Sexy day-to-night: the same cargo goes from studio to Ibiza boat party.</li>
+      <li>Utility worn as glamour: Parachute (M-51 and M-65 field pants), camo, Colossus denim.</li>
+      <li>Collab-hungry and archive-literate: 2000Archives, Rock Revival, Schott, New Rock, Sleazenation, Gentle Monster.</li>
+      <li>IRL first: stores "designed to feel like stepping into the brand's group chat" (<a href="https://retailboss.co/jaded-london-opens-first-new-york-store-in-soho-and-melrose-store-in-la/">Retail Boss</a>).</li>
+      <li>Fast and drop-driven: 1,109 products published in 2026 so far.</li>
+    </ul></div>
+    <div class="isnt"><h4>Jaded is not</h4><ul class="tight">
+      <li>Quiet luxury or beige minimalism.</li>
+      <li>A discount warehouse (yet 44% of the catalogue is marked down).</li>
+      <li>"Refined, timeless, classic" (the current product copy).</li>
+      <li>Ironic couture: Balenciaga's knowing absurdity reads as a costume on Jaded.</li>
+      <li>Smoking as a selling point (ASA, August 2026).</li>
+      <li>A Shein alternative. That's the perception the site has to beat (<a href="https://fashionunited.uk/news/business/jaded-london-item-found-to-have-shein-label-according-to-tiktok-user/2024031974685">FashionUnited</a>).</li>
+    </ul></div>
+  </div>
+  <div class="callout"><p><b>Positioning line for the rebuild:</b> London club uniform, dropped weekly.</p><p>Every template should answer "what's dropping, who's wearing it, where's the party".</p></div>
+</section>
+
+<section id="plan">
+  <h2>5. Rebuild plan</h2>
+
+  <h3 id="ia">IA and sitemap</h3>
+  <p>The top navigation goes from department-first to drop-first. Women and Men stay as entry points but share one product set, filtered by fit. The URL prefixes are Shopify's own (<code>/products</code>, <code>/collections</code>, <code>/pages</code>). Metaobject web pages sit under <code>/pages/&lt;type&gt;/&lt;handle&gt;</code> (<a href="https://shopify.dev/themes/architecture/templates/metaobject">Shopify docs</a>).</p>
+<pre class="tree">/                          Home · current drop + New in grid
+├─ /collections/new-in     all genders, filter Women / Men / Unisex
+├─ /collections/women      ── tops, dresses, denim, cargo, swim, accessories
+├─ /collections/men        ── tops, denim, cargo, outerwear, accessories
+├─ /collections/swim
+├─ /collections/denim      Colossus, Baggy, Bootcut, Flared, Straight
+├─ /pages/parachute        franchise hub (replaces 4 Parachute pages)
+├─ /collections/sale       one sale, seasonal; replaces 34 sale collections
+├─ /pages/drops/&lt;handle&gt;   drop metaobject: countdown, waitlist, lookbook, products
+├─ /pages/campaigns        archive index (130+ stories, filter by year / type)
+│  └─ /pages/campaigns/&lt;handle&gt;
+├─ /pages/collabs/&lt;handle&gt;  2000Archives, Rock Revival, Schott, New Rock …
+├─ /pages/stores           NYC 434 Broadway, LA Melrose + pop-up archive
+│  └─ /pages/stores/&lt;handle&gt;
+├─ /pages/club             waitlists, rewards, app, student discount
+├─ /pages/help/…           delivery, returns, size &amp; fit, FAQ, tracking
+├─ /pages/careers          ATS feed, one page instead of 26
+├─ /account · /account/wishlist
+└─ /policies/…             Shopify native policies</pre>
+
+  <h3 id="wireframes">Page-by-page wireframes</h3>
+  <p>Hatched blocks are imagery; purple blocks are drop and live states.</p>
+  <div class="wfs">
+    <div class="wf"><h4>Home</h4><div class="c"><div>Header · nav · LDN clock · Day/Night · bag</div><div class="r" style="grid-template-columns:1.3fr 1fr"><div class="k" style="min-height:90px">Campaign full-bleed</div><div class="u">Drop: title, countdown, waitlist</div></div><div class="r" style="grid-template-columns:repeat(4,1fr)"><div class="k" style="min-height:44px">P</div><div class="k">P</div><div class="k">P</div><div class="k">P</div></div><div class="r" style="grid-template-columns:1fr 2fr"><div>PARACHUTE</div><div class="k">Colourway strip</div></div><div class="k">Campaign rail</div><div>Worn by you · UGC</div><div>Stores &amp; IRL</div></div><p>The product grid is the homepage. One drop at a time owns the hero.</p></div>
+    <div class="wf"><h4>PLP</h4><div class="c"><div>Title · count · breadcrumbs</div><div>Sticky filter: Women/Men · category · size · fit · colour · sort · view 2/4/6</div><div class="r" style="grid-template-columns:repeat(4,1fr)"><div class="k" style="min-height:44px">P</div><div class="k">P</div><div class="k">P</div><div class="k">P</div><div class="k" style="min-height:44px">P</div><div class="u">Campaign tile</div><div class="k">P</div><div class="k">P</div></div><div>Load more · "showing 48 of 250"</div></div><p>Hover swaps to the on-model shot. Size availability shows on the card. A campaign tile sits every 12 products.</p></div>
+    <div class="wf"><h4>PDP</h4><div class="c"><div class="r" style="grid-template-columns:1.3fr 1fr"><div class="k" style="min-height:120px">Stacked gallery, video slot</div><div style="display:grid;gap:4px;border:0;padding:0"><div>Name · price · Klarna</div><div>Women's / Men's sizing</div><div>Size grid + fit note</div><div class="u">Add to bag / Notify</div><div>Facts · details · care</div></div></div><div class="k">Worn by you (UGC)</div><div>Same pant, other colours</div><div>Shop the campaign</div></div><p>One PDP per style. Sticky add-to-bag on mobile. Sold-out sizes open the back-in-stock alert.</p></div>
+    <div class="wf"><h4>Drop / campaign</h4><div class="c"><div class="k" style="min-height:70px">Full-bleed film (muted, poster first)</div><div class="u">Countdown → live → sold-through states</div><div>Credits · story</div><div class="r" style="grid-template-columns:repeat(3,1fr)"><div class="k" style="min-height:40px">Look</div><div class="k">Look</div><div class="k">Look</div></div><div>Shop the drop grid</div></div><p>One template covers pre-launch, launch day and archive. The sign-up form is a module inside it, not a separate page.</p></div>
+    <div class="wf"><h4>Collab</h4><div class="c"><div class="r" style="grid-template-columns:1fr 1fr"><div>JADED</div><div>PARTNER</div></div><div class="k" style="min-height:60px">Lookbook</div><div>Story · credits · year</div><div>Products (collab tag)</div><div>More collabs</div></div><p>Co-branded lock-up and archive status. Credits come from the existing pages (photographer, styling, talent).</p></div>
+    <div class="wf"><h4>Stores</h4><div class="c"><div class="r" style="grid-template-columns:1fr 1fr"><div class="k" style="min-height:50px">NYC · 434 Broadway</div><div class="k">LA · Melrose</div></div><div>Hours · map link · events this week</div><div class="u">Next party / pop-up</div><div>Archive: Hangzhou, Chengdu, Tokyo, Miami, Selfridges, Seoul…</div></div><p>Permanent stores first, then the event calendar, then 35 pop-up stories as an archive.</p></div>
+    <div class="wf"><h4>Account / Club</h4><div class="c"><div>Orders · tracking (parcelLab)</div><div>Wishlist (Swym → native)</div><div class="u">My waitlists · early access</div><div>Rewards · student status</div><div>App download</div></div><p>The club is the loyalty layer. Waitlists and early access live here, not on 51 separate pages.</p></div>
+  </div>
+
+  <h3 id="design">Design system</h3>
+  <h4>Colour</h4>
+  <p>Two modes, Day and Night. Day matches the cool grey sweep in Jaded's studio photography, so product shots sit in the page without a visible box. Night is for club drops and switches on with the viewer's dark mode. There's one accent: UV, for live, drop and focus states only.</p>
+  <div class="sw">
+    <div style="background:#ECECEE;color:#0A0A0B">Day ground<br>#ECECEE</div>
+    <div style="background:#0A0A0B;color:#ECECEE">Ink<br>#0A0A0B</div>
+    <div style="background:#060607;color:#EDEDF0">Night ground<br>#060607</div>
+    <div style="background:#4B2BFF;color:#fff">UV accent<br>#4B2BFF</div>
+    <div style="background:#B3001B;color:#fff">Sale / error<br>#B3001B</div>
+  </div>
+  <h4>Type</h4>
+  <div class="typespec">
+    <div><span>Display · Unbounded 800</span><b style="font:800 34px/1 var(--f-display);letter-spacing:-.04em">PARACHUTE</b></div>
+    <div><span>UI · Archivo 11–13 px caps</span><b style="font:600 12px/1 var(--f-ui);text-transform:uppercase;letter-spacing:.06em">New in · Women · Men · Campaigns · Stores</b></div>
+    <div><span>Data · JetBrains Mono</span><b class="mono" style="font-size:14px">£65 · JWL2358 · 02:05:16:57 · W28 W30 W32</b></div>
+  </div>
+  <p>The display face appears once per screen: a drop name, a franchise or a campaign title. Everything else is small utilitarian caps, which is the most Balenciaga part of the system. Mono carries anything a customer compares: price, size, style code, countdown.</p>
+  <h4>Grid, motion, imagery</h4>
+  <ul class="tight">
+    <li><b>Grid:</b> 12 columns, zero gutter, 1 px hairlines between tiles. PLP density switch 2 / 4 / 6 on desktop, 2 / 1 on mobile.</li>
+    <li><b>Motion:</b> image swap on hover, a pulse on the live dot and the countdown tick. Nothing else animates. Respect <code>prefers-reduced-motion</code>.</li>
+    <li><b>Imagery:</b> studio product shots on the existing sweep (already consistent across the catalogue), full-length first, then the detail crop. Campaign imagery runs full-bleed and uncropped. Archive tiles go greyscale until hover, which separates editorial from product. No cigarettes, lit or unlit, in paid or email creative.</li>
+    <li><b>Copy:</b> short, declarative, London. Replace "refined luxury and ultimate comfort" with what the garment does and where it goes.</li>
+  </ul>
+
+  <h3 id="dial">The Balenciaga dial</h3>
+  <p>"Like Balenciaga" means the Demna-era balenciaga.com: a stark, near-brutalist interface, tiny type, black and white, product grids as the homepage and drops treated like art releases. Pushed all the way, that's a costume on a brand whose median price is £48 and whose customers come for the party. Set it at about 6 out of 10.</p>
+  <div class="dial" role="img" aria-label="Dial set at 6 of 10, between Jaded's current site and full Balenciaga">
+    <div class="track"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><div class="fill"></div><div class="pin"></div></div>
+    <div class="ends"><span>0 · Today's Shopify theme</span><span>6 · Jaded rebuild</span><span>10 · balenciaga.com</span></div>
+  </div>
+  <div class="two">
+    <div class="is"><h4>Take</h4><ul class="tight">
+      <li>The product grid as homepage, hairline-ruled and edge to edge.</li>
+      <li>Tiny uppercase UI, mono for data.</li>
+      <li>Black and white ground, so imagery carries the colour.</li>
+      <li>Drops staged as releases: one hero, a countdown, a sold-through state.</li>
+      <li>Full-bleed campaign film, muted, with a poster frame.</li>
+      <li>Restraint: no promo bars stacked three deep and no pop-up on arrival.</li>
+    </ul></div>
+    <div class="isnt"><h4>Leave</h4><ul class="tight">
+      <li>Deliberately hostile navigation (hidden menus, unlabelled icons). Jaded's TikTok traffic is mobile and impatient.</li>
+      <li>Hiding prices and sizes until hover.</li>
+      <li>Ironic, anti-commerce copy. Jaded's voice is flirtatious and direct.</li>
+      <li>Greyscale everything. Jaded's colour (pink mist, camo, UV) is part of the product.</li>
+      <li>Luxury pacing. Jaded drops weekly; the site has to refresh weekly too.</li>
+    </ul></div>
+  </div>
+
+  <h3 id="stack">Tech stack: Online Store 2.0, not Hydrogen</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Question</th><th>Online Store 2.0 custom theme</th><th>Hydrogen (headless)</th></tr></thead>
+    <tbody>
+      <tr><td>Marketing ships campaign pages without developers</td><td>Yes, through JSON templates, sections and metaobjects</td><td>Needs a headless CMS and developer time</td></tr>
+      <tr><td>Current apps (Klaviyo, Swym, usizy, parcelLab, Gorgias, Searchanise, Student Beans, Klarna)</td><td>Theme app extensions, mostly drop-in</td><td>Each needs a re-integration or replacement</td></tr>
+      <tr><td>The Balenciaga-style UI</td><td>Fully achievable in Liquid and CSS (the prototype is plain HTML/CSS/JS)</td><td>Also achievable</td></tr>
+      <tr><td>Drop-day traffic spikes</td><td>Shopify's CDN-cached storefront</td><td>Oxygen edge; more moving parts to scale</td></tr>
+      <tr><td>Markets, Shopify Search &amp; Discovery, checkout extensibility</td><td>Native</td><td>Native through Storefront API, with more work</td></tr>
+      <tr><td>Cost and risk</td><td>Lower; one theme repo</td><td>Higher; app, CMS, hosting, a larger team</td></tr>
+    </tbody></table></div>
+  <p><b>Recommendation:</b> a custom OS 2.0 theme built from scratch (not a theme-store theme), with metaobjects for drops, campaigns, collabs, stores, size guides and careers. Retire Shogun once the 108 campaign pages are migrated. Revisit Hydrogen only if the app and web need a shared React codebase or there's a strong live-commerce requirement. Neither is evidenced today.</p>
+
+  <h3 id="targets">Performance and accessibility targets</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Metric (mobile, 75th percentile field data)</th><th>Target</th></tr></thead>
+    <tbody>
+      <tr><td>Largest Contentful Paint</td><td class="n">≤ 2.0 s (good is 2.5 s)</td></tr>
+      <tr><td>Interaction to Next Paint</td><td class="n">≤ 150 ms</td></tr>
+      <tr><td>Cumulative Layout Shift</td><td class="n">≤ 0.05</td></tr>
+      <tr><td>Homepage transfer, first view</td><td class="n">≤ 1.2 MB, ≤ 60 requests</td></tr>
+      <tr><td>Third-party JS on PLP/PDP</td><td class="n">≤ 150 KB compressed; apps load on interaction</td></tr>
+      <tr><td>Images</td><td class="n">srcset 360–1600 w, WebP/AVIF, lazy below fold, width/height set</td></tr>
+      <tr><td>Accessibility</td><td>WCAG 2.2 AA in the markup, tested with axe and VoiceOver/TalkBack each release. Remove the EqualWeb overlay once remediated.</td></tr>
+    </tbody></table></div>
+
+  <h3 id="seo">SEO and Markets</h3>
+  <ul class="tight">
+    <li><b>Markets:</b> keep subfolders (<code>/en-us</code>, plus whichever other markets are configured), with hreflang for every market plus <code>x-default</code>. Pin prices per market rather than relying on FX conversion. The catalogue data is GBP, and US prices such as $130 for Parachute are set per market <span class="sev m">needs capture</span>.</li>
+    <li><b>Canonicals:</b> product URLs only at <code>/products/&lt;handle&gt;</code>, never collection-scoped. Unisex merges 301 the losing handle to the survivor.</li>
+    <li><b>Structured data:</b> Product with Offer per variant (price, availability, size), BreadcrumbList, Organization with sameAs (TikTok, Instagram), Store/LocalBusiness for NYC and LA, Event for parties and pop-ups.</li>
+    <li><b>Collections as landing pages:</b> 397 merchandising collections reduced to about 60 indexable ones, each with an intro and FAQ. Internal and app-only collections are noindexed or unpublished.</li>
+    <li><b>Campaign archive:</b> 130+ stories with credits is linkable editorial content the competition doesn't have. Index it, interlink it with products and add Article schema.</li>
+  </ul>
+
+  <h3 id="migration">Content migration map</h3>
+  <p>All 2,981 URLs are in <code>jaded-london/migration_map.csv</code>, with old URL, new URL, action and class. Summary:</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Group</th><th>Count</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td>Products</td><td class="n">2,058</td><td>Keep URLs. Merge about 355 unisex duplicates with 301s. Move style code, model and care text into metafields.</td></tr>
+      <tr><td>Merchandising collections</td><td class="n">397</td><td>Keep the canonical set, add copy and images, consolidate near-duplicates.</td></tr>
+      <tr><td>Internal dated collections</td><td class="n">54</td><td>Unpublish; 301 to <code>/collections/new-in</code>.</td></tr>
+      <tr><td>Sale and promo collections</td><td class="n">41</td><td>301 to <code>/collections/sale</code>.</td></tr>
+      <tr><td>App-only and creator-edit collections</td><td class="n">34</td><td>Keep, noindex; creator edits become <code>edit-&lt;name&gt;</code>.</td></tr>
+      <tr><td>Campaign and collab pages</td><td class="n">142</td><td>Rebuild as metaobjects under <code>/pages/campaigns/</code> and <code>/pages/collabs/</code>, with 301s.</td></tr>
+      <tr><td>Drop sign-up pages</td><td class="n">51</td><td>301 to the matching drop page (waitlist module) or <code>/pages/club</code>.</td></tr>
+      <tr><td>Stores and pop-ups</td><td class="n">35</td><td>Stores metaobject, 301s.</td></tr>
+      <tr><td>Help, size, policies, search, account</td><td class="n">39</td><td>Help centre and native policies, 301s.</td></tr>
+      <tr><td>Careers and Student Beans</td><td class="n">47</td><td>One page each, 301s.</td></tr>
+      <tr><td>Landing duplicates of collections</td><td class="n">21</td><td>301 to the collection.</td></tr>
+      <tr><td>Test, copy and draft pages</td><td class="n">17</td><td>Delete, 301 to parent.</td></tr>
+      <tr><td>Empty-body or unclassified pages</td><td class="n">34</td><td>Review in admin; most are built in theme sections.</td></tr>
+    </tbody></table></div>
+  <p>Assets: 17,820 product images stay on Shopify's CDN with no migration needed. Shogun-hosted campaign images (<code>i.shgcdn.com</code>) must be re-uploaded to Shopify Files before Shogun is cancelled, or the campaign archive loses its imagery.</p>
+
+  <h3 id="social">Social and UGC integration</h3>
+  <ul class="tight">
+    <li>"Worn by you" rail on Home and PDP, fed by Dash Hudson (already in use), with products tagged per post. Rights managed in Dash Hudson.</li>
+    <li>Vertical video slot as gallery image 2 on PDP: 6–10 s, muted loop, poster frame, lazy-loaded.</li>
+    <li>Creator edits (the existing <code>camilleroth-rail-edit</code>, <code>libertyylove-rail-edit</code> collections) become a template: creator, their picks, their video.</li>
+    <li>TikTok Shop and Instagram product catalogues synced from Shopify, with UTM-tagged deep links that land on the drop page rather than the homepage.</li>
+    <li>Store and party content (NYC, LA, pop-ups) feeds the same rail, so IRL shows up online within the week.</li>
+  </ul>
+
+  <h3 id="drops">Drop mechanics</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>State</th><th>What the site does</th><th>Built with</th></tr></thead>
+    <tbody>
+      <tr><td>Teaser (T−7 to T−1 days)</td><td>Drop page live with film, countdown and waitlist. Products visible with a "drops Thu 6pm BST" label instead of add-to-bag.</td><td>Drop metaobject (date, film, products); Klaviyo list per drop</td></tr>
+      <tr><td>Early access (T−1 h)</td><td>Waitlist and app users get a signed link. The app keeps its "exclusive access" promise.</td><td>Customer tags; Shopify customer accounts; app push</td></tr>
+      <tr><td>Live</td><td>UV live dot, "x of y sizes left" on cards, sticky add-to-bag, low-stock nudges from real inventory only.</td><td>Theme; inventory from Storefront API</td></tr>
+      <tr><td>Sold through</td><td>Sizes switch to "notify me". The drop page turns into an archive story with credits.</td><td>Back-in-stock flow (Klaviyo); campaign template</td></tr>
+      <tr><td>Traffic</td><td>Static, cached drop page; no app scripts on the countdown view. Queueing only if checkout limits are hit.</td><td>Shopify CDN; checkout queue if needed</td></tr>
+    </tbody></table></div>
+  <p>Markdown policy: move sale to a defined season window and to <code>/collections/sale</code>. Keep compare-at prices off New In, so the drop grid never shows a strikethrough in its first weeks.</p>
+
+  <h3 id="roadmap">Phased roadmap</h3>
+  <div class="road">
+    <div><span class="mono">PHASE 0 · 2–3 WEEKS</span><b>Capture and prune</b><ul><li>Chrome capture: theme, menus, CWV, USD prices</li><li>Unpublish test and internal pages and collections</li><li>Fix broken index links</li><li>Analytics baseline</li></ul></div>
+    <div><span class="mono">PHASE 1 · 6–8 WEEKS</span><b>Theme core</b><ul><li>Design system and tokens</li><li>Home, PLP, PDP, cart, search</li><li>Unisex PDP merge with 301s</li><li>Metafields: model, style code, care</li></ul></div>
+    <div><span class="mono">PHASE 2 · 4–6 WEEKS</span><b>Drops and editorial</b><ul><li>Drop, campaign, collab and stores metaobjects</li><li>Migrate 142 stories off Shogun</li><li>Waitlist and back-in-stock flows</li><li>UGC rail</li></ul></div>
+    <div><span class="mono">PHASE 3 · ONGOING</span><b>Optimise</b><ul><li>Markets and hreflang audit</li><li>A/B: density, hero, PDP video</li><li>Remove the accessibility overlay after the audit</li><li>Retire Shogun</li></ul></div>
+  </div>
+</section>
+
+<section id="prototype">
+  <h2>6. Prototype</h2>
+  <p>A clickable homepage, PLP (New In) and PDP (Khaki Parachute Cargo Pants) built from the real catalogue. Products, prices in GBP, size availability, descriptions, campaign images and alt text all come from the store data. It includes Day/Night mode, a working filter and sort, grid density, the Women's/Men's size-system switch on the PDP (showing the real sold-out men's twin) and a prototype bag. The countdown and waitlist are examples and send nothing.</p>
+  <a class="cta" href="prototype.html#home">Home</a><a class="cta o" href="prototype.html#plp">PLP · New in</a><a class="cta o" href="prototype.html#pdp">PDP · Parachute</a>
+  <figure class="shot"><img src="shots/proto-home.jpg" alt="Prototype homepage: campaign hero beside the New In drop panel with countdown, then a four-column product grid" loading="lazy"><figcaption>Prototype homepage, desktop, Day mode.</figcaption></figure>
+</section>
+
+<section id="sources">
+  <h2>Sources and limits</h2>
+  <h4>Primary data</h4>
+  <ul class="src">
+    <li>Shopify public endpoints, jaded-london.myshopify.com: <code>/products.json</code> (9 pages), <code>/collections.json</code> (3), <code>/pages.json</code> (2), <code>/meta.json</code>, <code>/collections/&lt;handle&gt;/products.json</code> for six collections. Fetched 21 Oct 2026; raw files in <code>jaded-london/scrape/</code>.</li>
+    <li>Image weights measured on cdn.shopify.com; campaign tiles from i.shgcdn.com.</li>
+  </ul>
+  <h4>Press and references</h4>
+  <ul class="src">
+    <li><a href="https://retailboss.co/jaded-london-opens-first-new-york-store-in-soho-and-melrose-store-in-la/">Retail Boss: Jaded London opens first New York store in SoHo and Melrose store in LA</a></li>
+    <li><a href="https://www.particl.com/jaded-london/new-york-city-store-now-open-1316389-351df5c7">Particl: NYC store now open, 434 Broadway</a></li>
+    <li><a href="https://www.asa.org.uk/rulings/jaded-london-ltd-a26-1342047-jaded-london-ltd.html">ASA ruling on Jaded London Ltd (smoking imagery)</a> and <a href="https://fashionunited.uk/news/fashion/jaded-london-ad-banned-over-smoking-imagery/2026080589639">FashionUnited coverage</a></li>
+    <li><a href="https://thegryphon.co.uk/2021/11/16/the-jaded-truth-about-jaded-london">The Gryphon: The jaded truth about Jaded London</a></li>
+    <li><a href="https://fashionunited.uk/news/business/jaded-london-item-found-to-have-shein-label-according-to-tiktok-user/2024031974685">FashionUnited: Shein label found in Jaded London item</a></li>
+    <li><a href="https://en.wikipedia.org/wiki/Jaded_London">Wikipedia: Jaded London</a> (founders, 2013)</li>
+    <li><a href="https://shopify.dev/themes/architecture/templates/metaobject">Shopify: metaobject templates</a></li>
+    <li><a href="https://www.ftc.gov/news-events/news/press-releases/2025/04/ftc-approves-final-order-requiring-accessibe-pay-1-million">FTC: accessiBe order (2025)</a></li>
+  </ul>
+  <!--BENCHSRC-->
+  <h4>Limits</h4>
+  <ul class="src">
+    <li>jadedldn.com was not rendered here because of its Cloudflare challenge, which I didn't attempt to bypass. Menus, homepage composition, scripts, Core Web Vitals and USD prices need the Claude in Chrome capture.</li>
+    <li>The handoff mentions a Forbes article from September 2025, AW26 and SS26 campaigns and the Smoke Room. I couldn't find the Forbes piece, so it isn't cited.</li>
+    <li>Page classification in the migration map is rule-based. Rows marked "review" need a human decision.</li>
+  </ul>
+</section>
+</main>
+</div>

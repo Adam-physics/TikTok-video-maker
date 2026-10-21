@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jaded Rebuild Prototype</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=JetBrains+Mono:wght@400;600&family=Unbounded:wght@500;800&display=swap">
+<style>
+/* Layout: product grid is the page. Hairline 1px rules, 12-col grid, imagery does the shouting, type stays small. */
+:root{
+  --bg:#ECECEE;      /* matches the studio sweep in Jaded's product shots */
+  --fg:#0A0A0B;
+  --mute:#5D5D66;
+  --soft:#DEDEE2;
+  --uv:#4B2BFF;      /* UV club light: the one accent, used for live/drop states and focus */
+  --sale:#B3001B;
+  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --f-ui:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --hair:1px solid var(--fg);
+  --gut:max(16px, env(safe-area-inset-left, 0px));
+  --gutr:max(16px, env(safe-area-inset-right, 0px));
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#060607;--fg:#EDEDF0;--mute:#8E8E98;--soft:#18181C;--uv:#9581FF;--sale:#FF5C6E;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#060607;--fg:#EDEDF0;--mute:#8E8E98;--soft:#18181C;--uv:#9581FF;--sale:#FF5C6E;color-scheme:dark}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 12px/1.45 var(--f-ui);letter-spacing:.01em;-webkit-font-smoothing:antialiased;transition:background .4s,color .4s}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;letter-spacing:inherit}
+:focus-visible{outline:2px solid var(--uv);outline-offset:2px}
+.u{text-transform:uppercase;letter-spacing:.06em}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums;letter-spacing:0}
+.pad{padding-left:var(--gut);padding-right:var(--gutr)}
+.proto{background:var(--fg);color:var(--bg);font:500 10px/1 var(--f-mono);display:flex;gap:16px;justify-content:space-between;padding-block:7px;flex-wrap:wrap}
+.proto a{text-decoration:underline}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--bg);border-bottom:var(--hair)}
+.bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding-block:12px}
+.nav{display:flex;gap:18px;flex-wrap:wrap}
+.nav a{font-weight:600}
+.nav a[aria-current="page"]{text-decoration:underline;text-underline-offset:3px}
+.mark{font:800 clamp(16px,2.2vw,22px)/1 var(--f-display);letter-spacing:-.02em;white-space:nowrap}
+.mark span{font-weight:500;letter-spacing:.18em;font-size:.5em;vertical-align:middle;margin-left:.6em}
+.tools{display:flex;gap:16px;justify-content:flex-end;align-items:center}
+.dn{display:inline-flex;border:var(--hair)}
+.dn button{padding:4px 7px;font:600 10px/1 var(--f-mono)}
+.dn button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.clock{color:var(--mute)}
+.burger{display:none}
+@media (max-width:860px){
+  .bar{grid-template-columns:auto 1fr auto}
+  .nav{display:none}.burger{display:block;font-weight:600}
+  .mark{justify-self:center}.clock,.tools .hide-s{display:none}
+  .nav.open{display:flex;grid-column:1/-1;order:3;flex-direction:column;gap:10px;padding-top:8px}
+}
+main{min-height:60vh}
+/* HOME */
+.hero{position:relative;display:grid;grid-template-columns:1.3fr 1fr;border-bottom:var(--hair)}
+.hero figure{margin:0;position:relative;overflow:hidden;background:var(--soft);aspect-ratio:4/5;max-height:86vh;width:100%}
+.hero figure img{width:100%;height:100%;object-fit:cover}
+.hero figcaption{position:absolute;left:12px;bottom:12px;background:var(--bg);padding:4px 6px;font:500 10px/1.2 var(--f-mono)}
+.drop{display:flex;flex-direction:column;justify-content:space-between;gap:28px;padding:20px var(--gutr) 20px 20px;border-left:var(--hair)}
+.drop h1{font:800 clamp(40px,7vw,104px)/.86 var(--f-display);letter-spacing:-.04em;margin:0;text-wrap:balance}
+.drop .live{display:inline-flex;align-items:center;gap:8px;color:var(--uv);font:600 11px/1 var(--f-mono)}
+.drop .live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--uv);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.25}}
+.count{display:grid;grid-template-columns:repeat(4,1fr);border:var(--hair)}
+.count div{padding:10px;border-right:var(--hair)}
+.count div:last-child{border-right:0}
+.count b{display:block;font:600 clamp(22px,3vw,36px)/1 var(--f-mono)}
+.count small{color:var(--mute)}
+.wait{display:flex;border:var(--hair)}
+.wait input{flex:1;min-width:0;background:transparent;border:0;padding:12px;font:inherit;color:var(--fg)}
+.wait button{background:var(--fg);color:var(--bg);padding:0 16px;font-weight:700}
+.note{color:var(--mute);font:400 10px/1.4 var(--f-mono)}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-block:14px;border-bottom:var(--hair)}
+.sec-h h2{margin:0;font:700 12px/1 var(--f-ui)}
+.gw{overflow:hidden}
+.grid{display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));width:calc(100% + 1px)}
+.card{border-right:var(--hair);border-bottom:var(--hair);position:relative}
+.card .ph{position:relative;aspect-ratio:4/5;background:var(--soft);overflow:hidden}
+.card .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .25s}
+.card .ph img+img{opacity:0}
+.card:hover .ph img+img{opacity:1}
+.card .meta{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:8px 10px 12px}
+.card .t{font-weight:500}
+.card .pr{font-family:var(--f-mono)}
+.card .sub{grid-column:1/-1;color:var(--mute);font-size:10.5px}
+.flag{position:absolute;top:8px;left:8px;background:var(--bg);font:600 9.5px/1 var(--f-mono);padding:4px 5px;z-index:2}
+.flag.uv{background:var(--uv);color:#fff}
+.para{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);border-bottom:var(--hair)}
+.para .word{padding:20px;border-right:var(--hair);display:flex;flex-direction:column;justify-content:space-between;gap:24px}
+.para .word h2{font:800 clamp(34px,6vw,88px)/.85 var(--f-display);letter-spacing:-.05em;margin:0;word-break:break-word}
+.para .word p{max-width:42ch;margin:0}
+.strip{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(160px,1fr);overflow-x:auto;scrollbar-width:thin}
+.strip .card{border-bottom:0}
+.rail{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,24%);overflow-x:auto;border-bottom:var(--hair);scrollbar-width:thin}
+.rail a{border-right:var(--hair);display:block}
+.rail .ph{aspect-ratio:3/4;overflow:hidden;background:var(--soft)}
+.rail img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);transition:filter .3s}
+.rail a:hover img{filter:none}
+.rail .cap{padding:8px 10px 12px;display:flex;justify-content:space-between;gap:8px}
+.ugc{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:var(--hair)}
+.ugc div{aspect-ratio:3/4;border-right:var(--hair);display:flex;align-items:flex-end;padding:8px;color:var(--mute);font:500 10px/1.3 var(--f-mono);background:repeating-linear-gradient(135deg,transparent 0 10px,var(--soft) 10px 11px)}
+.ugc div:last-child{border-right:0}
+.stores{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:var(--hair)}
+.stores div{padding:14px 10px 18px;border-right:var(--hair);display:grid;gap:4px}
+.stores div:nth-child(4n){border-right:0}
+.stores b{font:700 13px/1.1 var(--f-ui);font-stretch:85%}
+footer{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding-block:28px 40px}
+footer h3{margin:0 0 8px;font:700 11px/1 var(--f-ui)}
+footer ul{list-style:none;margin:0;padding:0;display:grid;gap:5px;color:var(--mute)}
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr}.drop{border-left:0;border-top:var(--hair);padding:16px var(--gutr) 20px var(--gut)}
+  .hero figure{aspect-ratio:4/5;max-height:none}
+  .grid{--cols:2!important}.para{grid-template-columns:1fr}.para .word{border-right:0;border-bottom:var(--hair);padding-left:var(--gut)}
+  .ugc{grid-template-columns:repeat(3,1fr)}.ugc div:nth-child(3){border-right:0}.ugc div:nth-child(n+4){display:none}
+  .stores{grid-template-columns:repeat(2,1fr)}.stores div:nth-child(2n){border-right:0}
+  .rail{grid-auto-columns:70%}footer{grid-template-columns:1fr 1fr}
+}
+/* PLP */
+.plp-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding-block:22px 12px;border-bottom:var(--hair);flex-wrap:wrap}
+.plp-head h1{margin:0;font:800 clamp(28px,4.5vw,56px)/.9 var(--f-display);letter-spacing:-.04em}
+.crumbs{color:var(--mute);margin-bottom:8px}
+.filters{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hh,49px));z-index:40;background:var(--bg);border-bottom:var(--hair);display:flex;gap:6px 18px;align-items:center;flex-wrap:wrap;padding-block:9px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:var(--hair);padding:5px 8px;font-weight:600;font-size:10.5px}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.filters select{font:inherit;color:var(--fg);background:var(--bg);border:var(--hair);padding:4px 6px;text-transform:uppercase}
+.filters .sp{flex:1}
+.dens button{padding:2px 5px;font:600 10px var(--f-mono)}
+.dens button[aria-pressed="true"]{text-decoration:underline}
+.empty{padding:60px 16px;text-align:center;color:var(--mute)}
+/* PDP */
+.pdp{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,1fr);border-bottom:var(--hair)}
+.gal{display:grid;grid-template-columns:1fr 1fr;border-right:var(--hair)}
+.gal figure{margin:0;background:var(--soft);aspect-ratio:4/5;overflow:hidden;border-bottom:var(--hair)}
+.gal figure:nth-child(odd){border-right:var(--hair)}
+.gal figure:first-child{grid-column:1/-1;border-right:0;aspect-ratio:4/5}
+.gal img{width:100%;height:100%;object-fit:cover}
+.buy{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hh,49px));align-self:start;padding:20px var(--gutr) 28px 20px;display:grid;gap:18px}
+.buy h1{margin:0;font:700 clamp(22px,2.4vw,30px)/1 var(--f-ui);font-stretch:80%;letter-spacing:-.01em;text-transform:uppercase;text-wrap:balance}
+.buy .price{font:600 16px/1 var(--f-mono)}
+.seg{display:inline-grid;grid-auto-flow:column;border:var(--hair)}
+.seg button{padding:7px 10px;font-weight:600;font-size:10.5px}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.sizes{display:grid;grid-template-columns:repeat(5,1fr);border-top:var(--hair);border-left:var(--hair)}
+.sizes button{border-right:var(--hair);border-bottom:var(--hair);padding:12px 0;font:600 12px/1 var(--f-mono)}
+.sizes button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.sizes button.oos{color:var(--mute);text-decoration:line-through}
+.atc{background:var(--fg);color:var(--bg);padding:15px;font-weight:700;width:100%;text-transform:uppercase;letter-spacing:.08em}
+.atc.notify{background:transparent;color:var(--fg);border:var(--hair)}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;border-top:var(--hair);padding-top:14px}
+.facts dt{color:var(--mute)}
+.facts dd{margin:0}
+details{border-top:var(--hair);padding-block:11px}
+details summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between}
+details summary::after{content:"+";font-family:var(--f-mono)}
+details[open] summary::after{content:"–"}
+details ul{margin:10px 0 0;padding-left:16px;display:grid;gap:3px}
+details p{margin:10px 0 0;max-width:60ch}
+.toast{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:12px 14px;font:600 11px/1.3 var(--f-mono);z-index:80;max-width:320px}
+.mbuy{display:none}
+@media (max-width:860px){
+  .pdp{grid-template-columns:1fr}
+  .gal{display:grid;grid-auto-flow:column;grid-auto-columns:88%;grid-template-columns:none;overflow-x:auto;scroll-snap-type:x mandatory;border-right:0;border-bottom:var(--hair)}
+  .gal figure,.gal figure:first-child{grid-column:auto;scroll-snap-align:start;border-bottom:0;border-right:var(--hair)!important}
+  .buy{position:static;padding:16px var(--gutr) 24px var(--gut)}
+  .mbuy{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--bg);border-top:var(--hair);padding:10px var(--gutr) calc(10px + env(safe-area-inset-bottom,0px)) var(--gut);gap:10px;align-items:center}
+  .mbuy .atc{padding:12px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="proto pad"><span>CONCEPT PROTOTYPE · NOT THE LIVE STORE · NO CHECKOUT</span><span>Real products, prices (GBP) and imagery from the Jaded London Shopify catalogue, 21 Oct 2026 · <a href="index.html">Back to the report</a></span></div>
+<header class="top" id="hdr">
+  <div class="bar pad">
+    <button class="burger u" id="burger" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav u" id="nav" aria-label="Primary">
+      <a href="#plp" data-g="Jaded London">Women</a>
+      <a href="#plp" data-g="Jaded Man">Men</a>
+      <a href="#plp" data-g="all">New in</a>
+      <a href="#pdp">Parachute</a>
+      <a href="#home" data-to="camp">Campaigns</a>
+      <a href="#home" data-to="stores">Stores</a>
+    </nav>
+    <a class="mark" href="#home" aria-label="Jaded London home">JADED<span>LONDON</span></a>
+    <div class="tools u">
+      <span class="clock mono" id="clock" title="London time">LDN --:--</span>
+      <a href="#plp" class="hide-s">Search</a>
+      <span class="dn" role="group" aria-label="Day or night mode"><button id="dDay" aria-pressed="false">DAY</button><button id="dNight" aria-pressed="false">NIGHT</button></span>
+      <button id="bagBtn">Bag (<span id="bagN" class="mono">0</span>)</button>
+    </div>
+  </div>
+</header>
+<main id="app"></main>
+<footer class="pad u" id="foot">
+  <div><h3>Help</h3><ul><li>Delivery · free UK over £80</li><li>Returns &amp; exchanges</li><li>Track your order</li><li>Size &amp; fit</li><li>Klarna</li></ul></div>
+  <div><h3>Jaded</h3><ul><li>Campaign archive</li><li>Collabs</li><li>Stores &amp; pop-ups</li><li>Careers</li><li>Download the app</li></ul></div>
+  <div><h3>Club</h3><ul><li>Drop waitlists</li><li>Community rewards</li><li>Student discount</li><li>TikTok · Instagram</li></ul></div>
+  <div><h3>Region</h3><ul><li>United Kingdom · GBP £</li><li>United States · USD $</li><li>Ships to 190+ countries</li><li>Accessibility statement</li></ul></div>
+</footer>
+<div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
+<script src="data.js"></script>
+<script>
+const D=window.JADED, CAMP=[{"h":"nolita-jaded-london","n":"Nolita","img":"img/camp0.jpg","alt":"Woman in a backless dress adorned with floral designs, posing in a dim setting."},{"h":"vol-1-jaded-london","n":"Vol. 1","img":"img/camp1.jpg","alt":"Shirtless musician with long hair playing a bass guitar on stage."},{"h":"jaded-x-nothing-nyc","n":"Jaded x Nothing","img":"img/camp2.jpg","alt":"Two women interacting in a lively, stylish setting with music elements."},{"h":"violet-jaded-london","n":"Violet","img":"img/camp3.jpg","alt":"A man in a chair and a woman in a patterned outfit."},{"h":"la-casting-call","n":"LA Casting Call","img":"img/camp4.jpg","alt":"People queueing outside the Jaded London LA casting call."},{"h":"ibiza-2026-jaded-london","n":"Ibiza","img":"img/camp5.jpg","alt":"A boat with a thatched roof and people enjoying the water."},{"h":"campaign-romie","n":"Romie","img":"img/camp6.jpg","alt":"A person in a blue dress poses in front of a door."},{"h":"campaign-karmen","n":"Karmen","img":"img/camp7.jpg","alt":"A woman in stylish attire poses on a chair against a textured wall."},{"h":"spring-campaign","n":"Spring","img":"img/camp8.jpg","alt":"Models wearing oversized plaid and cargo pieces from new season collection"},{"h":"ruine-campaign","n":"Ruiné","img":"img/camp9.jpg","alt":"Models styling denim, blazer and graphic tee in urban fashion campaign"}];
+const STORES=[["NYC Store","September 2025","New York"],["ENG Pop-up","December 2025","Hangzhou"],["ENG Pop-up","December 2025","Chengdu"],["Nubian Pop-up","November 2025","Tokyo"],["World Tour: Miami","May 2025","Miami"],["World Tour: LA","April 2025","Los Angeles"],["Selfridges London","November 2024","London"],["2000Archives","April 2024","Seoul"]];
+const $=(s,r=document)=>r.querySelector(s), app=$('#app');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const gbp=n=>'£'+(Math.round(n)===n?n:n.toFixed(2));
+const loc=(p,j)=>`img/p_${p.h}_${j}.jpg`;
+let state={g:'all',type:'all',sort:'merch',cols:4,sys:'w',size:null,bag:0};
+try{const s=JSON.parse(localStorage.getItem('jd-proto')||'{}');if(s.cols)state.cols=s.cols}catch(e){}
+function save(){try{localStorage.setItem('jd-proto',JSON.stringify({cols:state.cols}))}catch(e){}}
+function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2600)}
+function sizeNote(p){const a=p.sizes.filter(s=>s[1]).length,n=p.sizes.length;if(!n)return'';if(a===0)return'Sold out · notify me';if(a<=2)return`Only ${a} of ${n} sizes left`;return`${a}/${n} sizes`}
+function card(p,i,opt={}){const two=opt.one?'':`<img src="${loc(p,1)}" alt="" loading="lazy" onerror="this.remove()">`;
+  const flag=p.tags.some(t=>/unisex/i.test(t))||/parachute/i.test(p.t)?'<span class="flag">UNISEX</span>':(i<4&&!opt.noflag?'<span class="flag uv">NEW</span>':'');
+  return `<a class="card" href="#pdp" data-h="${p.h}"><div class="ph">${flag}<img src="${loc(p,0)}" alt="${esc(p.t)}, ${esc(p.v==='Jaded Man'?'menswear':'womenswear')}" loading="${i<4?'eager':'lazy'}">${two}</div><div class="meta"><span class="t">${esc(p.t)}</span><span class="pr">${gbp(p.p)}</span><span class="sub">${esc(p.v==='Jaded Man'?'Men':'Women')} · ${esc(p.type)} · ${sizeNote(p)}</span></div></a>`}
+/* countdown: an example timer set 2 days ahead so the module reads as it would in production; the real date comes from the drop metaobject */
+const dropAt=Date.now()+ (2*864e5) + (5*36e5) + (17*6e4);
+function tick(){const el=$('#cd');if(!el)return;let s=Math.max(0,Math.floor((dropAt-Date.now())/1000));const v=[Math.floor(s/86400),Math.floor(s%86400/3600),Math.floor(s%3600/60),s%60];el.querySelectorAll('b').forEach((b,i)=>b.textContent=String(v[i]).padStart(2,'0'))}
+setInterval(tick,1000);
+function home(){
+  const nw=D.plp.slice(0,8), para=D.parachute.slice(0,10);
+  app.innerHTML=`
+  <section class="hero" aria-label="Current drop">
+    <figure><img src="${CAMP[0].img}" alt="${esc(CAMP[0].alt)}" fetchpriority="high"><figcaption class="u">Campaign · Nolita · Jaded London</figcaption></figure>
+    <div class="drop">
+      <div style="display:grid;gap:14px"><span class="live u">Drop live · New in 21.10.26</span>
+      <h1>NEW<br>IN.</h1>
+      <p style="max-width:40ch;margin:0">${D.counts.newin}+ pieces this drop across womenswear and Jaded Man. Parachute cargos, Colossus denim, camo and faux leather.</p></div>
+      <div style="display:grid;gap:10px">
+        <span class="u" style="font-weight:700">Next drop opens in</span>
+        <div class="count mono" id="cd" role="timer" aria-label="Countdown to next drop"><div><b>00</b><small>DAYS</small></div><div><b>00</b><small>HRS</small></div><div><b>00</b><small>MIN</small></div><div><b>00</b><small>SEC</small></div></div>
+        <form class="wait" id="wait"><label for="em" class="u" style="position:absolute;left:-9999px">Email for waitlist</label><input id="em" type="email" required placeholder="EMAIL FOR FIRST ACCESS"><button class="u">Join list</button></form>
+        <span class="note">Example timer. In production the date and waitlist come from the drop metaobject and Klaviyo; this prototype stores and sends nothing.</span>
+        <a href="#plp" class="atc" style="text-align:center">Shop new in</a>
+      </div>
+    </div>
+  </section>
+  <div class="sec-h pad u"><h2>New in</h2><a href="#plp">View all ${D.counts.newin}</a></div>
+  <div class="gw"><div class="grid" style="--cols:4">${nw.map((p,i)=>card(p,i)).join('')}</div></div>
+  <section class="para" aria-label="Parachute">
+    <div class="word"><div><span class="u note">The franchise · since 2022</span><h2>PARA&shy;CHUTE</h2></div>
+      <p>The new wardrobe staple. Inspired by the M-51 and M-65 field pants worn by the U.S. Army in 1951 and 1965. One pant, two size systems: women’s S equals men’s XS.</p>
+      <a href="#pdp" class="u" style="font-weight:700;text-decoration:underline">Shop Parachute · from ${gbp(Math.min(...para.map(p=>p.p)))}</a></div>
+    <div class="strip">${para.map((p,i)=>card(p,i,{one:1,noflag:1})).join('')}</div>
+  </section>
+  <div class="sec-h pad u" id="camp"><h2>Campaigns</h2><span>Archive · 130+ stories</span></div>
+  <div class="rail">${CAMP.map(c=>`<a href="#home" title="/pages/campaigns/${c.h}"><div class="ph"><img src="${c.img}" alt="${esc(c.alt)}" loading="lazy"></div><div class="cap u"><b>${esc(c.n)}</b><span class="mono">→</span></div></a>`).join('')}</div>
+  <div class="sec-h pad u"><h2>Worn by you</h2><span>#jadedlondon</span></div>
+  <div class="ugc">${['TikTok post','Creator edit','Instagram post','TikTok post','Store opening','Creator edit'].map(x=>`<div>${x}<br>slot · shoppable</div>`).join('')}</div>
+  <div class="sec-h pad u" id="stores"><h2>Stores &amp; IRL</h2><span>Physical stores, pop-ups and parties</span></div>
+  <div class="stores u">${STORES.map(s=>`<div><b>${s[0]}</b><span class="mono">${s[1]}</span><span>${s[2]}</span></div>`).join('')}</div>`;
+  tick();
+  $('#wait').addEventListener('submit',e=>{e.preventDefault();toast('Prototype: nothing was stored or sent.')});
+}
+function plp(){
+  const types=['all',...new Set(D.plp.slice(0,36).map(p=>p.type))];
+  app.innerHTML=`<div class="plp-head pad"><div><div class="crumbs u">Home / New in</div><h1>NEW IN</h1></div><span class="u mono" id="cnt"></span></div>
+  <div class="filters pad u" id="flt">
+    <div class="chips" role="group" aria-label="Department">${[['all','All'],['Jaded London','Women'],['Jaded Man','Men']].map(g=>`<button class="chip" data-g="${g[0]}" aria-pressed="${state.g===g[0]}">${g[1]}</button>`).join('')}</div>
+    <label for="ftype" style="position:absolute;left:-9999px">Category</label><select id="ftype">${types.map(t=>`<option value="${esc(t)}"${state.type===t?' selected':''}>${t==='all'?'All categories':esc(t)}</option>`).join('')}</select>
+    <label for="fsort" style="position:absolute;left:-9999px">Sort</label><select id="fsort"><option value="merch">Sort: Edit</option><option value="lo">Price low–high</option><option value="hi">Price high–low</option><option value="stock">Most sizes</option></select>
+    <span class="sp"></span>
+    <span class="dens" role="group" aria-label="Grid density">VIEW ${[2,4,6].map(c=>`<button data-c="${c}" aria-pressed="${state.cols===c}">${c}</button>`).join(' ')}</span>
+  </div><div id="pgrid"></div>`;
+  $('#fsort').value=state.sort;
+  const draw=()=>{let L=D.plp.slice(0,36).filter(p=>(state.g==='all'||p.v===state.g)&&(state.type==='all'||p.type===state.type));
+    if(state.sort==='lo')L=[...L].sort((a,b)=>a.p-b.p);if(state.sort==='hi')L=[...L].sort((a,b)=>b.p-a.p);
+    if(state.sort==='stock')L=[...L].sort((a,b)=>b.sizes.filter(s=>s[1]).length-a.sizes.filter(s=>s[1]).length);
+    $('#cnt').textContent=`${L.length} of ${D.counts.newin} shown`;
+    $('#pgrid').innerHTML=L.length?`<div class="gw"><div class="grid" style="--cols:${state.cols}">${L.map((p,i)=>card(p,i)).join('')}</div></div>`:'<p class="empty u">Nothing in this filter. Clear a filter to see more.</p>';};
+  $('#flt').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    if(b.dataset.g){state.g=b.dataset.g;$('#flt').querySelectorAll('[data-g]').forEach(x=>x.setAttribute('aria-pressed',x===b))}
+    if(b.dataset.c){state.cols=+b.dataset.c;save();$('#flt').querySelectorAll('[data-c]').forEach(x=>x.setAttribute('aria-pressed',x===b))}draw()});
+  $('#ftype').onchange=e=>{state.type=e.target.value;draw()};$('#fsort').onchange=e=>{state.sort=e.target.value;draw()};
+  draw();
+}
+function pdp(){
+  const p=D.pdp, tw=D.twin[0];
+  const sys=state.sys, sizes=sys==='w'?p.sizes:tw.sizes, cur=sys==='w'?p:tw;
+  const bul=p.bullets, model=p.paras.find(x=>/wears a size/.test(x))||'', code=(p.paras.find(x=>/Style code/.test(x))||'').replace('Style code: ',''), comp=p.paras.find(x=>/%/.test(x))||'', care=p.paras.find(x=>/wash/i.test(x))||'', dye=p.paras.find(x=>/handmade/i.test(x))||'';
+  const allOut=sizes.every(s=>!s[1]); const sel=state.size&&sizes.find(s=>s[0]===state.size&&s[1]);
+  app.innerHTML=`<div class="pdp">
+   <div class="gal" aria-label="Product images">${p.img.slice(0,7).map((u,i)=>`<figure><img src="img/pdp_${i}.jpg" alt="${esc(p.t)}, view ${i+1}" loading="${i<2?'eager':'lazy'}"></figure>`).join('')}</div>
+   <div class="buy">
+     <div class="crumbs u">Home / Parachute / Women</div>
+     <div style="display:grid;gap:10px"><h1>${esc(p.t)}</h1><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><span class="price">${gbp(p.p)}</span><span class="note u">Or 3 payments of ${gbp(Math.round(p.p/3*100)/100)} · Klarna</span></div></div>
+     <div style="display:grid;gap:8px"><span class="u" style="font-weight:700">Size system <span class="note">unisex fit</span></span>
+       <div class="seg u" role="group" aria-label="Size system"><button data-sys="w" aria-pressed="${sys==='w'}">Women’s sizing</button><button data-sys="m" aria-pressed="${sys==='m'}">Men’s sizing</button></div>
+       <span class="note">Women’s S is equivalent to a men’s XS. ${sys==='m'?'Men’s listing: every size currently sold out.':''}</span></div>
+     <div><div class="sizes" role="group" aria-label="Size">${sizes.map(s=>`<button data-s="${s[0]}" class="${s[1]?'':'oos'}" aria-pressed="${state.size===s[0]}" ${s[1]?'':'aria-label="'+s[0]+', sold out, notify me"'}>${s[0]}</button>`).join('')}</div></div>
+     <button class="atc ${allOut?'notify':''}" id="atc">${allOut?'Notify me when back':sel?'Add to bag · '+gbp(cur.p):'Select a size'}</button>
+     <dl class="facts u"><dt>Colour</dt><dd>${esc(p.colors.join(', '))}</dd><dt>Fit</dt><dd>Oversized · ${esc(bul.find(b=>/Inside leg/.test(b))||'')}</dd><dt>Model</dt><dd style="text-transform:none">${esc(model)}</dd><dt>Delivery</dt><dd>Free UK over £80 · worldwide</dd><dt>Style</dt><dd class="mono">${esc(code)}</dd></dl>
+     <details open><summary class="u">Details</summary><ul>${bul.map(b=>`<li>${esc(b)}</li>`).join('')}</ul></details>
+     <details><summary class="u">Composition &amp; care</summary><p>${esc(comp)}. ${esc(care.charAt(0).toUpperCase()+care.slice(1))}.</p><p>${esc(dye.replace(/\*/g,''))}</p></details>
+     <details><summary class="u">About the Parachute</summary><p>${esc(p.paras[0])}</p><p>Inspired by the M-51 and M-65 field pants worn by the U.S. Army in 1951 and 1965.</p></details>
+     <details><summary class="u">Size &amp; fit guide</summary><p>Fit predictor slot (usizy is already installed). Measurements table from the size-guide metaobject.</p></details>
+   </div></div>
+   <div class="sec-h pad u"><h2>More cargo, other colours</h2><a href="#plp">Shop Parachute</a></div>
+   <div class="strip">${D.parachute.filter(x=>x.h!==p.h).slice(0,8).map((x,i)=>card(x,i,{one:1,noflag:1})).join('')}</div>
+   <div class="mbuy"><div style="display:grid"><b class="u" style="font-size:11px">${esc(p.t)}</b><span class="mono">${gbp(p.p)}</span></div><button class="atc ${allOut?'notify':''}" id="atc2" style="width:auto;flex:1">${allOut?'Notify me':sel?'Add to bag':'Select size'}</button></div>`;
+  app.querySelectorAll('[data-sys]').forEach(b=>b.onclick=()=>{state.sys=b.dataset.sys;state.size=null;pdp()});
+  app.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{state.size=b.dataset.s;pdp();const s=sizes.find(x=>x[0]===b.dataset.s);if(!s[1])toast(`Size ${s[0]} is sold out. In production this opens a back-in-stock alert.`)});
+  const add=()=>{if(allOut){toast('Prototype: back-in-stock alerts are not sent from this page.');return}if(!sel){toast('Pick a size first.');return}state.bag++;$('#bagN').textContent=state.bag;toast(`Added ${p.t}, size ${state.size}. Prototype bag only.`)};
+  $('#atc').onclick=add;$('#atc2').onclick=add;
+}
+const views={home,plp,pdp};
+function route(){const v=(location.hash||'#home').slice(1);(views[v]||home)();document.querySelectorAll('#nav a').forEach(a=>a.removeAttribute('aria-current'));window.scrollTo(0,0);
+  const hh=$('#hdr').offsetHeight;document.documentElement.style.setProperty('--hh',hh+'px')}
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;
+  if(a.dataset.g){state.g=a.dataset.g;state.type='all'}
+  if(a.dataset.to){e.preventDefault();if(location.hash!=='#home'&&location.hash!==''){location.hash='home'}setTimeout(()=>{const t=document.getElementById(a.dataset.to);t&&t.scrollIntoView({behavior:'smooth'})},60);return}
+  if(a.getAttribute('href')===location.hash){e.preventDefault();route()}
+  $('#nav').classList.remove('open');$('#burger').setAttribute('aria-expanded','false');});
+window.addEventListener('hashchange',route);
+$('#burger').onclick=()=>{const o=$('#nav').classList.toggle('open');$('#burger').setAttribute('aria-expanded',o)};
+$('#bagBtn').onclick=()=>toast(state.bag?`${state.bag} item${state.bag>1?'s':''} in the prototype bag. Checkout is disabled.`:'Your bag is empty.');
+/* Day / Night: follows the viewer's system theme until they choose */
+const root=document.documentElement;
+function paintDN(){const dark=root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;$('#dDay').setAttribute('aria-pressed',!dark);$('#dNight').setAttribute('aria-pressed',dark)}
+$('#dDay').onclick=()=>{root.dataset.theme='light';paintDN()};$('#dNight').onclick=()=>{root.dataset.theme='dark';paintDN()};
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',paintDN);paintDN();
+function clock(){try{$('#clock').textContent='LDN '+new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',hour:'2-digit',minute:'2-digit'}).format(new Date())}catch(e){}}
+clock();setInterval(clock,15000);
+route();
+</script>
+</body>
+</html>
