@@ -58,6 +58,7 @@
    *  constellation: draw the Arsenal A (hero only)
    *  box:  element whose rect positions the constellation
    *  card: element used as the hover card for named stars
+   *  named: false draws the mark as a pure brand constellation (no company stars, labels or hover)
    */
   function createSky(canvas, opts) {
     opts = opts || {};
@@ -85,7 +86,7 @@
           var k = p[0] + ',' + p[1];
           if (!verts[k]) {
             verts[k] = { k: k, i: p[0], j: p[1], x: 0, y: 0, sx: rand(-.3, 1.3), sy: rand(-.3, 1.3),
-              d: .35 + p[1] / 8 * .9 + Math.random() * .25, ph: Math.random() * 6.28, info: NAMED[k] || null };
+              d: .35 + p[1] / 8 * .9 + Math.random() * .25, ph: Math.random() * 6.28, info: opts.named === false ? null : NAMED[k] || null };
             vlist.push(verts[k]);
           }
           return verts[k];
