@@ -74,7 +74,7 @@ h2{font-size:clamp(38px,5vw,66px);line-height:1.02;font-weight:800;font-stretch:
 h2 em,h1 em{font-style:normal;color:var(--accent)}
 h3{font-weight:750;letter-spacing:-.03em}
 .wrap{max-width:1240px;margin-inline:auto;padding-inline:20px}
-section{padding-block:clamp(84px,9vw,136px)}
+section{padding-block:clamp(72px,7.5vw,116px)}
 .tabnum{font-variant-numeric:tabular-nums}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 :focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:8px}
@@ -147,31 +147,12 @@ section{padding-block:clamp(84px,9vw,136px)}
 .hero__sub{margin-top:28px;font-size:clamp(18px,1.6vw,21px);line-height:1.6;color:var(--night-muted);max-width:44ch}
 .hero__sub b{color:var(--night-ink);font-weight:650}
 .hero__cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:38px}
-.hero__proof{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:30px;font-size:15px;color:var(--night-muted)}
-.hero__proof b{color:var(--night-ink);font-weight:700}
-.hero__proof span{padding-left:14px;border-left:1px solid var(--night-line)}
 .live{width:8px;height:8px;border-radius:50%;background:#3DCB8C;box-shadow:0 0 0 0 rgba(61,203,140,.6);animation:live 2.4s infinite}
 @keyframes live{70%{box-shadow:0 0 0 10px rgba(61,203,140,0)}100%{box-shadow:0 0 0 0 rgba(61,203,140,0)}}
 .hero__chart{position:relative;aspect-ratio:.86;width:100%;max-width:560px;justify-self:center}
-.hero__hint{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;font:500 12px/1 var(--f-mono);letter-spacing:.08em;color:var(--night-muted);white-space:nowrap;pointer-events:none;transition:opacity .4s}
-.hero__hint b{color:var(--ice)}
-.cursor-dot{width:6px;height:6px;border-radius:50%;background:var(--ice);box-shadow:0 0 12px var(--ice);animation:blink 1.6s ease-in-out infinite}
-@keyframes blink{50%{opacity:.3}}
-
 /* intro sequence */
 .intro{opacity:0;transform:translateY(22px);filter:blur(6px);transition:opacity .9s var(--ease),transform 1s var(--ease),filter .9s var(--ease);transition-delay:var(--d,0s)}
 .is-ready .intro{opacity:1;transform:none;filter:none}
-
-/* floating chips, like objects resting on the chart */
-.float{position:absolute;display:flex;flex-direction:column;gap:3px;padding:14px 18px;border-radius:20px;background:rgba(14,22,42,.62);border:1px solid rgba(201,214,240,.14);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 30px 60px -30px rgba(0,0,0,.8);animation:bob 7s ease-in-out infinite;opacity:0;transition:opacity 1s 1.7s}
-.is-ready .float{opacity:1}
-.float small{font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--night-muted)}
-.float b{font:750 17px/1.15 var(--f);letter-spacing:-.02em}
-.float--a{left:-6%;bottom:12%;transform:rotate(-5deg)}
-.float--b{right:-4%;top:6%;flex-direction:row;align-items:center;gap:12px;transform:rotate(5deg);animation-delay:-3s}
-.float--b i{width:34px;height:34px;border-radius:10px;background:url(data:image/png;base64,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) center/70% no-repeat,rgba(156,200,236,.12)}
-.float--b span{display:flex;flex-direction:column;gap:3px}
-@keyframes bob{50%{translate:0 -10px}}
 
 /* hover card for named stars */
 .sky-card{position:absolute;z-index:5;left:0;top:0;width:280px;padding:18px 18px 16px;border-radius:20px;background:rgba(11,17,32,.86);border:1px solid rgba(201,214,240,.16);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 30px 70px -30px rgba(0,0,0,.9);color:var(--night-ink);opacity:0;transform:translateY(8px) scale(.97);transition:opacity .25s,transform .3s var(--ease);pointer-events:none}
@@ -187,231 +168,181 @@ section{padding-block:clamp(84px,9vw,136px)}
   .hero__grid{grid-template-columns:minmax(0,1fr)}
   .hero__chart{position:absolute;inset:92px 0 auto;margin:auto;width:min(300px,72vw);z-index:-1}
   .hero__copy{padding-top:calc(min(300px,72vw)/.86 + 14px)}
-  .float{display:none}
-  .hero__hint{display:none}
 }
-@media (max-width:560px){.hero__proof span{border:0;padding:0;width:100%}}
 
-/* ───────── proof card ───────── */
-.proof{padding-block:clamp(56px,7vw,96px) clamp(40px,5vw,72px)}
-.proof__card{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(28px,4vw,56px);padding:clamp(28px,4vw,52px);border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-soft)}
-.growth{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:end;gap:16px;height:220px;margin-top:22px}
-.growth__bar{display:flex;flex-direction:column;justify-content:flex-start;align-items:center;gap:6px;width:clamp(84px,10vw,120px);border-radius:14px 14px 6px 6px;padding-top:14px;color:#fff;transform-origin:bottom;transition:transform 1.4s var(--ease)}
-.growth__bar b{font:800 clamp(18px,1.9vw,24px)/1 var(--f);font-stretch:108%;letter-spacing:-.03em}
-.growth__bar span{font:600 11px/1 var(--f-mono);opacity:.75}
-.growth__bar--a{height:22%;background:var(--facet);padding-top:0;justify-content:center}
-.growth__bar--a b{font-size:15px}
-.growth__bar--b{height:100%;background:var(--accent)}
-.growth__arc{align-self:stretch;display:flex;align-items:stretch}
-.growth__arc svg{width:100%;height:100%;overflow:visible}
-.growth__arc path{fill:none;stroke:var(--accent);stroke-width:2;stroke-dasharray:4 7;vector-effect:non-scaling-stroke}
-.growth.pre .growth__bar{transform:scaleY(.04)}
-.proof__stats{display:grid;gap:26px;align-content:center}
-.proof__stats div{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:22px;align-items:baseline;padding-top:22px;border-top:1px solid var(--line)}
-.proof__stats div:first-child{border:0;padding-top:0}
-.proof__stats b{grid-row:span 2;font:800 clamp(40px,4.4vw,58px)/1 var(--f);font-stretch:110%;letter-spacing:-.05em;color:var(--accent);min-width:3.2ch}
-.proof__stats p{font-size:16px;line-height:1.45}
-.proof__stats cite{font:500 12px/1 var(--f-mono);color:var(--muted);font-style:normal;margin-top:8px}
-@media (max-width:880px){.proof__card{grid-template-columns:minmax(0,1fr)}}
-
-.ticker{margin-top:48px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
-.ticker__track{display:flex;align-items:center;gap:28px;width:max-content;animation:tick 38s linear infinite}
-.ticker span{font:800 clamp(28px,3.4vw,46px)/1 var(--f);font-stretch:116%;letter-spacing:-.04em;color:var(--ink)}
-.ticker span.o{color:transparent;-webkit-text-stroke:1.2px var(--muted)}
-.ticker i{width:14px;height:14px;flex:none;background:var(--accent);clip-path:polygon(50% 0,100% 100%,0 100%)}
-@keyframes tick{to{transform:translateX(-50%)}}
-
-/* ───────── portfolio explorer ───────── */
-.explorer{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start}
-.picks{display:flex;flex-direction:column;gap:10px}
-.pick{display:grid;grid-template-columns:22px minmax(0,1fr);gap:14px;text-align:left;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;cursor:pointer;transition:border-color .2s,box-shadow .25s,transform .2s}
-.pick:hover{transform:translateX(3px)}
-.pick .dot{width:20px;height:20px;margin-top:2px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;transition:background .2s,border-color .2s}
-.pick b{display:block;font-size:16.5px;line-height:1.25;font-weight:700;letter-spacing:-.015em}
-.pick small{display:block;margin-top:4px;font-size:14px;line-height:1.4;color:var(--muted)}
-.pick[aria-selected="true"]{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
-.pick[aria-selected="true"] .dot{border-color:var(--accent);background:var(--accent)}
-.pick[aria-selected="true"] .dot::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent-ink)}
-
-.device{position:sticky;top:110px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-lg);overflow:hidden}
-.device__bar{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--tint)}
-.device__lights{display:flex;gap:6px}
-.device__lights i{width:10px;height:10px;border-radius:50%;background:var(--line)}
-.device__tag{margin-left:auto}
-.device__screen{position:relative;min-height:440px;padding:26px}
-.mock{animation:mockIn .5s var(--ease)}
-@keyframes mockIn{from{opacity:0;transform:translateY(12px)}}
-.mock[hidden]{display:none}
-.mrow{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.mrow--head{margin-bottom:20px}
-.mrow--head b{font-size:19px;letter-spacing:-.02em}
-.mfoot{margin-top:18px;font-size:14.5px;color:var(--muted)}
-.tasks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.tasks li{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);font-size:15px}
-.tasks li i{width:18px;height:18px;flex:none;border-radius:6px;border:2px solid var(--line)}
-.tasks li.done i{background:var(--accent);border-color:var(--accent);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
-.tasks li.done{color:var(--muted)}
-.tasks li.run i{border-color:var(--accent);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.who{margin-left:auto;font:600 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:6px 9px;border-radius:999px;background:var(--tint);color:var(--muted);white-space:nowrap}
-.who--ai{background:var(--accent-soft);color:var(--accent)}
-.meter{height:8px;border-radius:8px;background:var(--tint);margin-top:18px;overflow:hidden}
-.meter span{display:block;height:100%;width:var(--w);background:var(--accent);border-radius:inherit;animation:grow 1.4s var(--ease)}
-@keyframes grow{from{width:0}}
-.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.tile{padding:16px;border-radius:16px;border:1px solid var(--line);display:grid;gap:6px}
-.tile small{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.tile b{font-size:16px}
-.ok,.warn{font-size:13px;font-weight:600;color:var(--good)}
-.warn{color:var(--warn)}
-.ask{margin-top:14px;padding:16px;border-radius:16px;background:var(--tint);display:grid;gap:10px;font-size:14.5px}
-.ask__q{font-weight:600}
-.ask__a{display:flex;gap:10px;align-items:center;color:var(--muted)}
-.spark{width:16px;height:16px;flex:none;background:var(--accent);clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);animation:twinkle 2s ease-in-out infinite}
-@keyframes twinkle{50%{transform:scale(.7) rotate(45deg);opacity:.6}}
-.policy{display:grid;border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.policy__row{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;font-size:15px;border-top:1px solid var(--line)}
-.policy__row:first-child{border:0}
-.policy__row span{color:var(--muted)}
-.toggle{width:42px;height:24px;border-radius:24px;background:var(--line);position:relative}
-.toggle i{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .3s}
-.toggle.is-on{background:var(--good)}
-.toggle.is-on i{left:21px}
-.chain{display:inline-flex;align-items:center;gap:8px}
-.chain i{width:14px;height:14px;background:var(--tip);clip-path:polygon(50% 0,100% 100%,0 100%)}
-.spark-line{margin-top:14px;height:70px}
-.spark-line svg{width:100%;height:100%}
-.spark-line path{fill:none;stroke:var(--accent);stroke-width:2.5;vector-effect:non-scaling-stroke;stroke-dasharray:600;stroke-dashoffset:600;animation:draw 1.8s var(--ease) forwards}
-@keyframes draw{to{stroke-dashoffset:0}}
-.phases{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:ph}
-.phases li{position:relative;display:grid;gap:4px;padding:18px 18px 18px 64px;border-radius:16px;border:1px solid var(--line);counter-increment:ph}
-.phases li::before{content:counter(ph);position:absolute;left:18px;top:18px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:700 14px/1 var(--f-mono);background:var(--tint);color:var(--muted)}
-.phases li.done::before{background:var(--accent);color:var(--accent-ink)}
-.phases li.run{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
-.phases li.run::before{background:var(--accent-soft);color:var(--accent)}
-.phases b{font-size:17px}
-.phases span{font-size:14.5px;color:var(--muted)}
-.cal{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
-.cal .h{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-bottom:4px}
-.cal i{min-height:62px;border-radius:12px;border:1px dashed var(--line);font:600 12.5px/1.2 var(--f);font-style:normal;padding:10px;display:flex;align-items:flex-end}
-.cal i.c1,.cal i.c2,.cal i.c3{border-style:solid;animation:pop .5s var(--ease) backwards}
-.cal i.c1{background:var(--accent-soft);color:var(--accent);border-color:transparent}
-.cal i.c2{background:color-mix(in srgb,var(--ice) 30%,var(--surface));border-color:transparent}
-.cal i.c3{background:var(--tint);border-color:transparent}
-.cal i:nth-child(7){animation-delay:.05s}.cal i:nth-child(9){animation-delay:.1s}.cal i:nth-child(10){animation-delay:.15s}.cal i:nth-child(13){animation-delay:.2s}.cal i:nth-child(15){animation-delay:.25s}.cal i:nth-child(16){animation-delay:.3s}.cal i:nth-child(17){animation-delay:.35s}.cal i:nth-child(19){animation-delay:.4s}.cal i:nth-child(21){animation-delay:.45s}
-@keyframes pop{from{opacity:0;transform:scale(.85)}}
-.chat{display:grid;gap:12px}
-.chat p{max-width:84%;padding:14px 16px;border-radius:18px;font-size:15px;line-height:1.5}
-.chat .me{justify-self:end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:6px}
-.chat .it{background:var(--tint);border-bottom-left-radius:6px;display:flex;gap:10px;align-items:flex-start}
-.chat .it .spark{margin-top:3px}
-.typing{gap:5px!important;align-items:center!important;width:max-content}
-.typing span{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:dots 1.2s infinite}
-.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
-@keyframes dots{30%{transform:translateY(-4px);opacity:1}0%,60%,100%{opacity:.4}}
-.fleet{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.fleet li{display:grid;grid-template-columns:10px 110px minmax(0,1fr);gap:14px;align-items:center;padding:14px 16px;border-radius:14px;border:1px solid var(--line);font-size:14.5px}
-.fleet li i{width:10px;height:10px;border-radius:50%;background:var(--line)}
-.fleet li i.on{background:var(--good);box-shadow:0 0 0 4px color-mix(in srgb,var(--good) 18%,transparent)}
-.fleet li span{color:var(--muted)}
-@media (max-width:960px){.explorer{grid-template-columns:minmax(0,1fr)}.device{position:relative;top:auto;order:-1}.picks{flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 4px 10px;margin-inline:-4px}.pick{flex:0 0 78%;scroll-snap-align:start}}
-@media (max-width:560px){.device__screen{padding:18px;min-height:400px}.fleet li{grid-template-columns:10px minmax(0,1fr)}.fleet li span{grid-column:2}.tiles{grid-template-columns:minmax(0,1fr)}}
-
-/* ───────── flywheel ───────── */
-.flywheel{background:linear-gradient(180deg,var(--tint),color-mix(in srgb,var(--tint) 30%,transparent) 70%,transparent);border-radius:56px 56px 0 0;margin-inline:clamp(0px,1.4vw,24px)}
-.fly{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:center}
 .seg{display:flex;flex-wrap:wrap;gap:8px;margin-top:34px}
 .seg button{font:650 15px/1 var(--f);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:13px 18px;cursor:pointer;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s}
 .seg button:hover{border-color:var(--accent)}
 .seg button[aria-checked="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);box-shadow:0 10px 24px -12px var(--accent)}
+.mfoot{margin-top:18px;font-size:14.5px;color:var(--muted)}
+@keyframes mockIn{from{opacity:0;transform:translateY(12px)}}
+@keyframes pop{from{opacity:0;transform:scale(.85)}}
+
+/* ───────── the mark: one constellation reused everywhere ───────── */
+.mk{display:block;width:100%;height:auto;overflow:visible}
+.mk__f{fill-opacity:.08;transition:fill-opacity .6s var(--ease)}
+.mk__e{stroke:var(--mk-line,rgba(186,212,240,.35));stroke-width:2;transition:stroke .5s,stroke-opacity .5s}
+.mk__e--tip{stroke:rgba(199,152,255,.5)}
+.mk__dot{fill:var(--mk-dot,#E9EEF9);transition:fill .4s,transform .5s var(--ease)}
+.mk__s--named .mk__dot{fill:var(--mk-named,#BFE0FF)}
+.mk__halo{fill:var(--ice);opacity:0;transition:opacity .4s}
+.mk__ring{fill:none;stroke:var(--ice);stroke-width:2.5;opacity:0;transition:opacity .4s}
+.mk__s--energy .mk__dot,.mk__s--finance .mk__dot{fill:#3DCB8C}
+.mk__s--health .mk__dot{fill:#B49CFB}
+.mk__s--platform .mk__dot{fill:#fff}
+
+/* hero legend under the canvas mark */
+.hero__legend{position:absolute;left:0;right:0;bottom:-6px;text-align:center;font:500 12px/1 var(--f-mono);letter-spacing:.08em;color:var(--night-muted);opacity:0;transition:opacity 1s 2s}
+.is-ready .hero__legend{opacity:1}
+
+/* ───────── what we build ───────── */
+.build__head{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,5vw,80px);align-items:end;margin-bottom:56px}
+.build__head h2{font-size:clamp(44px,6vw,84px);line-height:.96}
+.build__head .lede{margin-top:0}
+.explorer{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:clamp(20px,3vw,40px);align-items:start}
+.picks{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.pick{display:block;text-align:left;font:inherit;color:inherit;background:none;border:0;border-bottom:1px solid var(--line);padding:16px 4px 16px 22px;cursor:pointer;position:relative;transition:padding .25s var(--ease)}
+.pick::before{content:"";position:absolute;left:2px;top:23px;width:8px;height:8px;border-radius:50%;background:var(--line);transition:background .25s,box-shadow .25s}
+.pick b{display:block;font-size:17px;font-weight:700;letter-spacing:-.015em;color:var(--muted);transition:color .25s}
+.pick small{display:block;margin-top:3px;font-size:14px;color:var(--muted);opacity:.8}
+.pick:hover b{color:var(--ink)}
+.pick[aria-selected="true"]{padding-left:28px}
+.pick[aria-selected="true"] b{color:var(--ink)}
+.pick[aria-selected="true"]::before{background:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
+
+.chart{position:sticky;top:104px;border-radius:var(--r-lg);overflow:hidden;color:var(--night-ink);padding:clamp(22px,3vw,36px);
+  background:radial-gradient(1px 1px at 18% 30%,rgba(255,255,255,.55),transparent 60%),radial-gradient(1px 1px at 82% 18%,rgba(255,255,255,.45),transparent 60%),radial-gradient(1.5px 1.5px at 60% 80%,rgba(156,200,236,.6),transparent 60%),radial-gradient(110% 80% at 80% 0%,#132042,var(--night) 70%);box-shadow:var(--shadow-lg)}
+.chart__top{display:grid;grid-template-columns:150px minmax(0,1fr);gap:28px;align-items:center}
+.chart__id .mono{color:var(--night-muted)}
+.chart__id h3{margin-top:10px;font-size:clamp(26px,2.6vw,34px);line-height:1.05;font-weight:800;font-stretch:106%;letter-spacing:-.035em}
+.chart__id p{margin-top:8px;color:var(--night-muted);font-size:16px}
+.mk--chart .mk__s--named{cursor:pointer}
+.mk--chart .mk__s--named:not(.is-sel) .mk__dot{opacity:.55}
+.mk--chart .mk__s.is-sel .mk__halo{opacity:.22;animation:halo 2.4s ease-in-out infinite}
+.mk--chart .mk__s.is-sel .mk__ring{opacity:1}
+.mk--chart .mk__s.is-sel .mk__dot{fill:#fff;transform:scale(1.4)}
+.mk--chart .mk__f{fill-opacity:.12}
+@keyframes halo{50%{opacity:.08}}
+
+.wf{list-style:none;margin:30px 0 0;padding:26px 0 0;display:grid;grid-template-columns:repeat(var(--n,5),minmax(0,1fr));gap:8px;position:relative;border-top:1px solid var(--night-line)}
+.wf::before{content:"";position:absolute;left:calc(50%/var(--n));right:calc(50%/var(--n));top:42px;height:2px;background:rgba(156,200,236,.18)}
+.wf::after{content:"";position:absolute;left:calc(50%/var(--n));top:38px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:#fff;box-shadow:0 0 16px var(--ice);opacity:0}
+.wf.run::after{animation:wfPulse calc(var(--n)*.45s + 1.6s) .3s var(--ease) infinite}
+@keyframes wfPulse{0%{left:calc(50%/var(--n));opacity:0}6%{opacity:1}80%{left:calc(100% - 50%/var(--n));opacity:1}100%{left:calc(100% - 50%/var(--n));opacity:0}}
+.wf__n{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px}
+.wf__dot{position:relative;z-index:1;width:34px;height:34px;border-radius:50%;display:grid;place-items:center}
+.wf__n--agent .wf__dot{background:radial-gradient(circle,#fff 0 4px,var(--ice) 5px 9px,rgba(156,200,236,.18) 10px)}
+.wf__n--human .wf__dot{background:var(--night);border:2px solid #E9EEF9}
+.wf__n--human .wf__dot::after{content:"";width:8px;height:8px;border-radius:50%;background:#E9EEF9}
+.wf__t{font-size:14px;font-weight:650;line-height:1.3}
+.wf__who{font:600 10px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--night-muted)}
+.wf__n--human .wf__who{color:#E9EEF9}
+.wf.run .wf__n{animation:wfIn .5s calc(var(--i)*.45s) var(--ease) both}
+@keyframes wfIn{from{opacity:0;transform:translateY(10px)}}
+.chart__foot{display:flex;gap:18px;align-items:center;margin-top:26px;font-size:13px;color:var(--night-muted)}
+.wf-key{display:inline-flex;align-items:center;gap:8px}
+.wf-key::before{content:"";width:12px;height:12px;border-radius:50%}
+.wf-key--agent::before{background:var(--ice);box-shadow:0 0 10px var(--ice)}
+.wf-key--human::before{border:2px solid #E9EEF9}
+.chart__note{margin-left:auto;font:500 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
+@media (max-width:960px){
+  .build__head{grid-template-columns:minmax(0,1fr)}
+  .explorer{grid-template-columns:minmax(0,1fr)}
+  .chart{position:relative;top:auto;order:-1}
+  .picks{flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;border:0;gap:8px;padding-bottom:6px}
+  .pick{flex:0 0 auto;scroll-snap-align:start;border:1px solid var(--line);border-radius:999px;padding:12px 16px 12px 30px}
+  .pick::before{top:50%;left:12px;margin-top:-4px}
+  .pick small{display:none}
+  .pick[aria-selected="true"]{padding-left:30px;border-color:var(--accent)}
+}
+@media (max-width:640px){
+  .chart__top{grid-template-columns:96px minmax(0,1fr);gap:18px}
+  .wf{grid-template-columns:minmax(0,1fr);gap:16px}
+  .wf::before{left:16px;right:auto;top:42px;bottom:18px;width:2px;height:auto}
+  .wf::after{display:none}
+  .wf__n{flex-direction:row;text-align:left;gap:14px}
+  .wf__who{margin-left:auto}
+  .chart__note{margin-left:0}
+  .chart__foot{flex-wrap:wrap}
+}
+
+/* ───────── cross-sell on the mark ───────── */
+.flywheel{background:linear-gradient(180deg,var(--tint),transparent 80%);border-radius:56px 56px 0 0;margin-inline:clamp(0px,1.4vw,24px)}
+.fly{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(28px,5vw,64px);align-items:center}
+.fly h2{font-size:clamp(36px,4.4vw,58px)}
 .fly__count{margin-top:28px;font-size:20px;color:var(--muted)}
 .fly__count b{font:800 34px/1 var(--f);font-stretch:110%;letter-spacing:-.04em;color:var(--ink)}
 .fly__count b:last-child{color:var(--accent)}
 .fly__fig{margin:0}
-.fly__fig svg{width:100%;height:auto;overflow:visible}
-.fl-orbit{fill:none;stroke:var(--line);stroke-width:1.2;stroke-dasharray:3 6}
-.fl-link{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;opacity:.15;transition:opacity .5s,stroke-dashoffset .9s var(--ease)}
-.fl-link.on{opacity:.9}
-.fl-node circle{fill:var(--surface);stroke:var(--line);stroke-width:1.5;transition:fill .4s,stroke .4s}
-.fl-node text{font:650 12.5px var(--f);fill:var(--muted);transition:fill .4s}
-.fl-node.on circle{fill:var(--accent-soft);stroke:var(--accent)}
-.fl-node.on text{fill:var(--ink)}
-.fl-node .glyph{fill:var(--muted);transition:fill .4s}
-.fl-node.on .glyph{fill:var(--accent)}
-.fl-core circle{fill:var(--accent)}
-.fl-core text{font:750 13px var(--f);fill:var(--accent-ink)}
-.fl-chan circle{fill:var(--ink)}
-.fl-chan text{font:700 12px var(--f);fill:var(--bg)}
+.mk--fly{--mk-line:rgba(52,72,154,.16);--mk-dot:#B9C4DE;--mk-named:#9AA6C3}
+.mk--fly .mk__f{fill-opacity:.07}
+.mk--fly.is-full .mk__f{fill-opacity:.32}
+.mk--fly .mk__s.is-lit .mk__dot{fill:var(--accent);transform:scale(1.35)}
+.mk--fly .mk__s.is-lit .mk__ring{opacity:1;stroke:var(--accent)}
+.mk--fly .mk__s.is-lit .mk__halo{opacity:.15;fill:var(--accent)}
+.fly__link{fill:none;stroke:var(--accent);stroke-width:3.5;stroke-linecap:round;opacity:.2;transition:opacity .4s,stroke-dashoffset 1s var(--ease)}
+.fly__link.on{opacity:.75}
+.fly__label{font:650 26px var(--f);fill:var(--muted);opacity:.55;transition:opacity .4s,fill .4s;paint-order:stroke;stroke:var(--bg);stroke-width:10px;stroke-linejoin:round}
+.fly__label.on{fill:var(--ink);opacity:1}
+.fly__chan-halo{fill:var(--accent);opacity:.12}
+.fly__chan-dot{fill:var(--accent)}
+.fly__chan-name{font:800 32px var(--f);fill:var(--ink)}
+.fly__chan-sub{font:600 20px var(--f-mono);letter-spacing:2px;text-transform:uppercase;fill:var(--muted)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mk--fly{--mk-line:rgba(186,212,240,.18);--mk-dot:#5A6684;--mk-named:#7C88A8}}
+:root[data-theme="dark"] .mk--fly{--mk-line:rgba(186,212,240,.18);--mk-dot:#5A6684;--mk-named:#7C88A8}
 @media (max-width:900px){.fly{grid-template-columns:minmax(0,1fr)}}
-@media (max-width:600px){.fl-node text{font-size:17px}.fl-chan text{font-size:16px}.flow__row span{font-size:11px}}
 
 /* ───────── studio model: sticky steps ───────── */
 .model__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:clamp(32px,5vw,72px)}
 .steps{list-style:none;margin:0;padding:0}
-.step{min-height:72vh;display:flex;flex-direction:column;justify-content:center;max-width:480px;transition:opacity .4s}
-.step:first-child{min-height:52vh}
+.step{min-height:48vh;display:flex;flex-direction:column;justify-content:center;max-width:480px;transition:opacity .4s}
+.step:first-child{min-height:36vh}
 html.js .step:not(.is-cur){opacity:.32}
 .step__num{font:600 12.5px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
 .step h3{margin-top:16px;font-size:clamp(30px,3.4vw,44px);line-height:1.04;font-weight:800;font-stretch:106%;letter-spacing:-.04em}
 .step p{margin-top:16px;font-size:18px;color:var(--muted)}
 .step__vis-m{display:none}
-.panel{position:sticky;top:110px;height:min(580px,calc(100vh - 140px));border-radius:var(--r-lg);background:var(--night);color:var(--night-ink);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow-lg);
-  background-image:radial-gradient(1px 1px at 12% 22%,rgba(255,255,255,.6),transparent 60%),radial-gradient(1px 1px at 78% 14%,rgba(255,255,255,.5),transparent 60%),radial-gradient(1.5px 1.5px at 64% 72%,rgba(156,200,236,.7),transparent 60%),radial-gradient(1px 1px at 30% 84%,rgba(255,255,255,.4),transparent 60%),radial-gradient(1px 1px at 90% 52%,rgba(255,255,255,.5),transparent 60%),radial-gradient(90% 70% at 70% 20%,#132042,var(--night))}
-.panel__top{position:absolute;left:26px;right:26px;top:22px;display:flex;justify-content:space-between;align-items:center;z-index:2}
+.model__head{max-width:720px;margin-bottom:24px}
+.model__head h2{font-size:clamp(40px,5vw,66px)}
+.panel{position:sticky;top:104px;height:min(620px,calc(100vh - 130px));border-radius:var(--r-lg);color:var(--night-ink);overflow:hidden;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;
+  background:radial-gradient(1px 1px at 12% 22%,rgba(255,255,255,.6),transparent 60%),radial-gradient(1px 1px at 78% 14%,rgba(255,255,255,.5),transparent 60%),radial-gradient(1.5px 1.5px at 64% 72%,rgba(156,200,236,.7),transparent 60%),radial-gradient(1px 1px at 30% 84%,rgba(255,255,255,.4),transparent 60%),radial-gradient(90% 70% at 70% 20%,#132042,var(--night))}
+.panel__top{display:flex;justify-content:space-between;align-items:center;padding:22px 26px 0}
 .panel .mono{color:var(--night-muted)}
 .bars{display:flex;gap:6px}
 .bars i{width:22px;height:4px;border-radius:4px;background:rgba(233,238,249,.16);transition:width .3s,background .3s}
 .bars i.on{width:38px;background:var(--ice)}
-.vis{position:absolute;inset:0;display:grid;place-items:center;padding:70px 32px 32px;opacity:0;visibility:hidden;transform:translateY(16px) scale(.98);transition:opacity .5s,transform .6s var(--ease),visibility .5s}
-.vis.is-on{opacity:1;visibility:visible;transform:none}
+.panel__mark{flex:1;min-height:0;display:grid;place-items:center;padding:8px 40px 14px}
+.panel__mark .mk{height:100%;width:auto;max-width:100%}
+.panel__cap{padding:0 26px 24px;text-align:center;font:650 18px/1.3 var(--f);letter-spacing:-.01em}
 
-.stack{width:100%;max-width:400px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.stack__co{padding:18px 16px;border-radius:16px;background:rgba(233,238,249,.06);border:1px solid rgba(233,238,249,.14);font-weight:650;font-size:15px;opacity:0;transform:translateY(-30px);transition:opacity .5s,transform .7s var(--ease);transition-delay:calc(var(--i)*.14s + .1s)}
-.stack__co--new{border-style:dashed;border-color:var(--ice);color:var(--ice);display:flex;justify-content:space-between}
-.stack__co--new i{font-style:normal}
-.stack__base{grid-column:1/-1;margin-top:6px;padding:20px;border-radius:16px;background:var(--ice);color:#0B1226;display:grid;gap:6px}
-.stack__base .mono{color:#0B1226;opacity:.65}
-.stack__base b{font-size:17px}
-.vis.is-on .stack__co{opacity:1;transform:none}
-.flow{width:100%;max-width:440px;display:grid;gap:22px}
-.flow__row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
-.flow__row span{padding:16px 4px;overflow-wrap:anywhere;text-align:center;font-size:12.5px;font-weight:650;border-radius:12px;background:rgba(233,238,249,.07);border:1px solid rgba(233,238,249,.14);transition:background .5s,color .5s,border-color .5s;transition-delay:calc(var(--k,0)*.12s + .6s)}
-.vis.is-on .flow__row span:nth-child(-n+3){background:var(--ice);color:#0B1226;border-color:transparent}
-.flow__row span:nth-child(2){--k:1}.flow__row span:nth-child(3){--k:2}
-.flow__agent{justify-self:start;display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:999px;background:rgba(156,200,236,.14);color:var(--ice);font-weight:700;font-size:14px;transform:translateX(-30px);opacity:0;transition:transform .8s var(--ease) .2s,opacity .5s .2s}
-.flow__agent .spark{background:var(--ice)}
-.vis.is-on .flow__agent{transform:none;opacity:1}
-.flow__legend{display:flex;gap:18px;font-size:13px;color:var(--night-muted)}
-.flow__legend span{display:flex;gap:8px;align-items:center}
-.flow__legend i{width:12px;height:12px;border-radius:4px}
-.flow__legend i.a{background:var(--ice)}.flow__legend i.h{border:1px solid rgba(233,238,249,.3)}
-.scale{width:100%;max-width:420px;display:grid;gap:18px}
-.scale__bars{height:220px;display:flex;align-items:flex-end;gap:12px;border-bottom:1px solid rgba(233,238,249,.18)}
-.scale__bars i{flex:1;height:var(--h);border-radius:10px 10px 3px 3px;background:linear-gradient(180deg,var(--ice),var(--facet));transform:scaleY(.05);transform-origin:bottom;transition:transform 1s var(--ease)}
-.scale__bars i:nth-child(2){transition-delay:.08s}.scale__bars i:nth-child(3){transition-delay:.16s}.scale__bars i:nth-child(4){transition-delay:.24s}.scale__bars i:nth-child(5){transition-delay:.32s}.scale__bars i:nth-child(6){transition-delay:.4s}
-.vis.is-on .scale__bars i{transform:none}
-.scale__tags{display:flex;flex-wrap:wrap;gap:8px}
-.scale__tags span{font-size:13px;font-weight:650;padding:8px 12px;border-radius:999px;border:1px solid rgba(156,200,236,.35);color:var(--ice)}
-.scale__cap{color:var(--night-muted)}
-.ticket{width:100%;max-width:360px;padding:26px;border-radius:24px;background:#E9EEF9;color:#0B1226;box-shadow:0 40px 80px -30px rgba(0,0,0,.8);position:relative}
-.ticket::before,.ticket::after{content:"";position:absolute;top:96px;width:22px;height:22px;border-radius:50%;background:var(--night)}
-.ticket::before{left:-11px}.ticket::after{right:-11px}
-.ticket__top{display:flex;justify-content:space-between}
-.ticket .mono{color:#566079}
-.ticket__sym{display:block;margin:12px 0 22px;padding-bottom:22px;border-bottom:2px dashed rgba(11,18,38,.18);font:850 72px/1 var(--f);font-stretch:118%;letter-spacing:-.05em;color:var(--navy)}
-.checks{list-style:none;margin:0;padding:0;display:grid;gap:10px}
-.checks li{display:flex;align-items:center;gap:12px;font-weight:650;opacity:0;transform:translateX(-10px);transition:opacity .4s,transform .5s var(--ease)}
-.checks li::before{content:"";width:22px;height:22px;border-radius:50%;background:var(--navy) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
-.vis.is-on .checks li{opacity:1;transform:none}
-.checks li:nth-child(2){transition-delay:.15s}.checks li:nth-child(3){transition-delay:.3s}.checks li:nth-child(4){transition-delay:.45s}
+/* the four moves, drawn on the mark */
+.mk--studio .mk__f{fill-opacity:.03}
+.mk--studio .mk__e{stroke-opacity:.35}
+.mk--studio .mk__dot{opacity:.45}
+.mk--studio .mk__s--twins .mk__dot{opacity:1;fill:#fff;transform:scale(1.5)}
+.mk--studio .mk__s--twins .mk__ring{opacity:1}
+.mk--studio .mk__f.has-twins{fill-opacity:.3}
+.mk--studio .mk__e.to-twins{stroke:var(--ice);stroke-opacity:.9}
+.mk__agent{fill:var(--ice);opacity:0;transform-origin:0 0;transition:opacity .4s}
+.mk--studio[data-step="1"] .mk__agent,.mk--studio[data-step="2"] .mk__agent,.mk--studio[data-step="3"] .mk__agent{opacity:1;animation:orbit 3.6s linear infinite;animation-delay:calc(var(--o)*-1.2s)}
+@keyframes orbit{to{transform:rotate(360deg)}}
+.mk--studio[data-step="1"] .mk__s--twins .mk__halo{opacity:.25;animation:halo 2.4s ease-in-out infinite}
+.mk--studio[data-step="1"] .mk__f.has-twins{fill-opacity:.55}
+.mk--studio[data-step="2"] .mk__e,.mk--studio[data-step="3"] .mk__e{stroke:var(--ice);stroke-opacity:.6}
+.mk--studio[data-step="2"] .mk__s--named .mk__dot,.mk--studio[data-step="3"] .mk__s--named .mk__dot{opacity:1}
+.mk--studio[data-step="2"] .mk__s--named .mk__ring{opacity:.7}
+.mk--studio[data-step="2"] .mk__f{fill-opacity:.16}
+.mk--studio[data-step="3"] .mk__f{fill-opacity:.85}
+.mk--studio[data-step="3"] .mk__dot{opacity:1}
 @media (max-width:900px){
   .model__grid{grid-template-columns:minmax(0,1fr)}
   .panel{display:none}
   .step,.step:first-child{min-height:0;padding-block:28px;max-width:none}
   html.js .step:not(.is-cur){opacity:1}
-  .step__vis-m{display:block;position:relative;margin-top:22px;height:380px;border-radius:var(--r-md);overflow:hidden;background:radial-gradient(90% 70% at 70% 20%,#132042,var(--night));color:var(--night-ink)}
-  .step__vis-m .vis{opacity:1;visibility:visible;transform:none;padding:24px}
+  .step__vis-m{display:grid;place-items:center;margin-top:22px;height:340px;padding:24px;border-radius:var(--r-md);background:radial-gradient(90% 70% at 70% 20%,#132042,var(--night))}
+  .step__vis-m .mk{height:100%;width:auto}
 }
+
 
 /* ───────── foundation (night band) ───────── */
 .foundation{background:var(--night);color:var(--night-ink);border-radius:clamp(28px,4vw,56px);margin-inline:clamp(0px,1.4vw,24px);position:relative;overflow:hidden;
@@ -435,9 +366,6 @@ html.js .step:not(.is-cur){opacity:.32}
 .ticks{list-style:none;margin:22px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .ticks li{font-size:14px;font-weight:650;padding:9px 14px;border-radius:999px;background:rgba(156,200,236,.1);color:var(--ice)}
 .pipeline{display:grid;gap:18px}
-.pipeline__ai{display:flex;flex-wrap:wrap;gap:8px}
-.pipeline__ai span{font:600 12.5px/1 var(--f);padding:9px 12px;border-radius:999px;border:1px solid rgba(156,200,236,.3);color:var(--ice);animation:pop .5s var(--ease) backwards}
-.pipeline__ai span:nth-child(2){animation-delay:.08s}.pipeline__ai span:nth-child(3){animation-delay:.16s}.pipeline__ai span:nth-child(4){animation-delay:.24s}.pipeline__ai span:nth-child(5){animation-delay:.32s}
 .pipeline__svg{width:100%;height:auto}
 .pipe{fill:none;stroke:rgba(233,238,249,.14);stroke-width:10;stroke-linecap:round;stroke-linejoin:round}
 .pipe--flow{stroke:var(--ice);stroke-width:3;stroke-dasharray:2 16;animation:flow 1.2s linear infinite}
@@ -468,53 +396,77 @@ html.js .step:not(.is-cur){opacity:.32}
 .opp .mono{grid-row:span 2;color:var(--ice)}
 .opp b{font-size:18px}
 .opp p{margin-top:4px;font-size:14.5px;color:var(--night-muted)}
-.foundation__line{margin-top:64px;text-align:center;font:800 clamp(28px,4vw,52px)/1.05 var(--f);font-stretch:112%;letter-spacing:-.045em}
 @media (max-width:900px){.fpane{grid-template-columns:minmax(0,1fr)}.tabs{display:flex}.tabs button{flex:1}}
 @media (max-width:520px){.tabs button{padding:12px}.kpis{grid-template-columns:minmax(0,1fr)}}
 
-/* ───────── evidence ───────── */
-.exhibits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.exhibit{margin:0;padding:28px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-soft);display:flex;flex-direction:column;gap:18px;transition:transform .3s var(--ease)}
-.exhibit:hover{transform:translateY(-4px)}
-.vs{display:grid;grid-template-columns:1fr 1fr;gap:12px;height:180px;align-items:end;padding-bottom:8px;border-bottom:1px solid var(--line)}
-.vs div{height:100%;display:flex;flex-direction:column;justify-content:flex-end;gap:8px}
-.vs i{display:block;flex:none;height:calc(var(--h) * .82);border-radius:10px 10px 3px 3px;background:var(--tint);border:1px solid var(--line);transform:scaleY(.04);transform-origin:bottom;transition:transform 1.2s var(--ease)}
-.vs i.hi{background:var(--accent);border-color:var(--accent);transition-delay:.15s}
-.in .vs i{transform:none}
-.vs small{font-size:12px;line-height:1.3;color:var(--muted);min-height:2.6em}
-.exhibit > b{font:800 clamp(44px,4.6vw,64px)/1 var(--f);font-stretch:110%;letter-spacing:-.05em;color:var(--accent)}
-.exhibit figcaption{font-size:15px;line-height:1.5;color:var(--muted)}
-.fine{margin-top:28px;max-width:90ch;font-size:13px;line-height:1.6;color:var(--muted)}
-@media (max-width:900px){.exhibits{grid-template-columns:minmax(0,1fr)}}
+/* foundation heading with the two feet of the A */
+.foundation__head{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:clamp(24px,5vw,72px);align-items:center;margin-bottom:44px}
+.foundation__head h2{font-size:clamp(38px,4.8vw,64px)}
+.mk--feet .mk__f{fill-opacity:.1}
+.mk--feet .mk__dot{opacity:.5}
+.mk--feet .mk__s--energy .mk__dot,.mk--feet .mk__s--finance .mk__dot,.mk--feet .mk__s--health .mk__dot{opacity:1;transform:scale(1.5)}
+.mk--feet[data-sel="energy"] .mk__s--energy .mk__ring,.mk--feet[data-sel="finance"] .mk__s--finance .mk__ring{opacity:1;stroke:#3DCB8C}
+.mk--feet[data-sel="energy"] .mk__s--energy .mk__halo,.mk--feet[data-sel="finance"] .mk__s--finance .mk__halo{opacity:.25;fill:#3DCB8C;animation:halo 2.4s ease-in-out infinite}
+.mk--feet[data-sel="health"] .mk__s--health .mk__ring{opacity:1;stroke:#B49CFB}
+.mk--feet[data-sel="health"] .mk__s--health .mk__halo{opacity:.3;fill:#B49CFB;animation:halo 2.4s ease-in-out infinite}
+.mk--feet[data-sel="energy"] .mk__f.has-energy,.mk--feet[data-sel="finance"] .mk__f.has-finance{fill-opacity:.55}
+.mk--feet[data-sel="health"] .mk__f--t{fill-opacity:.8}
+.node .node__halo{fill:var(--ice);opacity:.14;stroke:none}
+.node circle:not(.node__halo){fill:#fff;stroke:none}
+.node--bio .node__halo{fill:#3DCB8C}
+.node--bio circle:not(.node__halo){fill:#3DCB8C}
+.agent text{font:600 12px var(--f-mono);letter-spacing:.5px;fill:var(--ice);text-anchor:middle;text-transform:uppercase}
+@media (max-width:760px){.foundation__head{grid-template-columns:minmax(0,1fr)}.foundation__mark{width:160px}}
+
+/* ───────── why now: typography carries it ───────── */
+.now__kicker{font:600 13px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.now__market{margin-top:18px;display:flex;flex-wrap:wrap;align-items:baseline;gap:.25em .4em;font:850 clamp(48px,7.6vw,118px)/.9 var(--f);font-stretch:118%;letter-spacing:-.06em}
+.now__market i{font-style:normal;color:var(--accent);font-weight:400}
+.now__market span:last-child{color:var(--accent)}
+.now__marketcap{margin-top:20px;max-width:60ch;font-size:18px;color:var(--muted)}
+cite{font:500 12px/1.4 var(--f-mono);font-style:normal;letter-spacing:.04em;color:var(--muted);text-transform:uppercase}
+.now__marketcap cite{display:inline-block;margin-left:6px}
+.now__grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(32px,6vw,96px);margin-top:clamp(56px,7vw,96px);padding-top:clamp(40px,5vw,64px);border-top:1px solid var(--line)}
+.now__lead{margin:0}
+.now__lead p{font:750 clamp(28px,3.2vw,44px)/1.15 var(--f);letter-spacing:-.03em;text-wrap:balance}
+.now__lead em{font-style:normal;color:var(--accent)}
+.now__lead b{font-weight:850;background:linear-gradient(transparent 62%,var(--accent-soft) 62%)}
+.now__lead cite{display:block;margin-top:20px}
+.now__facts{list-style:none;margin:0;padding:0;display:grid;gap:28px}
+.now__facts li{display:grid;grid-template-columns:110px minmax(0,1fr);column-gap:20px;align-items:baseline}
+.now__facts b{grid-row:span 2;font:850 40px/1 var(--f);font-stretch:112%;letter-spacing:-.04em}
+.now__facts span{font-size:16px;line-height:1.5}
+.now__facts cite{margin-top:6px}
+.fine{margin-top:clamp(40px,5vw,64px);max-width:90ch;font-size:13px;line-height:1.6;color:var(--muted)}
+@media (max-width:860px){.now__grid{grid-template-columns:minmax(0,1fr)}.now__facts li{grid-template-columns:84px minmax(0,1fr)}.now__facts b{font-size:32px}}
 
 /* ───────── company ───────── */
-.why{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:start}
-.whys{list-style:none;margin:0;padding:0;display:grid}
-.whys li{display:grid;grid-template-columns:72px minmax(0,1fr);gap:16px;padding:26px 0;border-top:1px solid var(--line)}
-.whys li:last-child{border-bottom:1px solid var(--line)}
-.whys span{font:800 36px/1 var(--f);font-stretch:112%;letter-spacing:-.04em;color:var(--accent)}
-.whys h3{font-size:24px}
-.whys p{margin-top:8px;color:var(--muted)}
-.record{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:clamp(56px,7vw,96px);border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-soft);overflow:hidden}
-.record div{padding:clamp(24px,3vw,40px);display:grid;gap:10px;border-left:1px solid var(--line)}
-.record div:first-child{border:0}
-.record b{font:850 clamp(48px,5.4vw,76px)/1 var(--f);font-stretch:114%;letter-spacing:-.055em}
-.record span{font-size:15px;color:var(--muted)}
-@media (max-width:860px){.why{grid-template-columns:minmax(0,1fr)}.record{grid-template-columns:minmax(0,1fr)}.record div{border-left:0;border-top:1px solid var(--line)}}
+.why{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(28px,6vw,96px);align-items:end}
+.why__head h2{font-size:clamp(40px,5.2vw,72px)}
+.record{margin:0;display:grid;gap:0;border-top:1px solid var(--line)}
+.record div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--line)}
+.record dt{font:850 32px/1 var(--f);font-stretch:112%;letter-spacing:-.04em;color:var(--accent)}
+.record dd{margin:0;font-size:15.5px;color:var(--muted)}
+.whys{list-style:none;margin:clamp(56px,7vw,96px) 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,40px)}
+.whys li{padding-top:22px;border-top:3px solid var(--ink)}
+.whys h3{font-size:24px;line-height:1.15}
+.whys p{margin-top:10px;color:var(--muted)}
 .board{margin-top:clamp(56px,7vw,96px)}
+.board__title{font:600 13px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:22px}
 .people{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:12px}
 .person{border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line);transition:box-shadow .3s,border-color .3s}
 .person[open]{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
 .person summary{list-style:none;display:grid;grid-template-columns:52px minmax(0,1fr) 24px;gap:16px;align-items:center;padding:18px;cursor:pointer}
 .person summary::-webkit-details-marker{display:none}
-.person summary i{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font:750 16px/1 var(--f);font-style:normal;color:#fff;background:var(--navy);position:relative;overflow:hidden}
-.person summary i::after{content:"";position:absolute;right:-8px;bottom:-8px;width:26px;height:26px;background:var(--ice);opacity:.35;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.person summary i{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font:750 15px/1 var(--f);font-style:normal;color:#fff;background:radial-gradient(circle at 50% 40%,#5A6BC4,var(--navy))}
 .person summary b{display:block;font-size:18px;letter-spacing:-.02em}
 .person summary small{display:block;margin-top:3px;font-size:14px;color:var(--muted)}
 .person summary em{font-style:normal;font-size:22px;color:var(--muted);transition:transform .3s}
 .person[open] summary em{transform:rotate(45deg);color:var(--accent)}
 .person p{padding:0 18px 20px 86px;font-size:15px;line-height:1.6;color:var(--muted)}
+@media (max-width:860px){.why{grid-template-columns:minmax(0,1fr)}.whys{grid-template-columns:minmax(0,1fr)}.record div{grid-template-columns:110px minmax(0,1fr)}}
 @media (max-width:520px){.person p{padding-left:18px}}
+
 
 /* ───────── partner ───────── */
 .partner{padding-top:0}
@@ -612,265 +564,127 @@ html.js .reveal.in{opacity:1;transform:none}
         <a class="btn btn--sky" href="#partner">Partner With Us</a>
         <a class="btn btn--glass" href="https://ir.arsenalholdingscorp.com/">Investor Relations <span aria-hidden="true">↗</span></a>
       </div>
-      <p class="hero__proof intro" style="--d:.84s"><b>AI-Powered.</b> <b>Human-Led.</b> <span>Energy and finance operating today.</span></p>
     </div>
     <div class="hero__chart" id="chartBox" aria-hidden="true">
-      <div class="float float--a"><small>Operating today</small><b>Energy · Finance</b></div>
-      <div class="float float--b"><i></i><span><b>11 stars</b><small>one shared stack</small></span></div>
+      <p class="hero__legend">Each star is one of our businesses</p>
     </div>
   </div>
 
   <div class="sky-card" id="skyCard" role="status" aria-live="polite"></div>
-  <p class="hero__hint" aria-hidden="true"><span class="cursor-dot"></span>Hover a star in the <b>A</b> to identify it · click the sky</p>
 </section>
 
-<!-- ═════════════════ Market proof · one object ═════════════════ -->
-<section class="proof" aria-label="Market evidence">
-  <div class="wrap">
-    <div class="proof__card reveal">
-      <div class="proof__chart">
-        <span class="mono">Global AI-agents market · MarketsandMarkets</span>
-        <div class="growth" id="growth">
-          <div class="growth__bar growth__bar--a"><b>$5.3B</b><span>2024</span></div>
-          <div class="growth__arc" aria-hidden="true"><svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M4 74 C 80 70, 130 40, 196 6" /></svg></div>
-          <div class="growth__bar growth__bar--b"><b>$52.6B</b><span>2030</span></div>
-        </div>
-      </div>
-      <div class="proof__stats">
-        <div><b class="tabnum" data-count="62.7" data-dec="1" data-suffix="%">62.7%</b><p>CAGR of vertical AI agents, the fastest-growing segment of enterprise AI</p><cite>MarketsandMarkets</cite></div>
-        <div><b class="tabnum" data-count="71" data-suffix="%">71%</b><p>Median productivity gain across 51 studied agentic-AI deployments</p><cite>Stanford Digital Economy Lab</cite></div>
-      </div>
-    </div>
-    <div class="ticker" aria-hidden="true">
-      <div class="ticker__track">
-        <span>Build</span><i></i><span>Embed</span><i></i><span>Scale</span><i></i><span>Compound</span><i></i><span class="o">Accounting</span><i></i><span class="o">Insurance</span><i></i><span class="o">Wealth</span><i></i><span class="o">Agents</span><i></i><span class="o">Robotics</span><i></i>
-        <span>Build</span><i></i><span>Embed</span><i></i><span>Scale</span><i></i><span>Compound</span><i></i><span class="o">Accounting</span><i></i><span class="o">Insurance</span><i></i><span class="o">Wealth</span><i></i><span class="o">Agents</span><i></i><span class="o">Robotics</span><i></i>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═════════════════ What we build · portfolio explorer ═════════════════ -->
+<!-- ═════════════════ What we build · one star at a time ═════════════════ -->
 <section class="build" id="build">
   <div class="wrap">
-    <div class="head reveal">
-      <p class="eyebrow">What We Build</p>
-      <h2>A portfolio of AI-native companies. <em>One shared stack.</em></h2>
-      <p class="lede">We build human-led companies powered by autonomous AI, and cross-sell them under one umbrella. Pick one to see what it does.</p>
+    <div class="build__head reveal">
+      <h2>Seven companies.<br>One sky.</h2>
+      <p class="lede">Every company we build is a star in the same mark, running on the same AI stack. Agents do the repetitive work; a named person makes the call. Pick one and watch its workflow run.</p>
     </div>
 
     <div class="explorer reveal">
       <div class="picks" role="tablist" aria-label="Portfolio companies" id="picks">
-        <button class="pick" role="tab" aria-selected="true" aria-controls="mock-accounting" id="t-accounting" data-k="accounting"><i class="dot"></i><span><b>AI for Accountants</b><small>Software that runs an accounting firm.</small></span></button>
-        <button class="pick" role="tab" aria-selected="false" aria-controls="mock-mfo" id="t-mfo" data-k="mfo"><i class="dot"></i><span><b>Multi-Family Office Platform</b><small>The flywheel: one AI tool unifying accounting, legal, insurance &amp; wealth.</small></span></button>
-        <button class="pick" role="tab" aria-selected="false" aria-controls="mock-insurance" id="t-insurance" data-k="insurance"><i class="dot"></i><span><b>AI Insurance Servicing</b><small>Policy management, autopay, life settlements on-chain, life-expectancy analysis.</small></span></button>
-        <button class="pick" role="tab" aria-selected="false" aria-controls="mock-implementation" id="t-implementation" data-k="implementation"><i class="dot"></i><span><b>AI Implementation</b><small>A build-grow-sell practice for businesses adopting AI.</small></span></button>
-        <button class="pick" role="tab" aria-selected="false" aria-controls="mock-publishing" id="t-publishing" data-k="publishing"><i class="dot"></i><span><b>Publishing &amp; Marketing</b><small>AI-native content and agencies.</small></span></button>
-        <button class="pick" role="tab" aria-selected="false" aria-controls="mock-twins" id="t-twins" data-k="twins"><i class="dot"></i><span><b>Digital Twins / Legacy AI</b><small>Human expertise turned into lasting intelligence.</small></span></button>
-        <button class="pick" role="tab" aria-selected="false" aria-controls="mock-robotics" id="t-robotics" data-k="robotics"><i class="dot"></i><span><b>Agentic Entities &amp; Robotics</b><small>Autonomous builders and service/advertising robots.</small></span></button>
+        <button class="pick" role="tab" aria-selected="true" aria-controls="chart" id="t-accounting" data-k="accounting"><b>AI for Accountants</b><small>Software that runs an accounting firm</small></button>
+        <button class="pick" role="tab" aria-selected="false" aria-controls="chart" id="t-mfo" data-k="mfo"><b>Multi-Family Office</b><small>Accounting, legal, insurance &amp; wealth in one tool</small></button>
+        <button class="pick" role="tab" aria-selected="false" aria-controls="chart" id="t-insurance" data-k="insurance"><b>AI Insurance Servicing</b><small>Policies serviced end to end</small></button>
+        <button class="pick" role="tab" aria-selected="false" aria-controls="chart" id="t-implementation" data-k="implementation"><b>AI Implementation</b><small>Build, grow, sell, for owners adopting AI</small></button>
+        <button class="pick" role="tab" aria-selected="false" aria-controls="chart" id="t-publishing" data-k="publishing"><b>Publishing &amp; Marketing</b><small>AI-native content and agencies</small></button>
+        <button class="pick" role="tab" aria-selected="false" aria-controls="chart" id="t-twins" data-k="twins"><b>Digital Twins / Legacy AI</b><small>Expertise turned into lasting intelligence</small></button>
+        <button class="pick" role="tab" aria-selected="false" aria-controls="chart" id="t-robotics" data-k="robotics"><b>Agentic Entities &amp; Robotics</b><small>Autonomous builders and service robots</small></button>
       </div>
 
-      <div class="device">
-        <div class="device__bar"><span class="device__lights"><i></i><i></i><i></i></span><span class="mono" id="deviceTitle">arsenal · accounting</span><span class="mono device__tag">Illustrative</span></div>
-        <div class="device__screen">
-
-          <div class="mock is-on" id="mock-accounting" role="tabpanel" aria-labelledby="t-accounting">
-            <div class="mrow mrow--head"><b>Month-end close · March</b><span class="pill pill--accent">41 of 44 done by agents</span></div>
-            <ul class="tasks">
-              <li class="done"><i></i>Bank reconciliations, 6 accounts<span class="who who--ai">Agent</span></li>
-              <li class="done"><i></i>AP accruals and vendor matching<span class="who who--ai">Agent</span></li>
-              <li class="done"><i></i>Fixed-asset depreciation run<span class="who who--ai">Agent</span></li>
-              <li class="run"><i></i>Payroll journal entries<span class="who who--ai">Running…</span></li>
-              <li><i></i>Variance commentary review<span class="who">Partner</span></li>
-              <li><i></i>Sign-off and client package<span class="who">Partner</span></li>
-            </ul>
-            <div class="meter"><span style="--w:93%"></span></div>
-            <p class="mfoot">The agent prepares. A human signs.</p>
+      <div class="chart" id="chart" role="tabpanel" aria-labelledby="t-accounting">
+        <div class="chart__top">
+          <div class="chart__mark" id="buildMark"></div>
+          <div class="chart__id">
+            <span class="mono" id="chartCoord">Star 3 · 2</span>
+            <h3 id="chartName">AI for Accountants</h3>
+            <p id="chartLine">Software that runs an accounting firm.</p>
           </div>
-
-          <div class="mock" id="mock-mfo" role="tabpanel" aria-labelledby="t-mfo" hidden>
-            <div class="mrow mrow--head"><b>Family office · one view</b><span class="pill">4 disciplines · 1 assistant</span></div>
-            <div class="tiles">
-              <div class="tile"><small>Accounting</small><b>Q1 books closed</b><span class="ok">Up to date</span></div>
-              <div class="tile"><small>Legal</small><b>Trust amendment</b><span class="warn">Needs signature</span></div>
-              <div class="tile"><small>Insurance</small><b>Policy review</b><span class="ok">3 policies current</span></div>
-              <div class="tile"><small>Wealth</small><b>Succession plan</b><span class="ok">Draft ready</span></div>
-            </div>
-            <div class="ask"><span class="ask__q">“What changes for the estate if we sell the operating company this year?”</span><span class="ask__a"><i class="spark"></i>Drafting a joint answer from accounting, legal, insurance and wealth…</span></div>
-          </div>
-
-          <div class="mock" id="mock-insurance" role="tabpanel" aria-labelledby="t-insurance" hidden>
-            <div class="mrow mrow--head"><b>Policy servicing</b><span class="pill pill--accent">Agent-managed</span></div>
-            <div class="policy">
-              <div class="policy__row"><span>Policy</span><b>Universal life · #A-20418</b></div>
-              <div class="policy__row"><span>Autopay</span><b class="toggle is-on" aria-hidden="true"><i></i></b></div>
-              <div class="policy__row"><span>Life-expectancy analysis</span><b>Complete</b></div>
-              <div class="policy__row"><span>Settlement record</span><b class="chain">On-chain <i></i></b></div>
-            </div>
-            <div class="spark-line" aria-hidden="true"><svg viewBox="0 0 300 60" preserveAspectRatio="none"><path d="M0 48 L30 44 L60 46 L90 36 L120 38 L150 28 L180 30 L210 20 L240 22 L270 12 L300 10"/></svg></div>
-            <p class="mfoot">Premiums, renewals and paperwork run in the background.</p>
-          </div>
-
-          <div class="mock" id="mock-implementation" role="tabpanel" aria-labelledby="t-implementation" hidden>
-            <div class="mrow mrow--head"><b>Client engagement</b><span class="pill">Build · Grow · Sell</span></div>
-            <ol class="phases">
-              <li class="done"><b>Build</b><span>Map workflows, deploy the first agents</span></li>
-              <li class="run"><b>Grow</b><span>Move agents into what the client sells</span></li>
-              <li><b>Sell</b><span>A business worth more, ready for its next owner</span></li>
-            </ol>
-            <p class="mfoot">A practice for owners adopting AI, run by people who have done it.</p>
-          </div>
-
-          <div class="mock" id="mock-publishing" role="tabpanel" aria-labelledby="t-publishing" hidden>
-            <div class="mrow mrow--head"><b>Content calendar · Week 14</b><span class="pill pill--accent">Drafted by AI · edited by people</span></div>
-            <div class="cal">
-              <span class="h">Mon</span><span class="h">Tue</span><span class="h">Wed</span><span class="h">Thu</span><span class="h">Fri</span>
-              <i class="c1">Article</i><i></i><i class="c2">Video</i><i class="c1">Newsletter</i><i></i>
-              <i></i><i class="c3">Social × 6</i><i></i><i class="c2">Podcast</i><i class="c3">Social × 4</i>
-              <i class="c3">Ad set</i><i></i><i class="c1">Case study</i><i></i><i class="c2">Webinar</i>
-            </div>
-            <p class="mfoot">An agency that ships at the speed of software.</p>
-          </div>
-
-          <div class="mock" id="mock-twins" role="tabpanel" aria-labelledby="t-twins" hidden>
-            <div class="mrow mrow--head"><b>Legacy AI · Founder’s twin</b><span class="pill">Trained on decades of judgment</span></div>
-            <div class="chat">
-              <p class="me">How did you decide when to walk away from a deal?</p>
-              <p class="it"><i class="spark"></i>Two signals. If the seller wouldn’t open the books in week one, or the team didn’t know the numbers, I passed. Both told me what year two would look like.</p>
-              <p class="me">Would that rule still apply today?</p>
-              <p class="it typing"><span></span><span></span><span></span></p>
-            </div>
-          </div>
-
-          <div class="mock" id="mock-robotics" role="tabpanel" aria-labelledby="t-robotics" hidden>
-            <div class="mrow mrow--head"><b>Agent fleet</b><span class="pill pill--accent">5 active</span></div>
-            <ul class="fleet">
-              <li><i class="on"></i><b>Builder-01</b><span>Scaffolding a new company workspace</span></li>
-              <li><i class="on"></i><b>Builder-02</b><span>Writing onboarding flows</span></li>
-              <li><i class="on"></i><b>Service bot</b><span>Greeting visitors, lobby · floor 1</span></li>
-              <li><i class="on"></i><b>Ad unit</b><span>Running a campaign, retail site</span></li>
-              <li><i></i><b>Builder-03</b><span>Queued · awaiting human approval</span></li>
-            </ul>
-          </div>
-
         </div>
+        <ol class="wf" id="wf" aria-label="Workflow"></ol>
+        <div class="chart__foot"><span class="wf-key wf-key--agent">Agent</span><span class="wf-key wf-key--human">Person</span><span class="chart__note">Illustrative workflow</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═════════════════ Cross-sell flywheel ═════════════════ -->
+<!-- ═════════════════ Cross-sell: one relationship, the whole sky ═════════════════ -->
 <section class="flywheel" id="flywheel">
   <div class="wrap fly">
     <div class="fly__copy reveal">
-      <p class="eyebrow">The Cross-Sell Flywheel</p>
-      <h2>One relationship, <em>many revenue lines.</em></h2>
-      <p class="lede">Every accountant, attorney, RIA and insurance broker becomes a channel for the entire Arsenal portfolio. One relationship compounds into many revenue lines under one umbrella.</p>
+      <h2>One relationship lights up the <em>whole portfolio.</em></h2>
+      <p class="lede">Every accountant, attorney, RIA and insurance broker becomes a channel for every company we run. One relationship compounds into many revenue lines, under one umbrella.</p>
       <div class="seg" role="radiogroup" aria-label="Choose a channel" id="channels">
         <button role="radio" aria-checked="true" data-c="0">Accountant</button>
         <button role="radio" aria-checked="false" data-c="1">Attorney</button>
         <button role="radio" aria-checked="false" data-c="2">RIA</button>
         <button role="radio" aria-checked="false" data-c="3">Insurance broker</button>
       </div>
-      <p class="fly__count"><b class="tabnum" id="flyCount">1</b> relationship → <b class="tabnum" id="flyLines">7</b> revenue lines</p>
+      <p class="fly__count"><b class="tabnum">1</b> relationship → <b class="tabnum" id="flyLines">7</b> revenue lines</p>
     </div>
-    <figure class="fly__fig reveal">
-      <svg id="flySvg" viewBox="0 0 520 520" role="img" aria-label="A channel connects one client relationship to every company in the Arsenal portfolio"></svg>
-    </figure>
+    <figure class="fly__fig reveal" id="flyFig" aria-label="One client relationship connects to every company in the Arsenal portfolio"></figure>
   </div>
 </section>
 
-<!-- ═════════════════ Studio model · sticky steps ═════════════════ -->
+<!-- ═════════════════ Studio model: the mark builds itself ═════════════════ -->
 <section class="model" id="model">
   <div class="wrap">
-    <div class="head head--center reveal">
-      <p class="eyebrow">The Studio Model</p>
-      <h2>Build. Embed. <em>Scale. Compound.</em></h2>
-      <p class="lede">A model leading venture firms now call a new asset class. Our edge: we don’t just fund companies. We build and run them, on one shared AI platform.</p>
+    <div class="model__head reveal">
+      <h2>How a star gets built</h2>
+      <p class="lede">We don’t just fund companies. We build and run them, on one shared AI platform, in four moves.</p>
     </div>
 
     <div class="model__grid">
       <ol class="steps" id="steps">
         <li class="step is-cur" data-i="0">
           <span class="step__num">01 · Build</span>
-          <h3>Spin up AI-native companies on a shared platform.</h3>
-          <p>Human-led, AI-powered. Every new company starts with what the last one built.</p>
+          <h3>Spin up an AI-native company on the shared platform.</h3>
+          <p>A new star appears inside the mark. It starts with everything the others already built.</p>
           <div class="step__vis-m" aria-hidden="true"></div>
         </li>
         <li class="step" data-i="1">
           <span class="step__num">02 · Embed</span>
           <h3>Install our agentic AI into the operation.</h3>
-          <p>Agents take the repetitive workflows, and people keep the judgment calls.</p>
+          <p>Agents take the repetitive workflows. People keep the judgment calls.</p>
           <div class="step__vis-m" aria-hidden="true"></div>
         </li>
         <li class="step" data-i="2">
           <span class="step__num">03 · Scale</span>
-          <h3>Grow organically and cross-sell across the portfolio.</h3>
-          <p>Each customer relationship becomes a channel for every other company.</p>
+          <h3>Grow, and cross-sell across the portfolio.</h3>
+          <p>Its customers become customers of its neighbors, and theirs become its own.</p>
           <div class="step__vis-m" aria-hidden="true"></div>
         </li>
         <li class="step" data-i="3">
           <span class="step__num">04 · Compound</span>
           <h3>Turn growth into acquisition currency.</h3>
-          <p>Audit, governance and a public listing turn growth into acquisition currency and a re-rating.</p>
+          <p>Audit, governance and a public listing turn growth into currency for the next acquisition, and a re-rating.</p>
           <div class="step__vis-m" aria-hidden="true"></div>
         </li>
       </ol>
-
       <div class="panel" id="panel" aria-hidden="true">
-        <div class="panel__top"><span class="mono" id="panelLabel">Step 1 of 4</span><span class="bars" id="panelBars"><i class="on"></i><i></i><i></i><i></i></span></div>
-
-        <div class="vis is-on" data-v="0">
-          <div class="stack">
-            <div class="stack__co" style="--i:0">Accounting AI</div>
-            <div class="stack__co" style="--i:1">Family Office</div>
-            <div class="stack__co" style="--i:2">Insurance</div>
-            <div class="stack__co stack__co--new" style="--i:3">New company <i>+</i></div>
-            <div class="stack__base"><span class="mono">Shared AI stack</span><b>Models · Data · Agents · Tooling</b></div>
-          </div>
-        </div>
-
-        <div class="vis" data-v="1">
-          <div class="flow">
-            <div class="flow__row"><span>Intake</span><span>Data entry</span><span>Reconcile</span><span>Review</span><span>Decide</span></div>
-            <div class="flow__agent"><i class="spark"></i>Arsenal agent</div>
-            <div class="flow__legend"><span><i class="a"></i>Agent</span><span><i class="h"></i>Human</span></div>
-          </div>
-        </div>
-
-        <div class="vis" data-v="2">
-          <div class="scale">
-            <div class="scale__bars"><i style="--h:22%"></i><i style="--h:30%"></i><i style="--h:41%"></i><i style="--h:52%"></i><i style="--h:66%"></i><i style="--h:84%"></i></div>
-            <div class="scale__tags"><span>+ Insurance</span><span>+ Wealth</span><span>+ Accounting</span></div>
-            <span class="mono scale__cap">Revenue lines per relationship · illustrative</span>
-          </div>
-        </div>
-
-        <div class="vis" data-v="3">
-          <div class="ticket">
-            <div class="ticket__top"><span class="mono">OTCID</span><span class="mono">Public-company chassis</span></div>
-            <b class="ticket__sym">ADHI</b>
-            <ul class="checks"><li>Audit</li><li>Governance</li><li>Public listing</li><li>Acquisition currency</li></ul>
-          </div>
-        </div>
+        <div class="panel__top"><span class="mono" id="panelLabel">Step 1 of 4 · Build</span><span class="bars" id="panelBars"><i class="on"></i><i></i><i></i><i></i></span></div>
+        <div class="panel__mark" id="studioMark"></div>
+        <p class="panel__cap" id="panelCap">A new company joins the mark</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═════════════════ Operating foundation ═════════════════ -->
+<!-- ═════════════════ Operating foundation: the two feet of the A ═════════════════ -->
 <section class="foundation" id="foundation">
   <div class="wrap">
-    <div class="head reveal">
-      <p class="eyebrow eyebrow--sky">The Operating Foundation</p>
-      <h2>Real businesses. Real cash flow. <em>The proving ground for our stack.</em></h2>
-      <p class="lede">The build engine doesn’t run on venture hope. It’s funded and proven by operating businesses generating cash today.</p>
+    <div class="foundation__head reveal">
+      <div>
+        <h2>The mark stands on <em>real cash flow.</em></h2>
+        <p class="lede">Energy and finance are the two feet of the A. They operate today, fund every build, and are the first place our AI has to prove itself.</p>
+      </div>
+      <div class="foundation__mark" id="footMark" aria-hidden="true"></div>
     </div>
 
     <div class="tabs reveal" role="tablist" aria-label="Foundation businesses" id="fTabs">
-      <button role="tab" aria-selected="true" aria-controls="f-energy" id="ft-energy">Energy <small>Operating today</small></button>
-      <button role="tab" aria-selected="false" aria-controls="f-finance" id="ft-finance">Finance <small>Operating today</small></button>
-      <button role="tab" aria-selected="false" aria-controls="f-health" id="ft-health">Health &amp; Insurance <small>Build pipeline</small></button>
+      <button role="tab" aria-selected="true" aria-controls="f-energy" id="ft-energy" data-id="energy">Energy <small>Operating today</small></button>
+      <button role="tab" aria-selected="false" aria-controls="f-finance" id="ft-finance" data-id="finance">Finance <small>Operating today</small></button>
+      <button role="tab" aria-selected="false" aria-controls="f-health" id="ft-health" data-id="health">Health &amp; Insurance <small>Next · seeking partners</small></button>
     </div>
 
     <div class="fpanes reveal">
@@ -885,14 +699,16 @@ html.js .reveal.in{opacity:1;transform:none}
           <a class="link" href="https://arsenalholdingscorp.com/renewable-technology">Explore Energy <span aria-hidden="true">→</span></a>
         </div>
         <div class="pipeline" aria-hidden="true">
-          <div class="pipeline__ai"><span>Production optimization</span><span>Predictive maintenance</span><span>Procurement agents</span><span>Trading intelligence</span><span>Demand forecasting</span></div>
-          <svg class="pipeline__svg" viewBox="0 0 560 200" preserveAspectRatio="xMidYMid meet">
-            <path class="pipe" d="M40 90 H520"/><path class="pipe pipe--flow" d="M40 90 H520"/>
-            <path class="pipe pipe--bio" d="M300 90 V160 H520"/><path class="pipe pipe--flow pipe--bio" d="M300 90 V160 H520"/>
-            <g class="node"><circle cx="70" cy="90" r="22"/><text x="70" y="136">Upstream</text></g>
-            <g class="node"><circle cx="230" cy="90" r="22"/><text x="230" y="136">Midstream</text></g>
-            <g class="node"><circle cx="390" cy="90" r="22"/><text x="390" y="66">Downstream</text></g>
-            <g class="node node--bio"><circle cx="420" cy="160" r="16"/><text x="420" y="194">Biogas · waste in, energy out</text></g>
+          <svg class="pipeline__svg" viewBox="0 0 560 230" preserveAspectRatio="xMidYMid meet">
+            <path class="pipe" d="M40 100 H520"/><path class="pipe pipe--flow" d="M40 100 H520"/>
+            <path class="pipe pipe--bio" d="M300 100 V176 H520"/><path class="pipe pipe--flow pipe--bio" d="M300 100 V176 H520"/>
+            <g class="node" transform="translate(70 100)"><circle r="18" class="node__halo"/><circle r="7"/><text y="40">Upstream</text></g>
+            <g class="node" transform="translate(230 100)"><circle r="18" class="node__halo"/><circle r="7"/><text y="40">Midstream</text></g>
+            <g class="node" transform="translate(400 100)"><circle r="18" class="node__halo"/><circle r="7"/><text y="-28">Downstream</text></g>
+            <g class="node node--bio" transform="translate(440 176)"><circle r="16" class="node__halo"/><circle r="6"/><text y="38">Biogas · waste in, energy out</text></g>
+            <g class="agent" transform="translate(150 40)"><text>Predictive maintenance</text></g>
+            <g class="agent" transform="translate(330 40)"><text>Production optimization</text></g>
+            <g class="agent" transform="translate(470 40)"><text>Procurement</text></g>
           </svg>
         </div>
       </article>
@@ -905,7 +721,7 @@ html.js .reveal.in{opacity:1;transform:none}
           <a class="link" href="https://arsenalholdingscorp.com/financial-services">Explore Finance <span aria-hidden="true">→</span></a>
         </div>
         <div class="underwrite">
-          <div class="underwrite__head"><span class="mono">Credit decision timeline</span><b id="uwLabel">Weeks → Days</b></div>
+          <div class="underwrite__head"><span class="mono">Credit decision timeline</span><b id="uwLabel">Days</b></div>
           <label class="range">
             <span class="sr">Compare manual underwriting with the Arsenal platform</span>
             <input type="range" min="0" max="100" value="100" id="uwRange">
@@ -931,68 +747,56 @@ html.js .reveal.in{opacity:1;transform:none}
         </div>
       </article>
     </div>
-
-    <p class="foundation__line reveal">We build the companies others only fund.</p>
   </div>
 </section>
 
-<!-- ═════════════════ Evidence ═════════════════ -->
-<section class="evidence" id="evidence">
+<!-- ═════════════════ Why now · typographic, no decoration ═════════════════ -->
+<section class="now" id="evidence">
   <div class="wrap">
-    <div class="head reveal">
-      <p class="eyebrow">Why AI, Why Now</p>
-      <h2>The evidence is in. <em>Transformation beats efficiency.</em></h2>
-      <p class="lede">The winners won’t buy AI. They’ll build it into what a business does.</p>
+    <p class="now__kicker reveal">Why now</p>
+    <p class="now__market reveal"><span class="tabnum">$5.3B</span> <i aria-hidden="true">→</i> <span class="tabnum">$52.6B</span></p>
+    <p class="now__marketcap reveal">The global AI-agents market, 2024 to 2030. Vertical AI agents are its fastest-growing segment, at 62.7% a year. <cite>MarketsandMarkets</cite></p>
+
+    <div class="now__grid">
+      <blockquote class="now__lead reveal">
+        <p>Companies that build AI <em>into what they sell</em> earn a <b>43% higher</b> median revenue multiple than those that only use it in operations.</p>
+        <cite>McKinsey &amp; Company · 471 PE-backed companies</cite>
+      </blockquote>
+      <ul class="now__facts">
+        <li class="reveal"><b class="tabnum">71%</b><span>median productivity gain across 51 studied agentic-AI deployments.</span><cite>Stanford Digital Economy Lab</cite></li>
+        <li class="reveal"><b class="tabnum">2×</b><span>EBITDA margin at a two-dozen-store grocery chain after agentic procurement. Waste down 40%, stockouts down 80%.</span><cite>Stanford-reported case study</cite></li>
+        <li class="reveal"><b class="tabnum">+53%</b><span>cross-sell, with 25% less churn, in a SaaS company’s first year of an AI-first rebuild.</span><cite>BCG-reported case study</cite></li>
+      </ul>
     </div>
-    <div class="exhibits">
-      <figure class="exhibit reveal">
-        <span class="mono">Exhibit A · McKinsey &amp; Company</span>
-        <div class="vs"><div><i style="--h:58%"></i><small>AI in operations only</small></div><div><i style="--h:83%" class="hi"></i><small>AI in the offering</small></div></div>
-        <b class="tabnum" data-count="43" data-prefix="+" data-suffix="%">+43%</b>
-        <figcaption>Higher median revenue multiple for companies that embed AI in their offerings versus operations-only adopters, across 471 PE-backed companies.</figcaption>
-      </figure>
-      <figure class="exhibit reveal">
-        <span class="mono">Exhibit B · Stanford-reported case study</span>
-        <div class="vs"><div><i style="--h:38%"></i><small>EBITDA margin, before</small></div><div><i style="--h:76%" class="hi"></i><small>After agentic procurement</small></div></div>
-        <b class="tabnum">2×</b>
-        <figcaption>A two-dozen-store grocery chain doubled its EBITDA margin with autonomous agentic procurement, cutting waste 40% and stockouts 80%.</figcaption>
-      </figure>
-      <figure class="exhibit reveal">
-        <span class="mono">Exhibit C · BCG-reported case study</span>
-        <div class="vs"><div><i style="--h:50%"></i><small>Cross-sell, before</small></div><div><i style="--h:76%" class="hi"></i><small>First 12 months, AI-first</small></div></div>
-        <b class="tabnum" data-count="53" data-prefix="+" data-suffix="%">+53%</b>
-        <figcaption>Cross-sell uplift, with 25% churn reduction, at a SaaS portfolio company in the first 12 months of an AI-first operating rebuild.</figcaption>
-      </figure>
-    </div>
-    <p class="fine reveal">Third-party findings are attributed to their sources and reflect studied cohorts and reported case studies: correlations, not guarantees, and not projections of Arsenal’s results. Bars are drawn for illustration. Most companies still realize no measurable AI value; disciplined implementation is the difference, and it’s the entire point of the studio.</p>
+    <p class="fine reveal">Most companies still see no measurable value from AI. Disciplined implementation is the difference, and it’s the whole point of the studio. Third-party findings come from studied cohorts and reported cases: correlations, not guarantees, and not projections of Arsenal’s results.</p>
   </div>
 </section>
 
-<!-- ═════════════════ Company · why Arsenal + leadership ═════════════════ -->
+<!-- ═════════════════ Company · operators ═════════════════ -->
 <section class="company" id="company">
   <div class="wrap">
     <div class="why">
-      <div class="head reveal">
-        <p class="eyebrow">Why Arsenal</p>
-        <h2>Built differently, <em>on purpose.</em></h2>
-        <p class="lede">Operators first. Studio second. Arsenal didn’t start with a slide deck. It started with wells, pipelines and lending desks.</p>
+      <div class="why__head reveal">
+        <h2>Operators first. Studio second.</h2>
+        <p class="lede">Arsenal didn’t start with a slide deck. It started with wells, pipelines and lending desks, and that operating DNA goes into every company we build or acquire.</p>
       </div>
-      <ol class="whys">
-        <li class="reveal"><span>01</span><div><h3>Public-company chassis</h3><p>OTCID: ADHI. The audit and governance discipline most studios lack, built in from day one.</p></div></li>
-        <li class="reveal"><span>02</span><div><h3>Operators, not financial engineers</h3><p>We build and run companies. We don’t just allocate capital and wait.</p></div></li>
-        <li class="reveal"><span>03</span><div><h3>One shared AI stack</h3><p>Every company inherits the platform, and the economics improve with each build.</p></div></li>
-      </ol>
+      <dl class="record reveal">
+        <div><dt class="tabnum">20+</dt><dd>years of energy-sector leadership on the executive team</dd></div>
+        <div><dt class="tabnum">240+</dt><dd>wells drilled across US basins by our founders</dd></div>
+        <div><dt>Public</dt><dd>OTCID: ADHI. Audit and governance from day one</dd></div>
+      </dl>
     </div>
 
-    <div class="record reveal">
-      <div><b class="tabnum" data-count="20" data-suffix="+">20+</b><span>Years of energy-sector leadership on the executive team</span></div>
-      <div><b class="tabnum" data-count="240" data-suffix="+">240+</b><span>Wells drilled across multiple US basins by our founders</span></div>
-      <div><b class="tabnum" data-count="3">3</b><span>Pillars: a cash-flowing foundation, a shared AI stack, and a portfolio of AI-native builds</span></div>
-    </div>
+    <ol class="whys">
+      <li class="reveal"><h3>A public-company chassis</h3><p>The audit and governance discipline most studios lack, built in from day one.</p></li>
+      <li class="reveal"><h3>Operators, not financial engineers</h3><p>We build and run companies. We don’t allocate capital and wait.</p></li>
+      <li class="reveal"><h3>One shared AI stack</h3><p>Every company inherits the platform, so the economics improve with each build.</p></li>
+    </ol>
 
     <div class="board">
-      <p class="eyebrow reveal">Board &amp; executive leadership</p>
+      <h3 class="board__title reveal">Board &amp; executive leadership</h3>
       <div class="people">
+        <!-- Portrait slots: swap each <i> monogram for an <img> once Arsenal supplies headshots -->
         <details class="person reveal"><summary><i>RM</i><span><b>Ryan Messer</b><small>COO · Executive Director</small></span><em aria-hidden="true">+</em></summary><p>Over 20 years of energy sector leadership. Co-founded two successful companies, took PRYME Energy public on ASX/OTCQX, and drilled 240+ wells across multiple US basins. Since 2016, focused on sustainable technology, datacenter infrastructure and asset monetization.</p></details>
         <details class="person reveal"><summary><i>JM</i><span><b>Jordan Mandel</b><small>Chairman</small></span><em aria-hidden="true">+</em></summary><p>Extensive leadership experience and strategic oversight from his work with family offices and innovative financial platforms. His appointment underscores the company’s commitment to disciplined governance and forward-looking growth.</p></details>
         <details class="person reveal"><summary><i>CH</i><span><b>Charles Holloway</b><small>Non-Executive Director</small></span><em aria-hidden="true">+</em></summary><p>Energy sector leadership from ExxonMobil, BP Castrol and Chevron, including managing the historic Exxon-Mobil merger and leading BP’s multi-billion dollar US distributor network consolidation across seven acquired brands. Currently CEO of American Premium Petroleum.</p></details>
@@ -1010,8 +814,7 @@ html.js .reveal.in{opacity:1;transform:none}
       <canvas class="sky sky--mini" id="miniSky" aria-hidden="true"></canvas>
       <div class="partner__grid">
         <div class="partner__copy reveal">
-          <p class="eyebrow eyebrow--sky">Partner With Us</p>
-          <h2>Your business. <em>Amplified.</em></h2>
+                    <h2>Your business. <em>Amplified.</em></h2>
           <p class="lede">You built something real. We’re not here to strip it, leverage it, or rename it. We’re here to grow what it can sell, with AI, with capital, and with operators who’ve sat in your chair.</p>
           <div class="seg seg--dark" role="radiogroup" aria-label="Deal structure" id="deals">
             <button role="radio" aria-checked="false" data-d="0">Full Acquisition</button>
@@ -1508,11 +1311,86 @@ html.js .reveal.in{opacity:1;transform:none}
 
 </script>
 <script>
+/* The Arsenal mark as an SVG constellation, shared by every section below the hero.
+   Same lattice as the logo file (and the hero canvas): each vertex is a star, each facet
+   edge a line, and the eleven named stars are the businesses in the portfolio. */
+(function () {
+  'use strict';
+  var NS = 'http://www.w3.org/2000/svg';
+  var DX = 64.068, DY = 93.766, W = 640.68, H = 750.13;
+  var TRIS = [
+    ['a',[5,2],[5,0],[6,1]],['a',[6,3],[6,1],[7,2]],['a',[7,4],[7,2],[8,3]],['a',[8,5],[8,3],[9,4]],
+    ['a',[9,6],[9,4],[10,5]],['a',[5,4],[5,2],[6,3]],['a',[6,5],[6,3],[7,4]],['a',[7,6],[7,4],[8,5]],
+    ['a',[8,7],[8,5],[9,6]],
+    ['b',[5,4],[5,2],[4,3]],['b',[6,1],[6,3],[5,2]],['b',[7,2],[7,4],[6,3]],['b',[8,3],[8,5],[7,4]],
+    ['b',[9,4],[9,6],[8,5]],['b',[6,3],[6,5],[5,4]],['b',[7,4],[7,6],[6,5]],['b',[8,5],[8,7],[7,6]],
+    ['b',[5,2],[5,0],[4,1]],['b',[4,3],[4,1],[3,2]],['b',[3,4],[3,2],[2,3]],['b',[2,5],[2,3],[1,4]],
+    ['b',[1,6],[1,4],[0,5]],['b',[4,5],[4,3],[3,4]],['b',[3,6],[3,4],[2,5]],['b',[2,7],[2,5],[1,6]],
+    ['a',[4,1],[4,3],[5,2]],['a',[3,2],[3,4],[4,3]],['a',[2,3],[2,5],[3,4]],['a',[1,4],[1,6],[2,5]],
+    ['a',[4,3],[4,5],[5,4]],['a',[3,4],[3,6],[4,5]],['a',[2,5],[2,7],[3,6]],
+    ['t',[5,6],[4,7],[5,8]],['t',[5,6],[6,7],[5,8]],['t',[4,7],[3,8],[5,8]],['t',[6,7],[7,8],[5,8]]
+  ];
+  // the eleven named stars: the shared stack at the apex, seven companies on the facets,
+  // the two operating businesses as the feet, and the next vertical as the violet tip
+  var IDS = { platform: '5,0', accounting: '3,2', mfo: '7,2', insurance: '1,4', implementation: '9,4', twins: '5,4',
+    publishing: '2,7', robotics: '8,7', energy: '0,5', finance: '10,5', health: '5,6' };
+  var NAME = {};
+  Object.keys(IDS).forEach(function (id) { NAME[IDS[id]] = id; });
+
+  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var a in attrs) e.setAttribute(a, attrs[a]); if (parent) parent.appendChild(e); return e; }
+  function mix(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; }
+  function rgb(c) { return 'rgb(' + c.map(Math.round).join(',') + ')'; }
+  var ICE = [156, 200, 236], FACET = [110, 143, 214], DEEP = [59, 71, 166], TIP = [139, 92, 246], WHITE = [233, 238, 249];
+  function pt(k) { var p = k.split(','); return [p[0] * DX, p[1] * DY]; }
+
+  /** create(host, { pad, cls }) → { svg, P(id), star(id) } */
+  function create(host, o) {
+    o = o || {};
+    var pad = o.pad == null ? 40 : o.pad;
+    var svg = el('svg', { viewBox: [-pad, -pad, W + pad * 2, H + pad * 2].join(' '), class: 'mk ' + (o.cls || ''), 'aria-hidden': 'true', focusable: 'false' });
+    var gF = el('g', { class: 'mk__facets' }, svg), gE = el('g', { class: 'mk__edges' }, svg), gS = el('g', { class: 'mk__stars' }, svg);
+    var verts = {}, edges = {};
+    TRIS.forEach(function (tr) {
+      var ks = tr.slice(1).map(function (p) { return p[0] + ',' + p[1]; });
+      var pts = ks.map(pt), cx = (pts[0][0] + pts[1][0] + pts[2][0]) / 3 / W, cy = (pts[0][1] + pts[1][1] + pts[2][1]) / 3 / H;
+      var g = Math.min(1, cx * .65 + cy * .35), col = tr[0] === 't' ? TIP : g < .5 ? mix(ICE, FACET, g * 2) : mix(FACET, DEEP, (g - .5) * 2);
+      if (tr[0] === 'b') col = mix(col, WHITE, .18);
+      var cls = 'mk__f mk__f--' + tr[0];
+      ks.forEach(function (k) { verts[k] = 1; if (NAME[k]) cls += ' has-' + NAME[k]; });
+      el('polygon', { points: pts.map(function (p) { return p.join(','); }).join(' '), fill: rgb(col), class: cls }, gF);
+      for (var i = 0; i < 3; i++) { var a = ks[i], b = ks[(i + 1) % 3], key = a < b ? a + '|' + b : b + '|' + a; edges[key] = [a, b]; }
+    });
+    Object.keys(edges).forEach(function (key) {
+      var a = edges[key][0], b = edges[key][1], pa = pt(a), pb = pt(b), cls = 'mk__e';
+      [a, b].forEach(function (k) { if (NAME[k]) cls += ' to-' + NAME[k]; });
+      if (pt(a)[1] >= 6 * DY && pt(b)[1] >= 6 * DY && Math.abs(pa[0] - W / 2) <= 2.1 * DX && Math.abs(pb[0] - W / 2) <= 2.1 * DX) cls += ' mk__e--tip';
+      el('line', { x1: pa[0], y1: pa[1], x2: pb[0], y2: pb[1], class: cls }, gE);
+    });
+    Object.keys(verts).forEach(function (k) {
+      var p = pt(k), id = NAME[k], g = el('g', { class: 'mk__s' + (id ? ' mk__s--named mk__s--' + id : ''), transform: 'translate(' + p[0] + ' ' + p[1] + ')' }, gS);
+      if (id) { g.setAttribute('data-id', id); el('circle', { r: 30, class: 'mk__halo' }, g); el('circle', { r: 17, class: 'mk__ring' }, g); }
+      el('circle', { r: id ? 9 : 4.5, class: 'mk__dot' }, g);
+    });
+    host.appendChild(svg);
+    return {
+      svg: svg,
+      P: function (id) { return pt(IDS[id] || id); },
+      star: function (id) { return gS.querySelector('[data-id="' + id + '"]'); },
+      size: [W, H]
+    };
+  }
+
+  window.Mark = { create: create, IDS: IDS, el: el };
+})();
+
+</script>
+<script>
 (function () {
   'use strict';
   var REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var el = Mark.el;
 
   document.documentElement.classList.add('js');
   $('#yr').textContent = new Date().getFullYear();
@@ -1529,31 +1407,14 @@ html.js .reveal.in{opacity:1;transform:none}
   });
   $$('a', mnav).forEach(function (a) { a.addEventListener('click', function () { burger.setAttribute('aria-expanded', 'false'); mnav.classList.remove('is-open'); }); });
 
-  /* ── reveals + counters ── */
-  function count(el) {
-    var to = parseFloat(el.dataset.count), dec = +(el.dataset.dec || 0), pre = el.dataset.prefix || '', suf = el.dataset.suffix || '';
-    if (REDUCED) { el.textContent = pre + to.toFixed(dec) + suf; return; }
-    var t0 = performance.now(), dur = 1500;
-    (function step(now) {
-      var k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 4);
-      el.textContent = pre + (to * e).toFixed(dec) + suf;
-      if (k < 1) requestAnimationFrame(step);
-    })(t0);
-  }
+  /* ── reveals ── */
   var io = new IntersectionObserver(function (es) {
-    es.forEach(function (e) {
-      if (!e.isIntersecting) return;
-      e.target.classList.add('in'); io.unobserve(e.target);
-      $$('[data-count]', e.target).forEach(count);
-      if (e.target.matches('[data-count]')) count(e.target);
-      var g = $('.growth', e.target); if (g) setTimeout(function () { g.classList.remove('pre'); }, 150);
-    });
-  }, { threshold: .2 });
-  $('#growth').classList.add('pre');
-  $$('.reveal').forEach(function (el) { io.observe(el); });
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: .15 });
+  $$('.reveal').forEach(function (n) { io.observe(n); });
 
   /* ── hero star chart ── */
-  function goTo(id) { var el = $(id); if (el) el.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth' }); }
+  function goTo(id) { var n = $(id); if (n) n.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth' }); }
   if (window.ArsenalSky) {
     ArsenalSky.create($('#sky'), {
       constellation: true, box: $('#chartBox'), card: $('#skyCard'),
@@ -1565,18 +1426,43 @@ html.js .reveal.in{opacity:1;transform:none}
     });
     ArsenalSky.create($('#miniSky'), {});
   }
-  var hint = $('.hero__hint');
-  if (hint) $('.hero').addEventListener('pointermove', function once() { hint.style.opacity = '0'; $('.hero').removeEventListener('pointermove', once); });
 
-  /* ── portfolio explorer (tabs) ── */
-  var picks = $$('.pick'), title = $('#deviceTitle');
+  /* ── what we build: each company is a star, each star runs a workflow ── */
+  var A = 'agent', P = 'human';
+  var COMPANIES = {
+    accounting: { name: 'AI for Accountants', line: 'Software that runs an accounting firm. The agent prepares; the partner signs.',
+      wf: [['Bank feeds in', A], ['Reconcile accounts', A], ['Match invoices', A], ['Draft statements', A], ['Partner review', P], ['Sign-off', P]] },
+    mfo: { name: 'Multi-Family Office Platform', line: 'One AI tool unifying accounting, legal, insurance and wealth for a family.',
+      wf: [['Client asks a question', P], ['Pull the books', A], ['Check legal & insurance', A], ['Model the wealth impact', A], ['Draft one answer', A], ['Advisor approves', P]] },
+    insurance: { name: 'AI Insurance Servicing', line: 'Policy management, autopay, life settlements on-chain and life-expectancy analysis.',
+      wf: [['Policy onboarded', A], ['Premiums on autopay', A], ['Life-expectancy analysis', A], ['Settlement recorded on-chain', A], ['Servicing team review', P]] },
+    implementation: { name: 'AI Implementation', line: 'A build-grow-sell practice for businesses adopting AI.',
+      wf: [['Owner sets the goal', P], ['Map the workflows', A], ['Deploy agents', A], ['Move AI into the offering', A], ['Grow, or sell', P]] },
+    publishing: { name: 'Publishing & Marketing', line: 'AI-native content and agencies that ship at the speed of software.',
+      wf: [['Editor sets the brief', P], ['Research', A], ['Draft', A], ['Edit & approve', P], ['Publish & distribute', A]] },
+    twins: { name: 'Digital Twins / Legacy AI', line: 'Human expertise turned into lasting intelligence.',
+      wf: [['Expert interviews', P], ['Capture decisions', A], ['Train the twin', A], ['Answer new questions', A], ['Expert reviews', P]] },
+    robotics: { name: 'Agentic Entities & Robotics', line: 'Autonomous builders, and service and advertising robots.',
+      wf: [['Task assigned', P], ['Builder agent plans', A], ['Autonomous build', A], ['Robots deploy', A], ['Approve the next task', P]] }
+  };
+  var ORDER = Object.keys(COMPANIES);
+  var buildMark = Mark.create($('#buildMark'), { cls: 'mk--chart', pad: 50 });
+  var picks = $$('.pick');
   function selectPick(k) {
-    picks.forEach(function (p) {
-      var on = p.dataset.k === k;
-      p.setAttribute('aria-selected', on); p.tabIndex = on ? 0 : -1;
-      var m = $('#mock-' + p.dataset.k); m.hidden = !on;
-      if (on) { title.textContent = 'arsenal · ' + $('b', p).textContent.toLowerCase(); m.style.animation = 'none'; m.offsetHeight; m.style.animation = ''; }
+    var c = COMPANIES[k]; if (!c) return;
+    picks.forEach(function (p) { var on = p.dataset.k === k; p.setAttribute('aria-selected', on); p.tabIndex = on ? 0 : -1; if (on) $('#chart').setAttribute('aria-labelledby', p.id); });
+    buildMark.svg.setAttribute('data-sel', k);
+    $$('.mk__s--named', buildMark.svg).forEach(function (s) { s.classList.toggle('is-sel', s.dataset.id === k); });
+    $('#chartCoord').textContent = 'Company ' + (ORDER.indexOf(k) + 1) + ' of 7 · AI-native build';
+    $('#chartName').textContent = c.name; $('#chartLine').textContent = c.line;
+    var wf = $('#wf'); wf.innerHTML = '';
+    c.wf.forEach(function (s, i) {
+      var li = document.createElement('li'); li.className = 'wf__n wf__n--' + s[1]; li.style.setProperty('--i', i);
+      li.innerHTML = '<span class="wf__dot"></span><span class="wf__t"></span><span class="wf__who">' + (s[1] === A ? 'Agent' : 'Person') + '</span>';
+      li.querySelector('.wf__t').textContent = s[0]; wf.appendChild(li);
     });
+    wf.style.setProperty('--n', c.wf.length);
+    wf.classList.remove('run'); void wf.offsetWidth; wf.classList.add('run');
   }
   picks.forEach(function (p, i) {
     p.tabIndex = i ? -1 : 0;
@@ -1587,120 +1473,103 @@ html.js .reveal.in{opacity:1;transform:none}
       var n = picks[(i + d + picks.length) % picks.length]; n.focus(); selectPick(n.dataset.k);
     });
   });
+  // clicking a company star in the chart selects it too
+  $$('.mk__s--named', buildMark.svg).forEach(function (s) { if (COMPANIES[s.dataset.id]) s.addEventListener('click', function () { selectPick(s.dataset.id); }); });
+  selectPick('accounting');
 
-  /* ── cross-sell flywheel ── */
-  var NS = 'http://www.w3.org/2000/svg';
-  var svg = $('#flySvg');
-  var COS = ['Accounting AI', 'Family Office', 'Insurance', 'Implementation', 'Publishing', 'Legacy AI', 'Robotics'];
-  var CHANNELS = [
-    { name: 'Accountant', first: 0 }, { name: 'Attorney', first: 5 },
-    { name: 'RIA', first: 1 }, { name: 'Insurance broker', first: 2 }
-  ];
-  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
-  var C = 260, RAD = 180, nodes = [], links = [];
-  el('circle', { cx: C, cy: C, r: RAD, class: 'fl-orbit' }, svg);
-  el('circle', { cx: C, cy: C, r: RAD * .55, class: 'fl-orbit' }, svg);
-  COS.forEach(function (name, i) {
-    var a = -Math.PI / 2 + i / COS.length * Math.PI * 2;
-    var x = C + Math.cos(a) * RAD, y = C + Math.sin(a) * RAD;
-    var path = el('path', { d: 'M' + C + ' ' + C + ' Q ' + (C + Math.cos(a + .5) * RAD * .5) + ' ' + (C + Math.sin(a + .5) * RAD * .5) + ' ' + x + ' ' + y, class: 'fl-link' }, svg);
+  /* ── cross-sell: one relationship lights up the whole mark ── */
+  var flyMark = Mark.create($('#flyFig'), { cls: 'mk--fly', pad: 50 });
+  var fsvg = flyMark.svg; fsvg.setAttribute('viewBox', '-380 -70 1080 900');
+  var CH = [-250, 620], gLinks = el('g', { class: 'fly__links' }), stars = $('.mk__stars', fsvg);
+  fsvg.insertBefore(gLinks, stars);
+  var LABEL = { accounting: 'Accounting AI', mfo: 'Family Office', insurance: 'Insurance', implementation: 'Implementation', twins: 'Legacy AI', publishing: 'Publishing', robotics: 'Robotics' };
+  var links = {}, labels = {};
+  ORDER.forEach(function (id) {
+    var p = flyMark.P(id), dx = p[0] - CH[0], dy = p[1] - CH[1], mx = (CH[0] + p[0]) / 2 + dy * .18, my = (CH[1] + p[1]) / 2 - dx * .18;
+    var path = el('path', { d: 'M' + CH[0] + ' ' + CH[1] + ' Q' + mx + ' ' + my + ' ' + p[0] + ' ' + p[1], class: 'fly__link' }, gLinks);
     var len = path.getTotalLength(); path.style.strokeDasharray = len; path.style.strokeDashoffset = len; path.dataset.len = len;
-    links.push(path);
-    var g = el('g', { class: 'fl-node' }, svg);
-    el('circle', { cx: x, cy: y, r: 26 }, g);
-    el('path', { d: 'M' + x + ' ' + (y - 8) + ' L' + (x + 8) + ' ' + (y + 6) + ' L' + (x - 8) + ' ' + (y + 6) + ' Z', class: 'glyph' }, g);
-    var lx = C + Math.cos(a) * (RAD + 46), ly = C + Math.sin(a) * (RAD + 46) + 4;
-    var tx = el('text', { x: lx, y: ly, 'text-anchor': Math.abs(Math.cos(a)) < .3 ? 'middle' : (Math.cos(a) > 0 ? 'start' : 'end') }, g);
-    if (Math.abs(Math.cos(a)) >= .3) tx.setAttribute('x', C + Math.cos(a) * (RAD + 34));
-    tx.textContent = name;
-    nodes.push(g);
+    links[id] = path;
+    var right = p[0] > 320, t = el('text', { x: p[0] + (right ? 30 : -30), y: p[1] + 8, 'text-anchor': right ? 'start' : 'end', class: 'fly__label' }, fsvg);
+    t.textContent = LABEL[id]; labels[id] = t;
   });
-  var core = el('g', { class: 'fl-chan' }, svg);
-  el('circle', { cx: C, cy: C, r: 62 }, core);
-  var coreT = el('text', { x: C, y: C - 2, 'text-anchor': 'middle' }, core);
-  var coreS = el('text', { x: C, y: C + 16, 'text-anchor': 'middle', style: 'font-weight:500;opacity:.7;font-size:11px' }, core);
-  coreS.textContent = 'one relationship';
+  var chG = el('g', { class: 'fly__chan', transform: 'translate(' + CH.join(' ') + ')' }, fsvg);
+  el('circle', { r: 46, class: 'fly__chan-halo' }, chG); el('circle', { r: 16, class: 'fly__chan-dot' }, chG);
+  var chName = el('text', { y: 86, 'text-anchor': 'middle', class: 'fly__chan-name' }, chG);
+  var chSub = el('text', { y: 118, 'text-anchor': 'middle', class: 'fly__chan-sub' }, chG); chSub.textContent = 'one relationship';
+  var CHANNELS = [{ name: 'Accountant', first: 'accounting' }, { name: 'Attorney', first: 'twins' }, { name: 'RIA', first: 'mfo' }, { name: 'Insurance broker', first: 'insurance' }];
   var flyTimers = [];
   function flyTo(ci) {
-    var ch = CHANNELS[ci];
-    coreT.textContent = ch.name;
+    var ch = CHANNELS[ci]; chName.textContent = ch.name;
     flyTimers.forEach(clearTimeout); flyTimers = [];
-    var order = [ch.first].concat(COS.map(function (_, i) { return i; }).filter(function (i) { return i !== ch.first; }));
-    links.forEach(function (l) { l.classList.remove('on'); l.style.strokeDashoffset = l.dataset.len; });
-    nodes.forEach(function (n) { n.classList.remove('on'); });
+    var order = [ch.first].concat(ORDER.filter(function (i) { return i !== ch.first; }));
+    ORDER.forEach(function (id) { links[id].classList.remove('on'); links[id].style.strokeDashoffset = links[id].dataset.len; labels[id].classList.remove('on'); flyMark.star(id).classList.remove('is-lit'); });
+    fsvg.classList.remove('is-full');
     var lines = $('#flyLines'); lines.textContent = '0';
-    order.forEach(function (idx, k) {
+    order.forEach(function (id, k) {
       flyTimers.push(setTimeout(function () {
-        links[idx].classList.add('on'); links[idx].style.strokeDashoffset = 0; nodes[idx].classList.add('on');
-        lines.textContent = k + 1;
-      }, REDUCED ? 0 : (k === 0 ? 150 : 650 + k * 170)));
+        links[id].classList.add('on'); links[id].style.strokeDashoffset = 0; labels[id].classList.add('on'); flyMark.star(id).classList.add('is-lit');
+        lines.textContent = k + 1; if (k === order.length - 1) fsvg.classList.add('is-full');
+      }, REDUCED ? 0 : (k === 0 ? 150 : 700 + k * 200)));
     });
   }
   var chBtns = $$('#channels button');
-  chBtns.forEach(function (b) {
-    b.addEventListener('click', function () {
-      chBtns.forEach(function (x) { x.setAttribute('aria-checked', x === b); });
-      flyTo(+b.dataset.c);
-    });
-  });
-  var flyIO = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { flyTo(0); flyIO.disconnect(); } }, { threshold: .4 });
-  flyIO.observe(svg);
-  coreT.textContent = CHANNELS[0].name;
+  chBtns.forEach(function (b) { b.addEventListener('click', function () { chBtns.forEach(function (x) { x.setAttribute('aria-checked', x === b); }); flyTo(+b.dataset.c); }); });
+  var flyIO = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { flyTo(0); flyIO.disconnect(); } }, { threshold: .35 });
+  flyIO.observe(fsvg); chName.textContent = CHANNELS[0].name;
 
-  /* ── studio model: sticky steps ── */
-  var steps = $$('.step'), vis = $$('#panel .vis'), bars = $$('#panelBars i'), plabel = $('#panelLabel');
-  // small screens get each visual inline under its step
-  steps.forEach(function (s, i) {
-    var holder = $('.step__vis-m', s), clone = vis[i].cloneNode(true);
-    clone.classList.add('is-on'); holder.appendChild(clone);
-  });
+  /* ── studio model: the mark builds itself, one move per step ── */
+  var CAPS = ['A new company joins the mark', 'Agents go to work inside it', 'It connects to every neighbor', 'The whole mark compounds · ADHI, audited and public'];
+  var MOVES = ['Build', 'Embed', 'Scale', 'Compound'];
+  function studioMark(host, step) {
+    var m = Mark.create(host, { cls: 'mk--studio', pad: 60 });
+    var p = m.P('twins'), orbit = el('g', { class: 'mk__orbit', transform: 'translate(' + p.join(' ') + ')' });
+    for (var i = 0; i < 3; i++) el('circle', { r: 6, cx: 46, cy: 0, style: '--o:' + i, class: 'mk__agent' }, orbit);
+    m.svg.appendChild(orbit);
+    m.svg.setAttribute('data-step', step); return m;
+  }
+  var studio = studioMark($('#studioMark'), 0);
+  var steps = $$('.step'), bars = $$('#panelBars i');
+  steps.forEach(function (s, i) { studioMark($('.step__vis-m', s), i); });
   function setStep(i) {
     steps.forEach(function (s, k) { s.classList.toggle('is-cur', k === i); });
-    vis.forEach(function (v, k) { v.classList.toggle('is-on', k === i); });
     bars.forEach(function (b, k) { b.classList.toggle('on', k === i); });
-    plabel.textContent = 'Step ' + (i + 1) + ' of 4';
+    studio.svg.setAttribute('data-step', i);
+    $('#panelLabel').textContent = 'Step ' + (i + 1) + ' of 4 · ' + MOVES[i];
+    $('#panelCap').textContent = CAPS[i];
   }
-  // The visual on the right always matches the step whose heading sits closest to the
-  // middle of the sticky panel, so text and picture line up at any screen height.
+  // the visual always matches the step whose heading sits closest to the panel's middle
   var panel = $('#panel'), curStep = 0, stepTick = false;
   function syncStep() {
     stepTick = false;
-    if (!panel.offsetParent) return; // panel hidden on small screens
-    var pr = panel.getBoundingClientRect(), mid = pr.top + pr.height / 2, best = 0, bestD = Infinity;
-    steps.forEach(function (s, k) {
-      var h = $('h3', s).getBoundingClientRect(), d = Math.abs(h.top + h.height / 2 - mid);
-      if (d < bestD) { bestD = d; best = k; }
-    });
+    if (!panel.offsetParent) return;
+    var pr = panel.getBoundingClientRect(), mid = Math.min(pr.top + pr.height / 2, innerHeight / 2), best = 0, bestD = Infinity;  // before the panel sticks, use the screen's middle
+    steps.forEach(function (s, k) { var h = $('h3', s).getBoundingClientRect(), d = Math.abs(h.top + h.height / 2 - mid); if (d < bestD) { bestD = d; best = k; } });
     if (best !== curStep) { curStep = best; setStep(best); }
   }
   addEventListener('scroll', function () { if (!stepTick) { stepTick = true; requestAnimationFrame(syncStep); } }, { passive: true });
   addEventListener('resize', syncStep);
   syncStep();
 
-  /* ── foundation tabs ── */
+  /* ── foundation: the two feet of the A ── */
+  var footMark = Mark.create($('#footMark'), { cls: 'mk--feet', pad: 60 });
   var tabs = $$('#fTabs [role=tab]');
   function selectTab(t) {
     if (!t) return;
-    tabs.forEach(function (x) {
-      var on = x === t; x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1;
-      $('#' + x.getAttribute('aria-controls')).hidden = !on;
-    });
+    tabs.forEach(function (x) { var on = x === t; x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1; $('#' + x.getAttribute('aria-controls')).hidden = !on; });
+    footMark.svg.setAttribute('data-sel', t.dataset.id);
   }
   tabs.forEach(function (t, i) {
     t.tabIndex = i ? -1 : 0;
     t.addEventListener('click', function () { selectTab(t); });
-    t.addEventListener('keydown', function (e) {
-      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-      if (!d) return; var n = tabs[(i + d + tabs.length) % tabs.length]; n.focus(); selectTab(n);
-    });
+    t.addEventListener('keydown', function (e) { var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!d) return; var n = tabs[(i + d + tabs.length) % tabs.length]; n.focus(); selectTab(n); });
   });
+  selectTab(tabs[0]);
 
   /* ── underwriting: weeks → days ── */
   var uw = $('#uwRange'), tl = $('#uwTimeline'), uwl = $('#uwLabel');
   function uwSet() {
     var v = uw.value / 100;
     uw.style.setProperty('--p', uw.value + '%');
-    // sequential hand-offs (manual) collapse into overlapping automated work (platform)
     tl.style.setProperty('--step', (25 - v * 21) + '%');
     tl.style.setProperty('--w', (25 - v * 3) + '%');
     uwl.textContent = v < .34 ? 'Weeks' : v < .67 ? 'Weeks → Days' : 'Days';

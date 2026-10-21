@@ -13,6 +13,7 @@ There's no build step and no dependencies. Fonts come from Google Fonts.
 | `index.html` | All page content, copied from the live site's home, about, energy, finance, health and partner pages |
 | `styles.css` | Light and dark themes (follows the system setting), plus the night-sky hero and foundation band |
 | `sky.js` | The hero star chart |
+| `constellation.js` | The Arsenal mark as an SVG constellation, reused by the explorer, flywheel, studio steps and foundation |
 | `main.js` | Nav, scroll reveals, counters, the portfolio explorer, flywheel, sticky studio steps, foundation tabs, underwriting slider and deal builder |
 | `assets/` | The official logo files from the live site. The dark version is the same SVG recoloured |
 
@@ -52,3 +53,12 @@ The demo is a narrated product demo of Arsenal, cut in two versions, one to each
 For a live preview, open `demo/demo.html?v=tech` (or `?v=epic`) in a browser served from this folder.
 
 The music files aren't committed; they come from Pixabay under the Pixabay Content License. Product scenes are illustrative, so have counsel review the narration before any investor-facing use.
+
+## Previous version
+
+`arsenal-preview-v1.html` is a frozen single-file copy of the site before the constellation redesign. To restore that version completely:
+
+```bash
+git checkout 7b9e77f -- arsenal-site/index.html arsenal-site/styles.css arsenal-site/main.js arsenal-site/sky.js arsenal-site/arsenal-preview.html
+git rm arsenal-site/constellation.js
+```
