@@ -218,7 +218,38 @@ pre.tree{font:500 12.5px/1.55 var(--f-mono);background:var(--paper);border:1px s
 
 <section id="benchmark">
   <h2>3. Benchmark</h2>
-  <p class="callout">The live competitor benchmark (Balenciaga, Corteiz, Represent, Acne Studios, Vetements, Ottolinger, SSENSE, KidSuper, Motel Rocks, Minga) is still being captured. It will appear here in the next update to this page.</p>
+  <p>Captured live on 21 Oct 2026 with a desktop Chrome browser from a cloud container: homepage, PLP and PDP at desktop and phone widths. Each LCP figure is a single cold lab run, so read it as indicative. Balenciaga blocked the browser (403) and wasn't bypassed, so its row comes from published sources. ihateblue.com was unreachable. Full write-up: <code>jaded-london/benchmark/BENCHMARK.md</code>, raw numbers in <code>metrics.json</code>.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Site</th><th>Home weight / requests</th><th>3rd-party script domains</th><th>LCP desk / mob</th><th>What they do better</th><th>Jaded should copy</th><th>Jaded should not copy</th></tr></thead>
+    <tbody>
+      <tr><td><b>Balenciaga</b><br><span class="sev m">not captured</span></td><td class="n">n/a</td><td class="n">n/a</td><td class="n">n/a</td><td>A catalogue-only grid with the logo demoted (Bureau Borsche, 2017). Launches staged as media events: a browser game for FW21, social feeds wiped.</td><td>The launch as an event; a consistent grid</td><td>Near-anonymous branding. Demna left in July 2025, so the reference is a past era.</td></tr>
+      <tr><td><b>Corteiz</b></td><td class="n">1.4 MB / 164</td><td class="n">7</td><td class="n">1.8 / 1.7 s</td><td>The whole store sits behind a password and email capture. Scarcity is the brand.</td><td>Password-gated capsule drops using Shopify's password template</td><td>Gating the whole store. Jaded has 2,058 products to sell daily.</td></tr>
+      <tr><td><b>Represent</b></td><td class="n">7.6 MB / 462</td><td class="n">41</td><td class="n">3.1 / 1.5 s</td><td>Richest product schema (return and shipping policy). Fit finder, delivery date by postcode, a gated "Vault" sale.</td><td>The Vault model for sale, so markdowns leave the main grid; product schema</td><td>41 third-party script domains and about 4 MB of JS</td></tr>
+      <tr><td><b>Acne Studios</b></td><td class="n">2.5 MB / 94</td><td class="n">12</td><td class="n">6.0 / 3.0 s</td><td>Full-bleed video hero with a mobile poster. No images missing alt text, skip links, stacked PDP gallery, "Get notified" on sold-out sizes.</td><td>Stacked gallery, notify-me, accessibility basics</td><td>A 12 px h1 and a slow desktop LCP</td></tr>
+      <tr><td><b>Vetements</b></td><td class="n">1.2 MB / 130</td><td class="n">2</td><td class="n">1.7 / 1.2 s</td><td>A holding page; it sells through SSENSE.</td><td>n/a</td><td>n/a</td></tr>
+      <tr><td><b>Ottolinger</b></td><td class="n">1.9 MB / 109</td><td class="n">5</td><td class="n">5.7 / 4.5 s</td><td>Product grid as the homepage with campaign video bands, at a light 1.9 MB. The closest live analogue to the Balenciaga look.</td><td>The grid-first homepage with editorial bands</td><td>No h1 on any page, 79/79 images missing alt text, 11 px type</td></tr>
+      <tr><td><b>SSENSE</b></td><td class="n">13.6 MB / 52</td><td class="n">5</td><td class="n">5.3 / 1.5 s</td><td>Editorial mixed with commerce; a fast PDP (0.9 s LCP).</td><td>Editorial voice next to product</td><td>An 11.8 MB animated GIF as the LCP element; thin filters</td></tr>
+      <tr><td><b>KidSuper</b></td><td class="n">6.8 MB / 331</td><td class="n">9</td><td class="n">2.2 / 3.4 s</td><td>The only 5-column grid, a density toggle, low-stock badges, event tickets in the announcement bar.</td><td>Club-night and party tickets sold on-site; density toggle</td><td>The art-slideshow hero</td></tr>
+      <tr><td><b>Motel Rocks</b></td><td class="n">24.1 MB / 476</td><td class="n">31</td><td class="n">5.4 / 9.5 s</td><td>An on-site shoppable Instagram feed and notify-me.</td><td>Shoppable UGC, but with sized images</td><td>A 23.7 MB PDP caused by full-size Instagram images; no h1 on the homepage</td></tr>
+      <tr><td><b>Minga London</b></td><td class="n">10.9 MB / 328</td><td class="n">25</td><td class="n">2.7 / 1.4 s</td><td>Black UI chrome with a white grid and a loud voice ("All weirdos r welcome!"). A members' club with early access to drops.</td><td>Members' early access; a voice-led brand</td><td>A newsletter popup that becomes the mobile LCP; 17–18 MB PLP</td></tr>
+    </tbody></table></div>
+  <h4>Patterns across the set</h4>
+  <ul class="tight">
+    <li>Four columns on desktop and two on mobile everywhere except KidSuper (five). Size buttons are the norm; only the most austere sites use dropdowns.</li>
+    <li>Page weight comes from images and social widgets, not from the platform. Shopify sites range from a 1.6 MB PDP (Ottolinger) to 24 MB (Motel).</li>
+    <li>No captured site runs an on-page countdown. Drops are run through gates, vaults, clubs, notify-me and social channels. A countdown is therefore a gap Jaded can own, as long as the gates and the club come with it.</li>
+    <li>Only Motel puts a shoppable social feed on-site, and it pays for it in page weight. None embeds TikTok.</li>
+  </ul>
+  <div class="shots">
+    <figure class="shot"><img src="bench/ottolinger-home-desktop.jpg" alt="Ottolinger homepage: product grid with campaign bands" loading="lazy"><figcaption>Ottolinger · grid-first homepage</figcaption></figure>
+    <figure class="shot"><img src="bench/acnestudios-pdp-desktop.jpg" alt="Acne Studios product page with stacked gallery" loading="lazy"><figcaption>Acne Studios · stacked PDP gallery</figcaption></figure>
+    <figure class="shot"><img src="bench/representclo-vault-desktop.jpg" alt="Represent Vault gated sale sign-up page" loading="lazy"><figcaption>Represent · gated Vault sale</figcaption></figure>
+    <figure class="shot"><img src="bench/corteiz-home-desktop.jpg" alt="Corteiz password gate page" loading="lazy"><figcaption>Corteiz · whole-store password gate</figcaption></figure>
+    <figure class="shot"><img src="bench/kidsuper-home-desktop.jpg" alt="KidSuper homepage with event announcement" loading="lazy"><figcaption>KidSuper · event tickets on-site</figcaption></figure>
+    <figure class="shot"><img src="bench/mingalondon-home-desktop.jpg" alt="Minga London homepage with black header and white grid" loading="lazy"><figcaption>Minga London · voice-led, members' club</figcaption></figure>
+    <figure class="shot"><img src="bench/ssense-home-desktop.jpg" alt="SSENSE homepage with editorial banner" loading="lazy"><figcaption>SSENSE · editorial and commerce</figcaption></figure>
+    <figure class="shot"><img src="bench/motelrocks-pdp-desktop.jpg" alt="Motel Rocks product page" loading="lazy"><figcaption>Motel Rocks · 23.7 MB PDP</figcaption></figure>
+  </div>
 </section>
 
 <section id="brand">
@@ -298,7 +329,7 @@ pre.tree{font:500 12.5px/1.55 var(--f-mono);background:var(--paper);border:1px s
     <div><span>UI · Archivo 11–13 px caps</span><b style="font:600 12px/1 var(--f-ui);text-transform:uppercase;letter-spacing:.06em">New in · Women · Men · Campaigns · Stores</b></div>
     <div><span>Data · JetBrains Mono</span><b class="mono" style="font-size:14px">£65 · JWL2358 · 02:05:16:57 · W28 W30 W32</b></div>
   </div>
-  <p>The display face appears once per screen: a drop name, a franchise or a campaign title. Everything else is small utilitarian caps, which is the most Balenciaga part of the system. Mono carries anything a customer compares: price, size, style code, countdown.</p>
+  <p>The display face appears once per screen: a drop name, a franchise or a campaign title. Navigation and labels are small utilitarian caps, which is the most Balenciaga part of the system. Product names and running text stay at 14 px or more on phones, because that is where TikTok traffic lands. Mono carries anything a customer compares: price, size, style code, countdown.</p>
   <h4>Grid, motion, imagery</h4>
   <ul class="tight">
     <li><b>Grid:</b> 12 columns, zero gutter, 1 px hairlines between tiles. PLP density switch 2 / 4 / 6 on desktop, 2 / 1 on mobile.</li>
@@ -308,7 +339,7 @@ pre.tree{font:500 12.5px/1.55 var(--f-mono);background:var(--paper);border:1px s
   </ul>
 
   <h3 id="dial">The Balenciaga dial</h3>
-  <p>"Like Balenciaga" means the Demna-era balenciaga.com: a stark, near-brutalist interface, tiny type, black and white, product grids as the homepage and drops treated like art releases. Pushed all the way, that's a costume on a brand whose median price is £48 and whose customers come for the party. Set it at about 6 out of 10.</p>
+  <p>"Like Balenciaga" means the Demna-era balenciaga.com (Demna left in July 2025): a stark, near-brutalist interface, tiny type, black and white, product grids as the homepage and drops treated like art releases. Pushed all the way, that's a costume on a brand whose median price is £48 and whose customers come for the party. Set it at about 6 out of 10.</p>
   <div class="dial" role="img" aria-label="Dial set at 6 of 10, between Jaded's current site and full Balenciaga">
     <div class="track"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><div class="fill"></div><div class="pin"></div></div>
     <div class="ends"><span>0 · Today's Shopify theme</span><span>6 · Jaded rebuild</span><span>10 · balenciaga.com</span></div>
@@ -316,7 +347,7 @@ pre.tree{font:500 12.5px/1.55 var(--f-mono);background:var(--paper);border:1px s
   <div class="two">
     <div class="is"><h4>Take</h4><ul class="tight">
       <li>The product grid as homepage, hairline-ruled and edge to edge.</li>
-      <li>Tiny uppercase UI, mono for data.</li>
+      <li>Small uppercase caps for navigation and labels, mono for data. Product names and body stay at 14 px or more on phones.</li>
       <li>Black and white ground, so imagery carries the colour.</li>
       <li>Drops staged as releases: one hero, a countdown, a sold-through state.</li>
       <li>Full-bleed campaign film, muted, with a poster frame.</li>
@@ -324,7 +355,7 @@ pre.tree{font:500 12.5px/1.55 var(--f-mono);background:var(--paper);border:1px s
     </ul></div>
     <div class="isnt"><h4>Leave</h4><ul class="tight">
       <li>Deliberately hostile navigation (hidden menus, unlabelled icons). Jaded's TikTok traffic is mobile and impatient.</li>
-      <li>Hiding prices and sizes until hover.</li>
+      <li>Hiding prices and sizes until hover, and 11–12 px product names (Ottolinger, SSENSE and Acne all do this).</li>
       <li>Ironic, anti-commerce copy. Jaded's voice is flirtatious and direct.</li>
       <li>Greyscale everything. Jaded's colour (pink mist, camo, UV) is part of the product.</li>
       <li>Luxury pacing. Jaded drops weekly; the site has to refresh weekly too.</li>
@@ -404,7 +435,8 @@ pre.tree{font:500 12.5px/1.55 var(--f-mono);background:var(--paper);border:1px s
       <tr><td>Early access (T−1 h)</td><td>Waitlist and app users get a signed link. The app keeps its "exclusive access" promise.</td><td>Customer tags; Shopify customer accounts; app push</td></tr>
       <tr><td>Live</td><td>UV live dot, "x of y sizes left" on cards, sticky add-to-bag, low-stock nudges from real inventory only.</td><td>Theme; inventory from Storefront API</td></tr>
       <tr><td>Sold through</td><td>Sizes switch to "notify me". The drop page turns into an archive story with credits.</td><td>Back-in-stock flow (Klaviyo); campaign template</td></tr>
-      <tr><td>Traffic</td><td>Static, cached drop page; no app scripts on the countdown view. Queueing only if checkout limits are hit.</td><td>Shopify CDN; checkout queue if needed</td></tr>
+      <tr><td>Traffic</td><td>Static, cached drop page; no app scripts on the countdown view. Queueing only if checkout limits are hit.</td></tr>
+      <tr><td>Formats</td><td>Password-gated capsules (Corteiz), a gated sale "Vault" that takes markdowns out of the main grid (Represent), members’ early access (Minga), party and club-night tickets sold on-site (KidSuper).</td><td>Shopify password template; customer tags; ticket products</td><td>Shopify CDN; checkout queue if needed</td></tr>
     </tbody></table></div>
   <p>Markdown policy: move sale to a defined season window and to <code>/collections/sale</code>. Keep compare-at prices off New In, so the drop grid never shows a strikethrough in its first weeks.</p>
 
@@ -442,7 +474,14 @@ pre.tree{font:500 12.5px/1.55 var(--f-mono);background:var(--paper);border:1px s
     <li><a href="https://shopify.dev/themes/architecture/templates/metaobject">Shopify: metaobject templates</a></li>
     <li><a href="https://www.ftc.gov/news-events/news/press-releases/2025/04/ftc-approves-final-order-requiring-accessibe-pay-1-million">FTC: accessiBe order (2025)</a></li>
   </ul>
-  <!--BENCHSRC-->
+  <h4>Benchmark sources</h4>
+  <ul class="src">
+    <li>Live captures: balenciaga.com (blocked), corteiz.com, representclo.com, acnestudios.com, vetements.com, ottolinger.com, ssense.com, kidsuper.com, motelrocks.com, mingalondon.com. 21 Oct 2026.</li>
+    <li><a href="https://www.itsnicethat.com/news/bureau-borsche-balenciaga-website-redesign-010317">It's Nice That: Bureau Borsche's Balenciaga website</a> · <a href="https://bureauborsche.com/projects/balenciaga/visual-identity">Bureau Borsche project page</a></li>
+    <li><a href="https://hero-magazine.com/article/180958/balenciagas-fw21-collection-comes-with-an-online-video-game-set-in-2031/">Hero: Balenciaga FW21 Afterworld game</a> · <a href="https://fashionunited.uk/news/fashion/did-balenciaga-erase-its-instagram-again/2021091257647">FashionUnited: Balenciaga erases Instagram</a></li>
+    <li><a href="https://www.tag-walk.com/it/news/pierpaolo-piccioli-appointed-creative-director-of-balenciaga">Tag Walk: Piccioli appointed at Balenciaga</a></li>
+    <li><a href="https://ixd.prattsi.org/2023/09/design-critique-ssense/">Pratt IXD: design critique of SSENSE</a></li>
+  </ul>
   <h4>Limits</h4>
   <ul class="src">
     <li>jadedldn.com was not rendered here because of its Cloudflare challenge, which I didn't attempt to bypass. Menus, homepage composition, scripts, Core Web Vitals and USD prices need the Claude in Chrome capture.</li>
