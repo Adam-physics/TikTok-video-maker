@@ -155,10 +155,10 @@ def l_choose():
         *mine,
         note("your pick", (230, 650), size=46, color=GREY),
         *theirs,
-        *kid(560, 1040, 0.9, "happy", "point"),
+        *kid(560, 950, 0.9, "happy", "point"),
         tag("THEIR PICK", (820, 680), size=60, color=TEAL).at("their").focus(1.08).pop(),
-        Shape(arrow((650, 840), (820, 740), bend=-20, head=22), color=TEAL, width=W),
-        note("(even if it's not yours)", (540, 1260), size=44, color=GREY).at("you'd"),
+        Shape(arrow((650, 750), (800, 720), bend=-20, head=22), color=TEAL, width=W),
+        note("(even if it's not yours)", (820, 330), size=38, color=GREY),
     ]
 
 
