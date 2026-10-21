@@ -538,9 +538,12 @@ Source: public Shopify JSON endpoints on `jaded-london.myshopify.com` (`/product
 
 The full map, including every collection and all 2,058 product URLs, is in `migration_map.csv`.
 
-## Gaps (need the Claude in Chrome capture)
+## Live storefront (Claude in Chrome capture)
 
-- Live navigation menus, header/footer links, homepage sections and theme templates (Shopify JSON does not expose them).
-- USD prices for the `/en-us` market (catalogue is GBP; Markets price lists are applied only on `jadedldn.com`).
-- Scripts, page weight, Core Web Vitals, structured data and screenshots of the current storefront.
-- Content of the 20 pages whose body is empty (built in theme sections), including `/pages/new-york-store-2026`, `/pages/stores-2026`, `/pages/sleazenation`, `/pages/rock-revival-collaboration`.
+The live US store was captured in a normal browser on 21 Oct 2026: navigation drawer, homepage, gender landings, 12 PLPs with US prices, 4 PDPs, Parachute, campaign, collab, store and info pages, search, cart, apps and social accounts. See `scrape/chrome_inventory_en-us.md`.
+
+## Still outstanding
+
+- Core Web Vitals (field or lab) for the live store.
+- Mobile screenshots of the live store (the Chrome session could not resize below desktop width).
+- A keyboard-only accessibility pass.
