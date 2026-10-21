@@ -1,0 +1,4643 @@
+{
+  "meta": {
+    "generated": "2026-10-21",
+    "tool": "Playwright Chromium 1194 (headless), proxy via local agent proxy",
+    "desktop": {
+      "viewport": "1440x900",
+      "dpr": 1,
+      "ua": "Chrome 141 Windows desktop"
+    },
+    "mobile": {
+      "viewport": "390x844",
+      "dpr": 2,
+      "ua": "Chrome 141 Android (Pixel 8)",
+      "isMobile": true
+    },
+    "method": {
+      "bytes": "sum over finished requests of responseBodySize+responseHeadersSize (Playwright request.sizes()); encoded/transfer sizes, so compressed text counts small.",
+      "initial_load_plus_6s": "after load event + 6 s idle, before any interaction",
+      "after_scroll_total": "home/PLP pages: after cookie dismissal and auto-scroll to the bottom (capped at 14000 px) to trigger lazy-loading; PDP pages: after one scroll to ~2200 px for the sticky-ATC test",
+      "thirdPartyScriptDomains": "distinct registrable domains (eTLD+1 approximation) of script resources whose domain differs from the page host; Shopify CDN domains (shopify.com, shop.app) count as third-party",
+      "lcpMs": "last largest-contentful-paint entry via buffered PerformanceObserver, read ~6 s after load; single cold run from a cloud container, so treat as indicative, not field data",
+      "caveat_video": "This Chromium build does not play H.264/MP4, so autoplay video heroes render as blank/grey/poster frames in screenshots (motelrocks, ottolinger, acnestudios desktop poster). Video presence is detected from DOM <video> elements.",
+      "caveat_heuristics": "PLP grid columns, gallery type, sticky ATC and text signals are DOM heuristics; BENCHMARK.md corrects them where screenshots show otherwise (e.g. Represent PLP reported 10 columns because of a collection carousel; visually 4 desktop / 2 mobile)."
+    }
+  },
+  "sites": {
+    "balenciaga": {
+      "homeUrl": "https://www.balenciaga.com/en-gb",
+      "capturedAt": "2026-10-21T15:45:39.036Z",
+      "pages": {
+        "homeDesktop": {
+          "url": "https://www.balenciaga.com/en-gb",
+          "status": 403,
+          "blocked": true,
+          "title": "Access Denied",
+          "note": "Blocked by bot protection on first real-browser attempt; not retried or bypassed."
+        }
+      },
+      "status": "blocked: HTTP 403 \"Access Denied\" to Playwright Chromium with desktop Chrome UA; WebFetch also refused. Not captured live; see BENCHMARK.md for web-researched notes."
+    },
+    "corteiz": {
+      "homeUrl": "https://www.corteiz.com",
+      "capturedAt": "2026-10-21T15:44:53.189Z",
+      "pages": {
+        "homeDesktop": {
+          "url": "https://www.corteiz.com",
+          "finalUrl": "https://www.corteiz.com/password",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 164,
+            "bytes": 1507871,
+            "mb": 1.44,
+            "thirdPartyScriptDomains": 7
+          },
+          "after_scroll_total": {
+            "requests": 197,
+            "bytes": 1599480,
+            "mb": 1.53,
+            "thirdPartyScriptDomains": 7
+          },
+          "thirdPartyScriptDomainList": [
+            "shop.app",
+            "shopify.com",
+            "klaviyo.com",
+            "minmaxify.com",
+            "herokuapp.com",
+            "chimpstatic.com",
+            "cloudflare.com"
+          ],
+          "lcpMs": 1796,
+          "lcpElement": "DIV.password-logo",
+          "title": "CRTZRTW",
+          "metaDescription": null,
+          "htmlLang": "en",
+          "jsonLdTypes": [],
+          "jsonLd": {
+            "Product": false,
+            "Organization": false,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            ""
+          ],
+          "imgCount": 1,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 0,
+          "screenshots": [
+            "corteiz-home-desktop.jpg",
+            "corteiz-home-desktop-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "\"Courier New\", courier, serif",
+            "bodyFontSize": "12px",
+            "h1Font": "\"Courier New\", courier, serif",
+            "h1FontSize": "25px",
+            "fontsUsed": [
+              "Courier New"
+            ],
+            "bodyBg": "rgb(0, 0, 0)",
+            "bodyColor": "rgb(255, 213, 0)",
+            "navItems": [],
+            "heroVideos": [],
+            "imgsInViewport": 0,
+            "largestImgShare": 0,
+            "productLinksInViewport": 0,
+            "totalVideos": 0,
+            "pageHeight": 900,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": false,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": false,
+              "password": true,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": false,
+              "tiktok.com": false,
+              "youtube.com": false,
+              "twitter.com": false,
+              "x.com/": false,
+              "facebook.com": false,
+              "pinterest.": false,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "homeMobile": {
+          "url": "https://www.corteiz.com",
+          "finalUrl": "https://www.corteiz.com/password",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 161,
+            "bytes": 1504379,
+            "mb": 1.43,
+            "thirdPartyScriptDomains": 7
+          },
+          "after_scroll_total": {
+            "requests": 192,
+            "bytes": 1592370,
+            "mb": 1.52,
+            "thirdPartyScriptDomains": 7
+          },
+          "thirdPartyScriptDomainList": [
+            "shop.app",
+            "shopify.com",
+            "klaviyo.com",
+            "minmaxify.com",
+            "herokuapp.com",
+            "chimpstatic.com",
+            "cloudflare.com"
+          ],
+          "lcpMs": 1680,
+          "lcpElement": "DIV.password-logo",
+          "title": "CRTZRTW",
+          "metaDescription": null,
+          "htmlLang": "en",
+          "jsonLdTypes": [],
+          "jsonLd": {
+            "Product": false,
+            "Organization": false,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            ""
+          ],
+          "imgCount": 1,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 0,
+          "screenshots": [
+            "corteiz-home-mobile.jpg",
+            "corteiz-home-mobile-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "\"Courier New\", courier, serif",
+            "bodyFontSize": "12px",
+            "h1Font": "\"Courier New\", courier, serif",
+            "h1FontSize": "25px",
+            "fontsUsed": [
+              "Courier New"
+            ],
+            "bodyBg": "rgb(0, 0, 0)",
+            "bodyColor": "rgb(255, 213, 0)",
+            "navItems": [],
+            "heroVideos": [],
+            "imgsInViewport": 0,
+            "largestImgShare": 0,
+            "productLinksInViewport": 0,
+            "totalVideos": 0,
+            "pageHeight": 844,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": false,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": false,
+              "password": true,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": false,
+              "tiktok.com": false,
+              "youtube.com": false,
+              "twitter.com": false,
+              "x.com/": false,
+              "facebook.com": false,
+              "pinterest.": false,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        }
+      },
+      "status": "captured live: every URL (incl. /collections/all) redirects to /password; no PLP/PDP reachable."
+    },
+    "representclo": {
+      "homeUrl": "https://representclo.com/",
+      "capturedAt": "2026-10-21T15:57:50.173Z",
+      "pages": {
+        "homeDesktop": {
+          "url": "https://representclo.com",
+          "finalUrl": "https://representclo.com/",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 462,
+            "bytes": 8000694,
+            "mb": 7.63,
+            "thirdPartyScriptDomains": 41
+          },
+          "after_scroll_total": {
+            "requests": 531,
+            "bytes": 8445929,
+            "mb": 8.05,
+            "thirdPartyScriptDomains": 41
+          },
+          "thirdPartyScriptDomainList": [
+            "shop.app",
+            "shopify.com",
+            "wisepops.net",
+            "klaviyo.com",
+            "digitalgenius.com",
+            "marqo-ep.ai",
+            "cloudfront.net",
+            "yotpo.com",
+            "visually.io",
+            "mplat-ppcprotect.com",
+            "ometria.com",
+            "loyaltylion.net",
+            "seel.com",
+            "set1.io",
+            "userway.org",
+            "perfalytics.com",
+            "attn.tv",
+            "getelevar.com",
+            "googletagmanager.com",
+            "usedrop.io",
+            "upfluence.co",
+            "googleapis.com",
+            "tiktok.com",
+            "creativecdn.com",
+            "stackadapt.com",
+            "tkrconnector.com",
+            "upf.ai",
+            "facebook.net",
+            "datadoghq-browser-agent.com",
+            "omegacommerce.com",
+            "trustpilot.com",
+            "signifyd.com",
+            "azureedge.net",
+            "swymrelay.com",
+            "amazonaws.com",
+            "redirectify.app",
+            "socialsnowball.io",
+            "webgains.io",
+            "doubleclick.net",
+            "online-metrix.net"
+          ],
+          "lcpMs": 3068,
+          "lcpElement": "IMG https://scdn.speedsize.com/fbaf6506-81e1-43a2-bcc1-80e18c7b0146/https://representclo.com/cdn/shop/files/Split_Banner_OwnersFW26.jpg?v=17",
+          "title": "Luxury British Streetwear | Official US Store\u00ae | REPRESENT",
+          "metaDescription": "Bringing luxury British streetwear to the US, exclusive collaborations and collections. Discover the latest arrivals and discover the next chapter of Represent.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ImageObject",
+            "WebSite",
+            "SearchAction",
+            "BreadcrumbList",
+            "ListItem"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Luxury British Streetwear | Official US Store\u00ae | REPRESENT"
+          ],
+          "imgCount": 48,
+          "imgMissingAlt": 8,
+          "imgEmptyAlt": 26,
+          "screenshots": [
+            "representclo-home-desktop.jpg",
+            "representclo-home-desktop-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "STKBureau, sans-serif",
+            "bodyFontSize": "16px",
+            "h1Font": "STKBureau, sans-serif",
+            "h1FontSize": "12px",
+            "fontsUsed": [
+              "STKBureau",
+              "-apple-system"
+            ],
+            "bodyBg": "rgb(255, 255, 255)",
+            "bodyColor": "rgb(0, 0, 0)",
+            "navItems": [
+              "Represent",
+              "247",
+              "Outlet",
+              "Retail",
+              "The Vault",
+              "Prestige",
+              "US / USD",
+              "Search",
+              "Account",
+              "Cart Toggle"
+            ],
+            "heroVideos": [],
+            "imgsInViewport": 2,
+            "largestImgShare": 0.5,
+            "productLinksInViewport": 0,
+            "totalVideos": 1,
+            "pageHeight": 1263,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": true,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": true,
+              "password": false,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": true,
+              "youtube.com": true,
+              "twitter.com": false,
+              "x.com/": true,
+              "facebook.com": true,
+              "pinterest.": false,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "homeMobile": {
+          "url": "https://representclo.com",
+          "finalUrl": "https://representclo.com/",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 454,
+            "bytes": 7799014,
+            "mb": 7.44,
+            "thirdPartyScriptDomains": 41
+          },
+          "after_scroll_total": {
+            "requests": 541,
+            "bytes": 8307200,
+            "mb": 7.92,
+            "thirdPartyScriptDomains": 41
+          },
+          "thirdPartyScriptDomainList": [
+            "shop.app",
+            "shopify.com",
+            "klaviyo.com",
+            "wisepops.net",
+            "digitalgenius.com",
+            "marqo-ep.ai",
+            "yotpo.com",
+            "visually.io",
+            "mplat-ppcprotect.com",
+            "ometria.com",
+            "loyaltylion.net",
+            "seel.com",
+            "set1.io",
+            "userway.org",
+            "attn.tv",
+            "perfalytics.com",
+            "googletagmanager.com",
+            "getelevar.com",
+            "googleapis.com",
+            "tiktok.com",
+            "creativecdn.com",
+            "stackadapt.com",
+            "tkrconnector.com",
+            "upfluence.co",
+            "usedrop.io",
+            "upf.ai",
+            "facebook.net",
+            "datadoghq-browser-agent.com",
+            "omegacommerce.com",
+            "trustpilot.com",
+            "signifyd.com",
+            "cloudfront.net",
+            "azureedge.net",
+            "swymrelay.com",
+            "amazonaws.com",
+            "redirectify.app",
+            "socialsnowball.io",
+            "webgains.io",
+            "doubleclick.net",
+            "online-metrix.net"
+          ],
+          "lcpMs": 1496,
+          "lcpElement": "IMG https://scdn.speedsize.com/fbaf6506-81e1-43a2-bcc1-80e18c7b0146/https://representclo.com/cdn/shop/files/Split_Banner_OwnersFW26.jpg?v=17",
+          "title": "Luxury British Streetwear | Official US Store\u00ae | REPRESENT",
+          "metaDescription": "Bringing luxury British streetwear to the US, exclusive collaborations and collections. Discover the latest arrivals and discover the next chapter of Represent.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ImageObject",
+            "WebSite",
+            "SearchAction",
+            "BreadcrumbList",
+            "ListItem"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Luxury British Streetwear | Official US Store\u00ae | REPRESENT"
+          ],
+          "imgCount": 48,
+          "imgMissingAlt": 8,
+          "imgEmptyAlt": 26,
+          "screenshots": [
+            "representclo-home-mobile.jpg",
+            "representclo-home-mobile-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "STKBureau, sans-serif",
+            "bodyFontSize": "16px",
+            "h1Font": "STKBureau, sans-serif",
+            "h1FontSize": "12px",
+            "fontsUsed": [
+              "STKBureau",
+              "-apple-system"
+            ],
+            "bodyBg": "rgb(255, 255, 255)",
+            "bodyColor": "rgb(0, 0, 0)",
+            "navItems": [
+              "Open/Close Menu",
+              "Search",
+              "Account",
+              "Cart Toggle"
+            ],
+            "heroVideos": [],
+            "imgsInViewport": 2,
+            "largestImgShare": 0.5,
+            "productLinksInViewport": 0,
+            "totalVideos": 1,
+            "pageHeight": 1609,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": true,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": true,
+              "password": false,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": true,
+              "youtube.com": true,
+              "twitter.com": false,
+              "x.com/": true,
+              "facebook.com": true,
+              "pinterest.": false,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "plpDesktop": {
+          "url": "https://representclo.com/collections/mens-new-arrivals-all",
+          "finalUrl": "https://representclo.com/collections/mens-new-arrivals-all",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 577,
+            "bytes": 8775338,
+            "mb": 8.37,
+            "thirdPartyScriptDomains": 41
+          },
+          "after_scroll_total": {
+            "requests": 922,
+            "bytes": 10154801,
+            "mb": 9.68,
+            "thirdPartyScriptDomains": 41
+          },
+          "thirdPartyScriptDomainList": [
+            "shop.app",
+            "shopify.com",
+            "wisepops.net",
+            "klaviyo.com",
+            "digitalgenius.com",
+            "marqo-ep.ai",
+            "visually.io",
+            "yotpo.com",
+            "mplat-ppcprotect.com",
+            "ometria.com",
+            "loyaltylion.net",
+            "seel.com",
+            "userway.org",
+            "set1.io",
+            "attn.tv",
+            "googletagmanager.com",
+            "perfalytics.com",
+            "getelevar.com",
+            "usedrop.io",
+            "upfluence.co",
+            "googleapis.com",
+            "tiktok.com",
+            "creativecdn.com",
+            "stackadapt.com",
+            "tkrconnector.com",
+            "upf.ai",
+            "facebook.net",
+            "datadoghq-browser-agent.com",
+            "omegacommerce.com",
+            "trustpilot.com",
+            "signifyd.com",
+            "cloudfront.net",
+            "azureedge.net",
+            "swymrelay.com",
+            "amazonaws.com",
+            "redirectify.app",
+            "socialsnowball.io",
+            "webgains.io",
+            "doubleclick.net",
+            "online-metrix.net"
+          ],
+          "lcpMs": 3412,
+          "lcpElement": "IMG https://scdn.speedsize.com/fbaf6506-81e1-43a2-bcc1-80e18c7b0146/representclo.com/cdn/shop/files/GZ65OmoWBOuyb4QDuiMO80eW8KbzMvvZofUpBZid",
+          "title": "Men's New Arrivals & Latest Clothing | REPRESENT",
+          "metaDescription": "Shop the latest new arrivals at Represent. New and seasonal drops across hoodies, t-shirts, denim, footwear, and collaborations. Free UK delivery over \u00a3120.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ImageObject",
+            "CollectionPage",
+            "ItemList",
+            "ListItem",
+            "BreadcrumbList"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "New Arrivals"
+          ],
+          "imgCount": 264,
+          "imgMissingAlt": 4,
+          "imgEmptyAlt": 30,
+          "screenshots": [
+            "representclo-plp-desktop.jpg",
+            "representclo-plp-desktop-full.jpg"
+          ],
+          "plp": {
+            "productCards": 70,
+            "gridColumns": 10,
+            "filterControls": [
+              "Filter & Sort"
+            ],
+            "visibleCheckboxes": 0,
+            "infiniteOrLoadMore": "load-more",
+            "productCountText": "245\nproducts"
+          }
+        },
+        "plpMobile": {
+          "url": "https://representclo.com/collections/mens-new-arrivals-all",
+          "finalUrl": "https://representclo.com/collections/mens-new-arrivals-all",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 514,
+            "bytes": 8073159,
+            "mb": 7.7,
+            "thirdPartyScriptDomains": 41
+          },
+          "after_scroll_total": {
+            "requests": 586,
+            "bytes": 8528422,
+            "mb": 8.13,
+            "thirdPartyScriptDomains": 41
+          },
+          "thirdPartyScriptDomainList": [
+            "shop.app",
+            "shopify.com",
+            "klaviyo.com",
+            "wisepops.net",
+            "digitalgenius.com",
+            "marqo-ep.ai",
+            "visually.io",
+            "cloudfront.net",
+            "yotpo.com",
+            "mplat-ppcprotect.com",
+            "ometria.com",
+            "loyaltylion.net",
+            "seel.com",
+            "userway.org",
+            "set1.io",
+            "attn.tv",
+            "googletagmanager.com",
+            "getelevar.com",
+            "usedrop.io",
+            "googleapis.com",
+            "upfluence.co",
+            "tiktok.com",
+            "creativecdn.com",
+            "stackadapt.com",
+            "tkrconnector.com",
+            "perfalytics.com",
+            "upf.ai",
+            "facebook.net",
+            "datadoghq-browser-agent.com",
+            "omegacommerce.com",
+            "trustpilot.com",
+            "signifyd.com",
+            "azureedge.net",
+            "swymrelay.com",
+            "amazonaws.com",
+            "redirectify.app",
+            "socialsnowball.io",
+            "webgains.io",
+            "doubleclick.net",
+            "online-metrix.net"
+          ],
+          "lcpMs": 2916,
+          "lcpElement": "IMG https://scdn.speedsize.com/fbaf6506-81e1-43a2-bcc1-80e18c7b0146/representclo.com/cdn/shop/files/jpZsmStt5cAC2cIDZAcEWj_itsogRobhK52ORVWP",
+          "title": "Men's New Arrivals & Latest Clothing | REPRESENT",
+          "metaDescription": "Shop the latest new arrivals at Represent. New and seasonal drops across hoodies, t-shirts, denim, footwear, and collaborations. Free UK delivery over \u00a3120.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ImageObject",
+            "CollectionPage",
+            "ItemList",
+            "ListItem",
+            "BreadcrumbList"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "New Arrivals"
+          ],
+          "imgCount": 264,
+          "imgMissingAlt": 4,
+          "imgEmptyAlt": 30,
+          "screenshots": [
+            "representclo-plp-mobile.jpg"
+          ],
+          "plp": {
+            "productCards": 70,
+            "gridColumns": 10,
+            "filterControls": [
+              "Filter & Sort"
+            ],
+            "visibleCheckboxes": 0,
+            "infiniteOrLoadMore": "load-more",
+            "productCountText": "245\nproducts"
+          }
+        },
+        "pdpDesktop": {
+          "url": "https://representclo.com/products/represent-owners-club-hoodie-jet-black",
+          "finalUrl": "https://representclo.com/products/represent-owners-club-hoodie-jet-black",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 626,
+            "bytes": 10156718,
+            "mb": 9.69,
+            "thirdPartyScriptDomains": 42
+          },
+          "after_scroll_total": {
+            "requests": 678,
+            "bytes": 10720300,
+            "mb": 10.22,
+            "thirdPartyScriptDomains": 42
+          },
+          "thirdPartyScriptDomainList": [
+            "shop.app",
+            "shopify.com",
+            "klaviyo.com",
+            "wisepops.net",
+            "digitalgenius.com",
+            "marqo-ep.ai",
+            "yotpo.com",
+            "visually.io",
+            "mplat-ppcprotect.com",
+            "ometria.com",
+            "loyaltylion.net",
+            "seel.com",
+            "kleep.ai",
+            "vercel.app",
+            "userway.org",
+            "set1.io",
+            "attn.tv",
+            "perfalytics.com",
+            "googletagmanager.com",
+            "getelevar.com",
+            "tiktok.com",
+            "creativecdn.com",
+            "stackadapt.com",
+            "tkrconnector.com",
+            "usedrop.io",
+            "googleapis.com",
+            "upfluence.co",
+            "upf.ai",
+            "omegacommerce.com",
+            "trustpilot.com",
+            "signifyd.com",
+            "cloudfront.net",
+            "azureedge.net",
+            "swymrelay.com",
+            "amazonaws.com",
+            "redirectify.app",
+            "socialsnowball.io",
+            "webgains.io",
+            "doubleclick.net",
+            "facebook.net",
+            "online-metrix.net"
+          ],
+          "lcpMs": 1688,
+          "lcpElement": "IMG https://scdn.speedsize.com/fbaf6506-81e1-43a2-bcc1-80e18c7b0146/representclo.com/cdn/shop/files/Represent-Owners-Club-Hoodie-Jet-Black_O",
+          "title": "Represent Owners Club Hoodie - Jet Black | REPRESENT",
+          "metaDescription": "Introducing the Represent Owners Club Hoodie. Our most recognised piece, born in Manchester and worn worldwide. Cut from 480gsm heavyweight loopback cotton, piece dyed for depth of colour and pre-shrunk for a lived-in feel from the first wear. Owners Club branding sits to the chest and back, finished with a Cobrax popp",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ImageObject",
+            "Product",
+            "Offer",
+            "MerchantReturnPolicy",
+            "OfferShippingDetails",
+            "Brand",
+            "BreadcrumbList",
+            "ListItem"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Represent Owners Club Hoodie\n                      \n                         - J"
+          ],
+          "imgCount": 210,
+          "imgMissingAlt": 12,
+          "imgEmptyAlt": 47,
+          "screenshots": [
+            "representclo-pdp-desktop.jpg"
+          ],
+          "pdp": {
+            "bigImages": 64,
+            "bigImagesFirstScreen": 10,
+            "galleryGuess": "grid (2-col stack)",
+            "atcText": "ADD TO CART\nADD TO CART",
+            "atcSticky": "sticky",
+            "sizeOptionsSeen": [
+              "XXS",
+              "XS",
+              "S",
+              "M",
+              "L",
+              "XL",
+              "XXL",
+              "2",
+              "1",
+              "10",
+              "9",
+              "90"
+            ],
+            "sizeSelects": 0,
+            "sizeGuide": true,
+            "delivery": true,
+            "returns": true,
+            "crossSell": "YOU MAY ALSO LIKE",
+            "bnpl": null,
+            "reviews": true,
+            "notifyMe": false,
+            "priceSample": "$200",
+            "accordions": 44,
+            "atcVisibleAfterScroll": false
+          }
+        },
+        "pdpMobile": {
+          "url": "https://representclo.com/products/represent-owners-club-hoodie-jet-black",
+          "finalUrl": "https://representclo.com/products/represent-owners-club-hoodie-jet-black",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 594,
+            "bytes": 10094403,
+            "mb": 9.63,
+            "thirdPartyScriptDomains": 42
+          },
+          "after_scroll_total": {
+            "requests": 668,
+            "bytes": 10567426,
+            "mb": 10.08,
+            "thirdPartyScriptDomains": 42
+          },
+          "thirdPartyScriptDomainList": [
+            "shop.app",
+            "shopify.com",
+            "wisepops.net",
+            "klaviyo.com",
+            "digitalgenius.com",
+            "marqo-ep.ai",
+            "cloudfront.net",
+            "yotpo.com",
+            "mplat-ppcprotect.com",
+            "ometria.com",
+            "loyaltylion.net",
+            "visually.io",
+            "seel.com",
+            "kleep.ai",
+            "vercel.app",
+            "userway.org",
+            "perfalytics.com",
+            "set1.io",
+            "attn.tv",
+            "googletagmanager.com",
+            "getelevar.com",
+            "usedrop.io",
+            "googleapis.com",
+            "upfluence.co",
+            "tiktok.com",
+            "creativecdn.com",
+            "stackadapt.com",
+            "tkrconnector.com",
+            "upf.ai",
+            "facebook.net",
+            "doubleclick.net",
+            "omegacommerce.com",
+            "trustpilot.com",
+            "signifyd.com",
+            "azureedge.net",
+            "swymrelay.com",
+            "amazonaws.com",
+            "redirectify.app",
+            "socialsnowball.io",
+            "webgains.io",
+            "online-metrix.net"
+          ],
+          "lcpMs": 1424,
+          "lcpElement": "IMG https://scdn.speedsize.com/fbaf6506-81e1-43a2-bcc1-80e18c7b0146/representclo.com/cdn/shop/files/Represent-Owners-Club-Hoodie-Jet-Black_O",
+          "title": "Represent Owners Club Hoodie - Jet Black | REPRESENT",
+          "metaDescription": "Introducing the Represent Owners Club Hoodie. Our most recognised piece, born in Manchester and worn worldwide. Cut from 480gsm heavyweight loopback cotton, piece dyed for depth of colour and pre-shrunk for a lived-in feel from the first wear. Owners Club branding sits to the chest and back, finished with a Cobrax popp",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ImageObject",
+            "Product",
+            "Offer",
+            "MerchantReturnPolicy",
+            "OfferShippingDetails",
+            "Brand",
+            "BreadcrumbList",
+            "ListItem"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Represent Owners Club Hoodie\n                      \n                         - J"
+          ],
+          "imgCount": 210,
+          "imgMissingAlt": 12,
+          "imgEmptyAlt": 47,
+          "screenshots": [
+            "representclo-pdp-mobile.jpg"
+          ],
+          "pdp": {
+            "bigImages": 24,
+            "bigImagesFirstScreen": 10,
+            "galleryGuess": "side-by-side / carousel row",
+            "atcText": "ADD TO CART\nADD TO CART",
+            "atcSticky": "sticky",
+            "sizeOptionsSeen": [
+              "XXS",
+              "XS",
+              "S",
+              "M",
+              "L",
+              "XL",
+              "XXL",
+              "2",
+              "1",
+              "10",
+              "9",
+              "90"
+            ],
+            "sizeSelects": 0,
+            "sizeGuide": true,
+            "delivery": true,
+            "returns": true,
+            "crossSell": "YOU MAY ALSO LIKE",
+            "bnpl": null,
+            "reviews": true,
+            "notifyMe": false,
+            "priceSample": "$200",
+            "accordions": 44,
+            "atcVisibleAfterScroll": true
+          }
+        },
+        "vaultDesktop": {
+          "url": "https://representclo.com/collections/vault",
+          "finalUrl": "https://representclo.com/collections/vault",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 451,
+            "bytes": 9373909,
+            "mb": 8.94,
+            "thirdPartyScriptDomains": 40
+          },
+          "after_scroll_total": {
+            "requests": 497,
+            "bytes": 9737186,
+            "mb": 9.29,
+            "thirdPartyScriptDomains": 40
+          },
+          "thirdPartyScriptDomainList": [
+            "shop.app",
+            "shopify.com",
+            "wisepops.net",
+            "klaviyo.com",
+            "digitalgenius.com",
+            "marqo-ep.ai",
+            "visually.io",
+            "yotpo.com",
+            "mplat-ppcprotect.com",
+            "ometria.com",
+            "loyaltylion.net",
+            "seel.com",
+            "set1.io",
+            "userway.org",
+            "attn.tv",
+            "perfalytics.com",
+            "googletagmanager.com",
+            "getelevar.com",
+            "usedrop.io",
+            "googleapis.com",
+            "upfluence.co",
+            "tiktok.com",
+            "creativecdn.com",
+            "stackadapt.com",
+            "tkrconnector.com",
+            "upf.ai",
+            "facebook.net",
+            "omegacommerce.com",
+            "trustpilot.com",
+            "signifyd.com",
+            "cloudfront.net",
+            "azureedge.net",
+            "swymrelay.com",
+            "amazonaws.com",
+            "redirectify.app",
+            "socialsnowball.io",
+            "webgains.io",
+            "doubleclick.net",
+            "online-metrix.net"
+          ],
+          "lcpMs": 5696,
+          "lcpElement": "SPAN.cc-message",
+          "title": "THE VAULT - IS CLOSED | SIGN UP FOR SALE DETAILS | REPRESENT",
+          "metaDescription": "Sign up to be the first to hear about exclusive discounts and new launches at REPRESENT CLO",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ImageObject",
+            "CollectionPage",
+            "ItemList",
+            "BreadcrumbList",
+            "ListItem"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 0,
+          "h1Texts": [],
+          "imgCount": 48,
+          "imgMissingAlt": 4,
+          "imgEmptyAlt": 30,
+          "screenshots": [
+            "representclo-vault-desktop.jpg"
+          ],
+          "plp": {
+            "productCards": 10,
+            "gridColumns": 10,
+            "filterControls": [],
+            "visibleCheckboxes": 0,
+            "infiniteOrLoadMore": "none-visible",
+            "productCountText": null
+          }
+        },
+        "vaultMobile": {
+          "url": "https://representclo.com/collections/vault",
+          "finalUrl": "https://representclo.com/collections/vault",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 455,
+            "bytes": 8065486,
+            "mb": 7.69,
+            "thirdPartyScriptDomains": 40
+          },
+          "after_scroll_total": {
+            "requests": 510,
+            "bytes": 8464728,
+            "mb": 8.07,
+            "thirdPartyScriptDomains": 40
+          },
+          "thirdPartyScriptDomainList": [
+            "shop.app",
+            "shopify.com",
+            "klaviyo.com",
+            "wisepops.net",
+            "digitalgenius.com",
+            "marqo-ep.ai",
+            "visually.io",
+            "cloudfront.net",
+            "yotpo.com",
+            "mplat-ppcprotect.com",
+            "ometria.com",
+            "loyaltylion.net",
+            "seel.com",
+            "set1.io",
+            "attn.tv",
+            "userway.org",
+            "googletagmanager.com",
+            "perfalytics.com",
+            "tiktok.com",
+            "creativecdn.com",
+            "stackadapt.com",
+            "tkrconnector.com",
+            "getelevar.com",
+            "usedrop.io",
+            "googleapis.com",
+            "upfluence.co",
+            "upf.ai",
+            "facebook.net",
+            "omegacommerce.com",
+            "trustpilot.com",
+            "signifyd.com",
+            "azureedge.net",
+            "swymrelay.com",
+            "amazonaws.com",
+            "redirectify.app",
+            "socialsnowball.io",
+            "webgains.io",
+            "doubleclick.net",
+            "online-metrix.net"
+          ],
+          "lcpMs": 5516,
+          "lcpElement": "SPAN.cc-message",
+          "title": "THE VAULT - IS CLOSED | SIGN UP FOR SALE DETAILS | REPRESENT",
+          "metaDescription": "Sign up to be the first to hear about exclusive discounts and new launches at REPRESENT CLO",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ImageObject",
+            "CollectionPage",
+            "ItemList",
+            "BreadcrumbList",
+            "ListItem"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 0,
+          "h1Texts": [],
+          "imgCount": 48,
+          "imgMissingAlt": 4,
+          "imgEmptyAlt": 30,
+          "screenshots": [
+            "representclo-vault-mobile.jpg"
+          ],
+          "plp": {
+            "productCards": 10,
+            "gridColumns": 10,
+            "filterControls": [],
+            "visibleCheckboxes": 0,
+            "infiniteOrLoadMore": "none-visible",
+            "productCountText": null
+          }
+        }
+      }
+    },
+    "acnestudios": {
+      "homeUrl": "https://www.acnestudios.com/",
+      "capturedAt": "2026-10-21T15:53:40.232Z",
+      "pages": {
+        "homeDesktop": {
+          "url": "https://www.acnestudios.com/",
+          "finalUrl": "https://www.acnestudios.com/us/en/home",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 94,
+            "bytes": 2579424,
+            "mb": 2.46,
+            "thirdPartyScriptDomains": 7
+          },
+          "after_scroll_total": {
+            "requests": 141,
+            "bytes": 5504137,
+            "mb": 5.25,
+            "thirdPartyScriptDomains": 12
+          },
+          "thirdPartyScriptDomainList": [
+            "cookielaw.org",
+            "recaptcha.net",
+            "cquotient.com",
+            "cloudflareinsights.com",
+            "googletagmanager.com",
+            "gstatic.com",
+            "riskified.com",
+            "facebook.net",
+            "tiktok.com",
+            "qualibooth.com",
+            "bloomreach.com",
+            "dema.ai"
+          ],
+          "lcpMs": 6032,
+          "lcpElement": "IMG https://www.acnestudios.com/on/demandware.static/-/Library-Sites-acne/default/dw38e3760d/home/2026/w42/poster-d.jpg",
+          "title": "Acne Studios - Shop the official site",
+          "metaDescription": "Shop the official Acne Studios site. View the latest ready-to-wear, womenswear, menswear, shoes & accessories. Complimentary shipping & returns available.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Acne Studios"
+          ],
+          "imgCount": 24,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 5,
+          "screenshots": [
+            "acnestudios-home-desktop.jpg",
+            "acnestudios-home-desktop-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "\"Helvetica Now Text\", Helvetica, Arial, sans-serif",
+            "bodyFontSize": "12px",
+            "h1Font": "\"Helvetica Now Text\", Helvetica, Arial, sans-serif",
+            "h1FontSize": "12px",
+            "fontsUsed": [
+              "Helvetica Now Text",
+              "Helvetica Monospaced Pro"
+            ],
+            "bodyBg": "rgba(0, 0, 0, 0)",
+            "bodyColor": "rgb(0, 0, 0)",
+            "navItems": [
+              "WOMAN",
+              "MAN",
+              "DENIM",
+              "BAGS",
+              "SCARVES",
+              "SEARCH",
+              "HELP",
+              "ACCOUNT",
+              "00",
+              "Acne Studios x Hussein Chalayan"
+            ],
+            "heroVideos": [
+              {
+                "w": 1440,
+                "h": 810,
+                "autoplay": true,
+                "muted": true
+              }
+            ],
+            "imgsInViewport": 5,
+            "largestImgShare": 0.9,
+            "productLinksInViewport": 0,
+            "totalVideos": 3,
+            "pageHeight": 5776,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": false,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": true,
+              "password": false,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": false,
+              "youtube.com": true,
+              "twitter.com": true,
+              "x.com/": false,
+              "facebook.com": true,
+              "pinterest.": true,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "homeMobile": {
+          "url": "https://www.acnestudios.com/",
+          "finalUrl": "https://www.acnestudios.com/us/en/home",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 98,
+            "bytes": 2645788,
+            "mb": 2.52,
+            "thirdPartyScriptDomains": 8
+          },
+          "after_scroll_total": {
+            "requests": 143,
+            "bytes": 5703779,
+            "mb": 5.44,
+            "thirdPartyScriptDomains": 13
+          },
+          "thirdPartyScriptDomainList": [
+            "cookielaw.org",
+            "recaptcha.net",
+            "cquotient.com",
+            "cloudflareinsights.com",
+            "googletagmanager.com",
+            "gstatic.com",
+            "corewebvitals.io",
+            "riskified.com",
+            "facebook.net",
+            "tiktok.com",
+            "qualibooth.com",
+            "bloomreach.com",
+            "dema.ai"
+          ],
+          "lcpMs": 2960,
+          "lcpElement": "IMG https://www.acnestudios.com/on/demandware.static/-/Library-Sites-acne/default/dwcf09ba97/home/2026/w42/poster-m.jpg",
+          "title": "Acne Studios - Shop the official site",
+          "metaDescription": "Shop the official Acne Studios site. View the latest ready-to-wear, womenswear, menswear, shoes & accessories. Complimentary shipping & returns available.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Acne Studios"
+          ],
+          "imgCount": 24,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 5,
+          "screenshots": [
+            "acnestudios-home-mobile.jpg",
+            "acnestudios-home-mobile-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "\"Helvetica Now Text\", Helvetica, Arial, sans-serif",
+            "bodyFontSize": "12px",
+            "h1Font": "\"Helvetica Now Text\", Helvetica, Arial, sans-serif",
+            "h1FontSize": "12px",
+            "fontsUsed": [
+              "Helvetica Now Text",
+              "Helvetica Monospaced Pro"
+            ],
+            "bodyBg": "rgba(0, 0, 0, 0)",
+            "bodyColor": "rgb(0, 0, 0)",
+            "navItems": [
+              "Menu",
+              "Search",
+              "Account",
+              "Bag",
+              "Acne Studios x Hussein Chalayan"
+            ],
+            "heroVideos": [
+              {
+                "w": 390,
+                "h": 585,
+                "autoplay": true,
+                "muted": true
+              }
+            ],
+            "imgsInViewport": 4,
+            "largestImgShare": 0.69,
+            "productLinksInViewport": 0,
+            "totalVideos": 3,
+            "pageHeight": 5662,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": false,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": true,
+              "password": false,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": false,
+              "youtube.com": true,
+              "twitter.com": true,
+              "x.com/": false,
+              "facebook.com": true,
+              "pinterest.": true,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "plpDesktop": {
+          "url": "https://www.acnestudios.com/us/en/woman/new-arrivals/",
+          "finalUrl": "https://www.acnestudios.com/us/en/woman/new-arrivals/",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 123,
+            "bytes": 2952393,
+            "mb": 2.82,
+            "thirdPartyScriptDomains": 8
+          },
+          "after_scroll_total": {
+            "requests": 181,
+            "bytes": 4040854,
+            "mb": 3.85,
+            "thirdPartyScriptDomains": 13
+          },
+          "thirdPartyScriptDomainList": [
+            "cookielaw.org",
+            "recaptcha.net",
+            "cquotient.com",
+            "cloudflareinsights.com",
+            "googletagmanager.com",
+            "gstatic.com",
+            "corewebvitals.io",
+            "riskified.com",
+            "facebook.net",
+            "tiktok.com",
+            "qualibooth.com",
+            "bloomreach.com",
+            "dema.ai"
+          ],
+          "lcpMs": 1620,
+          "lcpElement": "IMG https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwc59945a8/images/CB/CB0133-/",
+          "title": "Acne Studios \u2013 Women\u2019s New Arrivals",
+          "metaDescription": "Shop the latest arrivals from the women\u2019s collection.  Free shipping, easy returns, and international delivery available.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Women's New Arrivals"
+          ],
+          "imgCount": 82,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 6,
+          "screenshots": [
+            "acnestudios-plp-desktop.jpg",
+            "acnestudios-plp-desktop-full.jpg"
+          ],
+          "plp": {
+            "productCards": 29,
+            "gridColumns": 4,
+            "filterControls": [
+              "FILTER"
+            ],
+            "visibleCheckboxes": 0,
+            "infiniteOrLoadMore": "load-more",
+            "productCountText": "99 items"
+          }
+        },
+        "plpMobile": {
+          "url": "https://www.acnestudios.com/us/en/woman/new-arrivals/",
+          "finalUrl": "https://www.acnestudios.com/us/en/woman/new-arrivals/",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 102,
+            "bytes": 2823324,
+            "mb": 2.69,
+            "thirdPartyScriptDomains": 7
+          },
+          "after_scroll_total": {
+            "requests": 135,
+            "bytes": 3526810,
+            "mb": 3.36,
+            "thirdPartyScriptDomains": 12
+          },
+          "thirdPartyScriptDomainList": [
+            "cookielaw.org",
+            "recaptcha.net",
+            "cquotient.com",
+            "cloudflareinsights.com",
+            "googletagmanager.com",
+            "gstatic.com",
+            "riskified.com",
+            "facebook.net",
+            "tiktok.com",
+            "qualibooth.com",
+            "bloomreach.com",
+            "dema.ai"
+          ],
+          "lcpMs": 884,
+          "lcpElement": "IMG https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwc59945a8/images/CB/CB0133-/",
+          "title": "Acne Studios \u2013 Women\u2019s New Arrivals",
+          "metaDescription": "Shop the latest arrivals from the women\u2019s collection.  Free shipping, easy returns, and international delivery available.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Women's New Arrivals"
+          ],
+          "imgCount": 82,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 6,
+          "screenshots": [
+            "acnestudios-plp-mobile.jpg"
+          ],
+          "plp": {
+            "productCards": 29,
+            "gridColumns": 2,
+            "filterControls": [
+              "FILTER"
+            ],
+            "visibleCheckboxes": 0,
+            "infiniteOrLoadMore": "load-more",
+            "productCountText": "99 items"
+          }
+        },
+        "pdpDesktop": {
+          "url": "https://www.acnestudios.com/us/en/rw-ux-shir000001/CB0133-CQP.html?g=woman",
+          "finalUrl": "https://www.acnestudios.com/us/en/rw-ux-shir000001/CB0133-CQP.html?g=woman",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 105,
+            "bytes": 2164914,
+            "mb": 2.06,
+            "thirdPartyScriptDomains": 9
+          },
+          "after_scroll_total": {
+            "requests": 146,
+            "bytes": 3129830,
+            "mb": 2.98,
+            "thirdPartyScriptDomains": 14
+          },
+          "thirdPartyScriptDomainList": [
+            "cookielaw.org",
+            "recaptcha.net",
+            "cquotient.com",
+            "cloudflareinsights.com",
+            "googletagmanager.com",
+            "gstatic.com",
+            "corewebvitals.io",
+            "riskified.com",
+            "sspinc.io",
+            "facebook.net",
+            "tiktok.com",
+            "qualibooth.com",
+            "bloomreach.com",
+            "dema.ai"
+          ],
+          "lcpMs": 2848,
+          "lcpElement": "IMG https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwc59945a8/images/CB/CB0133-/",
+          "title": "Acne Studios - Patchwork Denim Shirt - Indigo/blue",
+          "metaDescription": null,
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ProductGroup",
+            "Brand",
+            "Product",
+            "Offer",
+            "BreadcrumbList",
+            "ListItem"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Patchwork Denim Shirt"
+          ],
+          "imgCount": 14,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 4,
+          "screenshots": [
+            "acnestudios-pdp-desktop.jpg"
+          ],
+          "pdp": {
+            "bigImages": 5,
+            "bigImagesFirstScreen": 1,
+            "galleryGuess": "vertical stack (scroll)",
+            "atcText": "ADD TO BAG",
+            "atcSticky": "sticky",
+            "sizeOptionsSeen": [
+              "00",
+              "XXS",
+              "XS",
+              "S",
+              "M",
+              "L",
+              "XL",
+              "XXL",
+              "XXXL"
+            ],
+            "sizeSelects": 0,
+            "sizeGuide": true,
+            "delivery": true,
+            "returns": true,
+            "crossSell": "RECOMMENDED",
+            "bnpl": null,
+            "reviews": false,
+            "notifyMe": false,
+            "priceSample": "$1,400.",
+            "accordions": 16,
+            "atcVisibleAfterScroll": true
+          }
+        },
+        "pdpMobile": {
+          "url": "https://www.acnestudios.com/us/en/rw-ux-shir000001/CB0133-CQP.html?g=woman",
+          "finalUrl": "https://www.acnestudios.com/us/en/rw-ux-shir000001/CB0133-CQP.html?g=woman",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 113,
+            "bytes": 3272631,
+            "mb": 3.12,
+            "thirdPartyScriptDomains": 8
+          },
+          "after_scroll_total": {
+            "requests": 154,
+            "bytes": 4003805,
+            "mb": 3.82,
+            "thirdPartyScriptDomains": 13
+          },
+          "thirdPartyScriptDomainList": [
+            "cookielaw.org",
+            "recaptcha.net",
+            "cquotient.com",
+            "cloudflareinsights.com",
+            "googletagmanager.com",
+            "gstatic.com",
+            "riskified.com",
+            "sspinc.io",
+            "facebook.net",
+            "tiktok.com",
+            "qualibooth.com",
+            "bloomreach.com",
+            "dema.ai"
+          ],
+          "lcpMs": 4932,
+          "lcpElement": "IMG https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dwc59945a8/images/CB/CB0133-/",
+          "title": "Acne Studios - Patchwork Denim Shirt - Indigo/blue",
+          "metaDescription": null,
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ProductGroup",
+            "Brand",
+            "Product",
+            "Offer",
+            "BreadcrumbList",
+            "ListItem"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Patchwork Denim Shirt"
+          ],
+          "imgCount": 30,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 4,
+          "screenshots": [
+            "acnestudios-pdp-mobile.jpg"
+          ],
+          "pdp": {
+            "bigImages": 5,
+            "bigImagesFirstScreen": 5,
+            "galleryGuess": "side-by-side / carousel row",
+            "atcText": "ADD TO BAG",
+            "atcSticky": "sticky",
+            "sizeOptionsSeen": [
+              "XXS",
+              "XS",
+              "S",
+              "M",
+              "L",
+              "XL",
+              "XXL",
+              "XXXL"
+            ],
+            "sizeSelects": 0,
+            "sizeGuide": true,
+            "delivery": true,
+            "returns": true,
+            "crossSell": "RECOMMENDED",
+            "bnpl": null,
+            "reviews": false,
+            "notifyMe": false,
+            "priceSample": "$1,400.",
+            "accordions": 8,
+            "atcVisibleAfterScroll": false
+          }
+        }
+      }
+    },
+    "vetements": {
+      "homeUrl": "https://vetements.com",
+      "capturedAt": "2026-10-21T15:48:17.174Z",
+      "pages": {
+        "homeDesktop": {
+          "url": "https://vetements.com",
+          "finalUrl": "https://www.vetements.com/",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 130,
+            "bytes": 1241850,
+            "mb": 1.18,
+            "thirdPartyScriptDomains": 2
+          },
+          "after_scroll_total": {
+            "requests": 136,
+            "bytes": 1247495,
+            "mb": 1.19,
+            "thirdPartyScriptDomains": 2
+          },
+          "thirdPartyScriptDomainList": [
+            "sentry-cdn.com",
+            "parastorage.com"
+          ],
+          "lcpMs": 1688,
+          "lcpElement": "IMG https://static.wixstatic.com/media/1f68cd_d319236cd81c42a291e4e1c507ea053b~mv2.png/v1/fill/w_980,h_768,al_c,q_90,usm_0.66_1.00_0.01,enc_",
+          "title": "VETEMENTS Official Website of the Fashion Brand",
+          "metaDescription": "VETEMENTS Fashion Brand Official Website & Shop - Discover latest collection by Guram Gvasalia",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "WebSite"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": false,
+            "BreadcrumbList": false
+          },
+          "h1Count": 0,
+          "h1Texts": [],
+          "imgCount": 4,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 0,
+          "screenshots": [
+            "vetements-home-desktop.jpg",
+            "vetements-home-desktop-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "Arial, Helvetica, sans-serif",
+            "bodyFontSize": "10px",
+            "h1Font": null,
+            "h1FontSize": null,
+            "fontsUsed": [
+              "Arial",
+              "Helvetica",
+              "helvetica-w01-bold",
+              "helvetica-w01-roman",
+              "cormorantgaramond-light",
+              "HelveticaNeue"
+            ],
+            "bodyBg": "rgba(0, 0, 0, 0)",
+            "bodyColor": "rgb(0, 0, 0)",
+            "navItems": [
+              "Instagram",
+              "Youtube"
+            ],
+            "heroVideos": [],
+            "imgsInViewport": 4,
+            "largestImgShare": 0.58,
+            "productLinksInViewport": 0,
+            "totalVideos": 0,
+            "pageHeight": 1023,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": false,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": false,
+              "password": false,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": false,
+              "youtube.com": true,
+              "twitter.com": false,
+              "x.com/": false,
+              "facebook.com": false,
+              "pinterest.": false,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "homeMobile": {
+          "url": "https://vetements.com",
+          "finalUrl": "https://www.vetements.com/",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 128,
+            "bytes": 1224987,
+            "mb": 1.17,
+            "thirdPartyScriptDomains": 2
+          },
+          "after_scroll_total": {
+            "requests": 134,
+            "bytes": 1230985,
+            "mb": 1.17,
+            "thirdPartyScriptDomains": 2
+          },
+          "thirdPartyScriptDomainList": [
+            "sentry-cdn.com",
+            "parastorage.com"
+          ],
+          "lcpMs": 1156,
+          "lcpElement": "IMG https://static.wixstatic.com/media/1f68cd_d319236cd81c42a291e4e1c507ea053b~mv2.png/v1/fill/w_640,h_752,al_c,q_90,usm_0.66_1.00_0.01,enc_",
+          "title": "VETEMENTS Official Website of the Fashion Brand",
+          "metaDescription": "VETEMENTS Fashion Brand Official Website & Shop - Discover latest collection by Guram Gvasalia",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "WebSite"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": false,
+            "BreadcrumbList": false
+          },
+          "h1Count": 0,
+          "h1Texts": [],
+          "imgCount": 4,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 0,
+          "screenshots": [
+            "vetements-home-mobile.jpg"
+          ],
+          "design": {
+            "bodyFont": "Arial, Helvetica, sans-serif",
+            "bodyFontSize": "10px",
+            "h1Font": null,
+            "h1FontSize": null,
+            "fontsUsed": [
+              "Arial",
+              "Helvetica",
+              "helvetica-w01-bold",
+              "helvetica-w01-roman",
+              "cormorantgaramond-light",
+              "HelveticaNeue"
+            ],
+            "bodyBg": "rgba(0, 0, 0, 0)",
+            "bodyColor": "rgb(0, 0, 0)",
+            "navItems": [],
+            "heroVideos": [],
+            "imgsInViewport": 2,
+            "largestImgShare": 0.54,
+            "productLinksInViewport": 0,
+            "totalVideos": 0,
+            "pageHeight": 693,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": false,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": false,
+              "password": false,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": false,
+              "youtube.com": true,
+              "twitter.com": false,
+              "x.com/": false,
+              "facebook.com": false,
+              "pinterest.": false,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        }
+      },
+      "status": "captured live: holding page \"NEW VETEMENTS WEBSITE COMING VERY SOON\" (Wix); SHOP links go to ssense.com; no own PLP/PDP."
+    },
+    "ottolinger": {
+      "homeUrl": "https://ottolinger.com",
+      "capturedAt": "2026-10-21T15:48:17.278Z",
+      "pages": {
+        "homeDesktop": {
+          "url": "https://ottolinger.com",
+          "finalUrl": "https://ottolinger.com/",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 109,
+            "bytes": 2001509,
+            "mb": 1.91,
+            "thirdPartyScriptDomains": 5
+          },
+          "after_scroll_total": {
+            "requests": 171,
+            "bytes": 4057672,
+            "mb": 3.87,
+            "thirdPartyScriptDomains": 5
+          },
+          "thirdPartyScriptDomainList": [
+            "google.com",
+            "iubenda.com",
+            "gstatic.com",
+            "pinimg.com",
+            "facebook.net"
+          ],
+          "lcpMs": 5664,
+          "lcpElement": "IMG https://cdn.shopify.com/s/files/1/1220/9360/files/ScarfHoodandFlock_800x_crop_center.jpg?v=1789981190",
+          "title": "Ottolinger \u2014 Home",
+          "metaDescription": "Berlin-based label Ottolinger is a collaboration between Swiss-born designers Christa B\u00f6sch and Cosima Gadient.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "WebSite",
+            "WebPage",
+            "ReadAction",
+            "Organization",
+            "ImageObject"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 0,
+          "h1Texts": [],
+          "imgCount": 79,
+          "imgMissingAlt": 79,
+          "imgEmptyAlt": 0,
+          "screenshots": [
+            "ottolinger-home-desktop.jpg",
+            "ottolinger-home-desktop-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "Unica, sans-serif",
+            "bodyFontSize": "11px",
+            "h1Font": null,
+            "h1FontSize": null,
+            "fontsUsed": [
+              "Unica"
+            ],
+            "bodyBg": "rgba(0, 0, 0, 0)",
+            "bodyColor": "rgb(0, 0, 0)",
+            "navItems": [
+              "All",
+              "New Arrivals",
+              "Tops",
+              "Bottoms",
+              "Dresses",
+              "Outerwear",
+              "Accessories",
+              "Collections",
+              "Sale",
+              "Search",
+              "Cart",
+              "Ottolinger"
+            ],
+            "heroVideos": [
+              {
+                "w": 1440,
+                "h": 150,
+                "autoplay": true,
+                "muted": true
+              }
+            ],
+            "imgsInViewport": 7,
+            "largestImgShare": 0.24,
+            "productLinksInViewport": 3,
+            "totalVideos": 2,
+            "pageHeight": 14088,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": false,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": true,
+              "password": false,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": true,
+              "youtube.com": false,
+              "twitter.com": false,
+              "x.com/": false,
+              "facebook.com": false,
+              "pinterest.": false,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "homeMobile": {
+          "url": "https://ottolinger.com",
+          "finalUrl": "https://ottolinger.com/",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 105,
+            "bytes": 1957576,
+            "mb": 1.87,
+            "thirdPartyScriptDomains": 5
+          },
+          "after_scroll_total": {
+            "requests": 171,
+            "bytes": 4053880,
+            "mb": 3.87,
+            "thirdPartyScriptDomains": 5
+          },
+          "thirdPartyScriptDomainList": [
+            "google.com",
+            "iubenda.com",
+            "gstatic.com",
+            "pinimg.com",
+            "facebook.net"
+          ],
+          "lcpMs": 4464,
+          "lcpElement": "IMG https://cdn.shopify.com/s/files/1/1220/9360/files/ScarfHoodandFlock_800x_crop_center.jpg?v=1789981190",
+          "title": "Ottolinger \u2014 Home",
+          "metaDescription": "Berlin-based label Ottolinger is a collaboration between Swiss-born designers Christa B\u00f6sch and Cosima Gadient.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "WebSite",
+            "WebPage",
+            "ReadAction",
+            "Organization",
+            "ImageObject"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 0,
+          "h1Texts": [],
+          "imgCount": 79,
+          "imgMissingAlt": 79,
+          "imgEmptyAlt": 0,
+          "screenshots": [
+            "ottolinger-home-mobile.jpg",
+            "ottolinger-home-mobile-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "Unica, sans-serif",
+            "bodyFontSize": "16px",
+            "h1Font": null,
+            "h1FontSize": null,
+            "fontsUsed": [
+              "Unica"
+            ],
+            "bodyBg": "rgba(0, 0, 0, 0)",
+            "bodyColor": "rgb(0, 0, 0)",
+            "navItems": [
+              "Menu",
+              "Search",
+              "Cart",
+              "Ottolinger"
+            ],
+            "heroVideos": [
+              {
+                "w": 390,
+                "h": 150,
+                "autoplay": true,
+                "muted": true
+              }
+            ],
+            "imgsInViewport": 6,
+            "largestImgShare": 0.62,
+            "productLinksInViewport": 2,
+            "totalVideos": 2,
+            "pageHeight": 13909,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": true,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": true,
+              "password": false,
+              "soldOut": true,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": true,
+              "youtube.com": false,
+              "twitter.com": false,
+              "x.com/": false,
+              "facebook.com": false,
+              "pinterest.": false,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "plpDesktop": {
+          "url": "https://ottolinger.com/shop/all",
+          "finalUrl": "https://ottolinger.com/shop/all",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 145,
+            "bytes": 3858061,
+            "mb": 3.68,
+            "thirdPartyScriptDomains": 5
+          },
+          "after_scroll_total": {
+            "requests": 296,
+            "bytes": 4942409,
+            "mb": 4.71,
+            "thirdPartyScriptDomains": 5
+          },
+          "thirdPartyScriptDomainList": [
+            "google.com",
+            "iubenda.com",
+            "gstatic.com",
+            "pinimg.com",
+            "facebook.net"
+          ],
+          "lcpMs": 3656,
+          "lcpElement": "IMG https://cdn.shopify.com/s/files/1/1220/9360/files/131-900631-01_01_Front_1_800x_crop_center.jpg?v=1792165439",
+          "title": "Ottolinger \u2014 All",
+          "metaDescription": "Berlin-based label Ottolinger is a collaboration between Swiss-born designers Christa B\u00f6sch and Cosima Gadient.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "WebSite",
+            "WebPage",
+            "ReadAction",
+            "Organization",
+            "ImageObject"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 0,
+          "h1Texts": [],
+          "imgCount": 71,
+          "imgMissingAlt": 71,
+          "imgEmptyAlt": 0,
+          "screenshots": [
+            "ottolinger-plp-desktop.jpg",
+            "ottolinger-plp-desktop-full.jpg"
+          ],
+          "plp": {
+            "productCards": 69,
+            "gridColumns": 4,
+            "filterControls": [
+              "Filters"
+            ],
+            "visibleCheckboxes": 0,
+            "infiniteOrLoadMore": "none-visible",
+            "productCountText": null
+          }
+        },
+        "plpMobile": {
+          "url": "https://ottolinger.com/shop/all",
+          "finalUrl": "https://ottolinger.com/shop/all",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 133,
+            "bytes": 3190875,
+            "mb": 3.04,
+            "thirdPartyScriptDomains": 5
+          },
+          "after_scroll_total": {
+            "requests": 137,
+            "bytes": 3193524,
+            "mb": 3.05,
+            "thirdPartyScriptDomains": 5
+          },
+          "thirdPartyScriptDomainList": [
+            "google.com",
+            "iubenda.com",
+            "gstatic.com",
+            "pinimg.com",
+            "facebook.net"
+          ],
+          "lcpMs": 3404,
+          "lcpElement": "IMG https://cdn.shopify.com/s/files/1/1220/9360/files/131-900631-01_01_Front_1_800x_crop_center.jpg?v=1792165439",
+          "title": "Ottolinger \u2014 All",
+          "metaDescription": "Berlin-based label Ottolinger is a collaboration between Swiss-born designers Christa B\u00f6sch and Cosima Gadient.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "WebSite",
+            "WebPage",
+            "ReadAction",
+            "Organization",
+            "ImageObject"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 0,
+          "h1Texts": [],
+          "imgCount": 71,
+          "imgMissingAlt": 71,
+          "imgEmptyAlt": 0,
+          "screenshots": [
+            "ottolinger-plp-mobile.jpg"
+          ],
+          "plp": {
+            "productCards": 36,
+            "gridColumns": 2,
+            "filterControls": [
+              "Filters"
+            ],
+            "visibleCheckboxes": 0,
+            "infiniteOrLoadMore": "none-visible",
+            "productCountText": null
+          }
+        },
+        "pdpDesktop": {
+          "url": "https://ottolinger.com/shop/products/aw26-4d-sneaker-heel-used-white",
+          "finalUrl": "https://ottolinger.com/shop/products/aw26-4d-sneaker-heel-used-white",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 94,
+            "bytes": 1646262,
+            "mb": 1.57,
+            "thirdPartyScriptDomains": 5
+          },
+          "after_scroll_total": {
+            "requests": 98,
+            "bytes": 1648915,
+            "mb": 1.57,
+            "thirdPartyScriptDomains": 5
+          },
+          "thirdPartyScriptDomainList": [
+            "google.com",
+            "gstatic.com",
+            "iubenda.com",
+            "pinimg.com",
+            "facebook.net"
+          ],
+          "lcpMs": 3348,
+          "lcpElement": "IMG https://cdn.shopify.com/s/files/1/1220/9360/files/131-900631-01_01_Front_1_800x_crop_center.jpg?v=1792165439",
+          "title": "Ottolinger \u2014 4D Sneaker Heel (Used White)",
+          "metaDescription": "OTTOLINGER 4D Sneaker Heel in Used White, with a leather upper, concealed 6 cm wedge heel, lace-up closure and textured rubber outsole.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "WebSite",
+            "WebPage",
+            "ReadAction",
+            "Organization",
+            "Product",
+            "Offer",
+            "ImageObject"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 0,
+          "h1Texts": [],
+          "imgCount": 8,
+          "imgMissingAlt": 8,
+          "imgEmptyAlt": 0,
+          "screenshots": [
+            "ottolinger-pdp-desktop.jpg"
+          ],
+          "pdp": {
+            "bigImages": 7,
+            "bigImagesFirstScreen": 1,
+            "galleryGuess": "grid (2-col stack)",
+            "atcText": "Add to cart",
+            "atcSticky": "sticky",
+            "sizeOptionsSeen": [],
+            "sizeSelects": 0,
+            "sizeGuide": true,
+            "delivery": true,
+            "returns": true,
+            "crossSell": "Similar items",
+            "bnpl": "PayPal",
+            "reviews": false,
+            "notifyMe": false,
+            "priceSample": "\u20ac675.00",
+            "accordions": 0,
+            "atcVisibleAfterScroll": false
+          }
+        },
+        "pdpMobile": {
+          "url": "https://ottolinger.com/shop/products/aw26-4d-sneaker-heel-used-white",
+          "finalUrl": "https://ottolinger.com/shop/products/aw26-4d-sneaker-heel-used-white",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 92,
+            "bytes": 2096274,
+            "mb": 2.0,
+            "thirdPartyScriptDomains": 5
+          },
+          "after_scroll_total": {
+            "requests": 100,
+            "bytes": 2103383,
+            "mb": 2.01,
+            "thirdPartyScriptDomains": 5
+          },
+          "thirdPartyScriptDomainList": [
+            "google.com",
+            "iubenda.com",
+            "gstatic.com",
+            "pinimg.com",
+            "facebook.net"
+          ],
+          "lcpMs": 3512,
+          "lcpElement": "IMG https://cdn.shopify.com/s/files/1/1220/9360/files/131-900631-01_01_Front_1_800x_crop_center.jpg?v=1792165439",
+          "title": "Ottolinger \u2014 4D Sneaker Heel (Used White)",
+          "metaDescription": "OTTOLINGER 4D Sneaker Heel in Used White, with a leather upper, concealed 6 cm wedge heel, lace-up closure and textured rubber outsole.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "WebSite",
+            "WebPage",
+            "ReadAction",
+            "Organization",
+            "Product",
+            "Offer",
+            "ImageObject"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 0,
+          "h1Texts": [],
+          "imgCount": 8,
+          "imgMissingAlt": 8,
+          "imgEmptyAlt": 0,
+          "screenshots": [
+            "ottolinger-pdp-mobile.jpg"
+          ],
+          "pdp": {
+            "bigImages": 1,
+            "bigImagesFirstScreen": 1,
+            "galleryGuess": "single/carousel",
+            "atcText": "Add to cart",
+            "atcSticky": "sticky",
+            "sizeOptionsSeen": [],
+            "sizeSelects": 0,
+            "sizeGuide": true,
+            "delivery": true,
+            "returns": true,
+            "crossSell": "Similar items",
+            "bnpl": "PayPal",
+            "reviews": false,
+            "notifyMe": false,
+            "priceSample": "\u20ac675.00",
+            "accordions": 0,
+            "atcVisibleAfterScroll": false
+          }
+        }
+      }
+    },
+    "ssense": {
+      "homeUrl": "https://www.ssense.com/en-gb",
+      "capturedAt": "2026-10-21T15:45:38.834Z",
+      "pages": {
+        "homeDesktop": {
+          "url": "https://www.ssense.com/en-gb",
+          "finalUrl": "https://www.ssense.com/en-gb",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 52,
+            "bytes": 14283386,
+            "mb": 13.62,
+            "thirdPartyScriptDomains": 5
+          },
+          "after_scroll_total": {
+            "requests": 71,
+            "bytes": 20600148,
+            "mb": 19.65,
+            "thirdPartyScriptDomains": 5
+          },
+          "thirdPartyScriptDomainList": [
+            "cookielaw.org",
+            "cloudflareinsights.com",
+            "datadoghq-browser-agent.com",
+            "zdassets.com",
+            "riskified.com"
+          ],
+          "lcpMs": 5308,
+          "lcpElement": "IMG https://res.cloudinary.com/ssenseweb/image/upload/w_2048,q_90,f_auto,dpr_auto/v1791208831/yzyrtv6da2vpetiqbbsm.gif",
+          "title": "Luxury fashion & independent designers | SSENSE UK",
+          "metaDescription": null,
+          "htmlLang": "en-gb",
+          "jsonLdTypes": [
+            "Website",
+            "SearchAction",
+            "EntryPoint",
+            "PropertyValueSpecification",
+            "Organization",
+            "Person",
+            "PostalAddress",
+            "ContactPoint",
+            "Language",
+            "QuantitativeValue"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Looksmaxxing and the Quantification of Culture"
+          ],
+          "imgCount": 34,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 32,
+          "screenshots": [
+            "ssense-home-desktop.jpg",
+            "ssense-home-desktop-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "\"Favorit SSENSE Inter\"",
+            "bodyFontSize": "11px",
+            "h1Font": "\"Favorit SSENSE Inter1\"",
+            "h1FontSize": "95px",
+            "fontsUsed": [
+              "Favorit SSENSE Inter",
+              "JHA Times Now",
+              "Favorit SSENSE Inter1"
+            ],
+            "bodyBg": "rgb(255, 255, 255)",
+            "bodyColor": "rgb(0, 0, 0)",
+            "navItems": [
+              "Menswear",
+              "Womenswear",
+              "Everything Else",
+              "Details",
+              "MENSWEAR",
+              "WOMENSWEAR",
+              "EVERYTHING ELSE",
+              "SALE",
+              "SEARCH",
+              "ENGLISH",
+              "LOGIN",
+              "WISHLIST",
+              "BAG (0)"
+            ],
+            "heroVideos": [],
+            "imgsInViewport": 3,
+            "largestImgShare": 0.24,
+            "productLinksInViewport": 0,
+            "totalVideos": 0,
+            "pageHeight": 5287,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": false,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": false,
+              "password": false,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": true,
+              "youtube.com": false,
+              "twitter.com": true,
+              "x.com/": false,
+              "facebook.com": true,
+              "pinterest.": false,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "homeMobile": {
+          "url": "https://www.ssense.com/en-gb",
+          "finalUrl": "https://www.ssense.com/en-gb",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 55,
+            "bytes": 3248322,
+            "mb": 3.1,
+            "thirdPartyScriptDomains": 5
+          },
+          "after_scroll_total": {
+            "requests": 75,
+            "bytes": 5134598,
+            "mb": 4.9,
+            "thirdPartyScriptDomains": 5
+          },
+          "thirdPartyScriptDomainList": [
+            "cookielaw.org",
+            "cloudflareinsights.com",
+            "datadoghq-browser-agent.com",
+            "zdassets.com",
+            "riskified.com"
+          ],
+          "lcpMs": 1516,
+          "lcpElement": "IMG https://res.cloudinary.com/ssenseweb/image/upload/w_768,q_90,f_auto,dpr_auto/v1792017904/cyixe0w6s9lvvpqemc2a.jpg",
+          "title": "Luxury fashion & independent designers | SSENSE UK",
+          "metaDescription": null,
+          "htmlLang": "en-gb",
+          "jsonLdTypes": [
+            "Website",
+            "SearchAction",
+            "EntryPoint",
+            "PropertyValueSpecification",
+            "Organization",
+            "Person",
+            "PostalAddress",
+            "ContactPoint",
+            "Language",
+            "QuantitativeValue"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Looksmaxxing and the Quantification of Culture"
+          ],
+          "imgCount": 34,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 32,
+          "screenshots": [
+            "ssense-home-mobile.jpg",
+            "ssense-home-mobile-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "\"Favorit SSENSE Inter\"",
+            "bodyFontSize": "11px",
+            "h1Font": "\"Favorit SSENSE Inter1\"",
+            "h1FontSize": "38px",
+            "fontsUsed": [
+              "Favorit SSENSE Inter",
+              "JHA Times Now",
+              "Favorit SSENSE Inter1"
+            ],
+            "bodyBg": "rgb(255, 255, 255)",
+            "bodyColor": "rgb(0, 0, 0)",
+            "navItems": [
+              "Menswear",
+              "Womenswear",
+              "Everything Else",
+              "Details",
+              "0"
+            ],
+            "heroVideos": [],
+            "imgsInViewport": 3,
+            "largestImgShare": 0.3,
+            "productLinksInViewport": 0,
+            "totalVideos": 0,
+            "pageHeight": 8792,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": false,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": true,
+              "password": false,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": false,
+              "youtube.com": true,
+              "twitter.com": true,
+              "x.com/": false,
+              "facebook.com": true,
+              "pinterest.": false,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "plpDesktop": {
+          "url": "https://www.ssense.com/en-gb/men/sale",
+          "finalUrl": "https://www.ssense.com/en-gb/men/sale",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 165,
+            "bytes": 2778118,
+            "mb": 2.65,
+            "thirdPartyScriptDomains": 11
+          },
+          "after_scroll_total": {
+            "requests": 258,
+            "bytes": 3534260,
+            "mb": 3.37,
+            "thirdPartyScriptDomains": 11
+          },
+          "thirdPartyScriptDomainList": [
+            "googletagmanager.com",
+            "cloudflareinsights.com",
+            "datadoghq-browser-agent.com",
+            "riskified.com",
+            "openai.com",
+            "facebook.net",
+            "doubleclick.net",
+            "appboycdn.com",
+            "tiktok.com",
+            "pinimg.com",
+            "zdassets.com"
+          ],
+          "lcpMs": 1196,
+          "lcpElement": "IMG https://img.ssensemedia.com/image/upload/b_white,c_lpad,g_south,ar_2:3/f_auto,c_limit,w_256,q_85/261232M188017_1.jpg",
+          "title": "Designer Clothes, Shoes & Bags for Men | SSENSE United Kingdom",
+          "metaDescription": "Shop the latest collection of designer clothes and accessories for Men at SSENSE. Fast shipping and returns worldwide. Free shipping on eligible orders.",
+          "htmlLang": "en-gb",
+          "jsonLdTypes": [
+            "Product",
+            "Brand",
+            "Offer"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": false,
+            "BreadcrumbList": false
+          },
+          "h1Count": 0,
+          "h1Texts": [],
+          "imgCount": 120,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 0,
+          "screenshots": [
+            "ssense-plp-desktop.jpg",
+            "ssense-plp-desktop-full.jpg"
+          ],
+          "plp": {
+            "productCards": 120,
+            "gridColumns": 4,
+            "filterControls": [
+              "SORT"
+            ],
+            "visibleCheckboxes": 1,
+            "infiniteOrLoadMore": "none-visible",
+            "productCountText": null
+          }
+        },
+        "plpMobile": {
+          "url": "https://www.ssense.com/en-gb/men/sale",
+          "finalUrl": "https://www.ssense.com/en-gb/men/sale",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 166,
+            "bytes": 2763038,
+            "mb": 2.64,
+            "thirdPartyScriptDomains": 11
+          },
+          "after_scroll_total": {
+            "requests": 171,
+            "bytes": 2768254,
+            "mb": 2.64,
+            "thirdPartyScriptDomains": 11
+          },
+          "thirdPartyScriptDomainList": [
+            "googletagmanager.com",
+            "cloudflareinsights.com",
+            "datadoghq-browser-agent.com",
+            "riskified.com",
+            "openai.com",
+            "facebook.net",
+            "doubleclick.net",
+            "appboycdn.com",
+            "tiktok.com",
+            "pinimg.com",
+            "zdassets.com"
+          ],
+          "lcpMs": 1360,
+          "lcpElement": "IMG https://img.ssensemedia.com/image/upload/b_white,c_lpad,g_south,ar_2:3/f_auto,c_limit,w_384,q_85/261232M188017_1.jpg",
+          "title": "Designer Clothes, Shoes & Bags for Men | SSENSE United Kingdom",
+          "metaDescription": "Shop the latest collection of designer clothes and accessories for Men at SSENSE. Fast shipping and returns worldwide. Free shipping on eligible orders.",
+          "htmlLang": "en-gb",
+          "jsonLdTypes": [
+            "Product",
+            "Brand",
+            "Offer"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": false,
+            "BreadcrumbList": false
+          },
+          "h1Count": 0,
+          "h1Texts": [],
+          "imgCount": 120,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 0,
+          "screenshots": [
+            "ssense-plp-mobile.jpg"
+          ],
+          "plp": {
+            "productCards": 120,
+            "gridColumns": 2,
+            "filterControls": [
+              "REFINE",
+              "SORT"
+            ],
+            "visibleCheckboxes": 1,
+            "infiniteOrLoadMore": "none-visible",
+            "productCountText": null
+          }
+        },
+        "pdpDesktop": {
+          "url": "https://www.ssense.com/en-gb/men/product/rick-owens/black-temple-cargobelas-cargo-pants/18674671",
+          "finalUrl": "https://www.ssense.com/en-gb/men/product/rick-owens/black-temple-cargobelas-cargo-pants/18674671",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 143,
+            "bytes": 2874318,
+            "mb": 2.74,
+            "thirdPartyScriptDomains": 11
+          },
+          "after_scroll_total": {
+            "requests": 164,
+            "bytes": 3023181,
+            "mb": 2.88,
+            "thirdPartyScriptDomains": 11
+          },
+          "thirdPartyScriptDomainList": [
+            "googletagmanager.com",
+            "cloudflareinsights.com",
+            "datadoghq-browser-agent.com",
+            "riskified.com",
+            "openai.com",
+            "facebook.net",
+            "doubleclick.net",
+            "appboycdn.com",
+            "tiktok.com",
+            "pinimg.com",
+            "zdassets.com"
+          ],
+          "lcpMs": 932,
+          "lcpElement": "IMG https://img.ssensemedia.com/images/f_auto,c_limit,w_640/261232M188017_1/rick-owens-black-temple-cargobelas-cargo-pants.jpg",
+          "title": "Rick Owens: Black Temple Cargobelas Cargo Pants | SSENSE United Kingdom",
+          "metaDescription": "Buy the Rick Owens Black Temple Cargobelas Cargo Pants at SSENSE. Fast shipping and returns worldwide. Free shipping on eligible orders.",
+          "htmlLang": "en-gb",
+          "jsonLdTypes": [
+            "Product",
+            "Brand",
+            "Offer"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": false,
+            "BreadcrumbList": false
+          },
+          "h1Count": 2,
+          "h1Texts": [
+            "Rick OwensBlack Temple Cargobelas Cargo Pants",
+            "Rick OwensBlack Temple Cargobelas Cargo Pants"
+          ],
+          "imgCount": 53,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 0,
+          "screenshots": [
+            "ssense-pdp-desktop.jpg"
+          ],
+          "pdp": {
+            "bigImages": 4,
+            "bigImagesFirstScreen": 1,
+            "galleryGuess": "vertical stack (scroll)",
+            "atcText": "ADD TO BAG",
+            "atcSticky": "sticky",
+            "sizeOptionsSeen": [],
+            "sizeSelects": 1,
+            "sizeGuide": true,
+            "delivery": false,
+            "returns": false,
+            "crossSell": "YOU MAY ALSO LIKE",
+            "bnpl": null,
+            "reviews": false,
+            "notifyMe": false,
+            "priceSample": null,
+            "accordions": 8,
+            "atcVisibleAfterScroll": true
+          }
+        },
+        "pdpMobile": {
+          "url": "https://www.ssense.com/en-gb/men/product/rick-owens/black-temple-cargobelas-cargo-pants/18674671",
+          "finalUrl": "https://www.ssense.com/en-gb/men/product/rick-owens/black-temple-cargobelas-cargo-pants/18674671",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 145,
+            "bytes": 2851754,
+            "mb": 2.72,
+            "thirdPartyScriptDomains": 11
+          },
+          "after_scroll_total": {
+            "requests": 153,
+            "bytes": 2897491,
+            "mb": 2.76,
+            "thirdPartyScriptDomains": 11
+          },
+          "thirdPartyScriptDomainList": [
+            "googletagmanager.com",
+            "cloudflareinsights.com",
+            "datadoghq-browser-agent.com",
+            "riskified.com",
+            "openai.com",
+            "facebook.net",
+            "doubleclick.net",
+            "pinimg.com",
+            "appboycdn.com",
+            "tiktok.com",
+            "zdassets.com"
+          ],
+          "lcpMs": 1180,
+          "lcpElement": "IMG https://img.ssensemedia.com/images/f_auto,c_limit,w_640/261232M188017_1/rick-owens-black-temple-cargobelas-cargo-pants.jpg",
+          "title": "Rick Owens: Black Temple Cargobelas Cargo Pants | SSENSE United Kingdom",
+          "metaDescription": "Buy the Rick Owens Black Temple Cargobelas Cargo Pants at SSENSE. Fast shipping and returns worldwide. Free shipping on eligible orders.",
+          "htmlLang": "en-gb",
+          "jsonLdTypes": [
+            "Product",
+            "Brand",
+            "Offer"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": false,
+            "BreadcrumbList": false
+          },
+          "h1Count": 2,
+          "h1Texts": [
+            "Rick OwensBlack Temple Cargobelas Cargo Pants",
+            "Rick OwensBlack Temple Cargobelas Cargo Pants"
+          ],
+          "imgCount": 53,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 0,
+          "screenshots": [
+            "ssense-pdp-mobile.jpg"
+          ],
+          "pdp": {
+            "bigImages": 4,
+            "bigImagesFirstScreen": 4,
+            "galleryGuess": "side-by-side / carousel row",
+            "atcText": "ADD TO BAG",
+            "atcSticky": null,
+            "sizeOptionsSeen": [
+              "0"
+            ],
+            "sizeSelects": 2,
+            "sizeGuide": true,
+            "delivery": false,
+            "returns": true,
+            "crossSell": "YOU MAY ALSO LIKE",
+            "bnpl": "Klarna",
+            "reviews": false,
+            "notifyMe": false,
+            "priceSample": "\u00a3344",
+            "accordions": 9,
+            "atcVisibleAfterScroll": false
+          }
+        }
+      },
+      "status": "captured live (a default headless UA got a 403 \"Just a moment...\" challenge in a connectivity test; the normal desktop Chrome UA run loaded normally, no challenge solved or bypassed)."
+    },
+    "kidsuper": {
+      "homeUrl": "https://kidsuper.com/",
+      "capturedAt": "2026-10-21T15:55:33.677Z",
+      "pages": {
+        "homeDesktop": {
+          "url": "https://kidsuper.com",
+          "finalUrl": "https://kidsuper.com/",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 331,
+            "bytes": 7154485,
+            "mb": 6.82,
+            "thirdPartyScriptDomains": 9
+          },
+          "after_scroll_total": {
+            "requests": 348,
+            "bytes": 7220186,
+            "mb": 6.89,
+            "thirdPartyScriptDomains": 9
+          },
+          "thirdPartyScriptDomainList": [
+            "squarecdn.com",
+            "shop.app",
+            "shopify.com",
+            "dubcdn.com",
+            "klaviyo.com",
+            "shopifycdn.com",
+            "googletagmanager.com",
+            "facebook.net",
+            "cloudfront.net"
+          ],
+          "lcpMs": 2208,
+          "lcpElement": "IMG https://kidsuper.com/cdn/shop/files/IMG_9025.png?v=1789190976&width=1600",
+          "title": "KidSuper Studios",
+          "metaDescription": "a real company built on unreal ideas.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "KidSuper"
+          ],
+          "imgCount": 240,
+          "imgMissingAlt": 4,
+          "imgEmptyAlt": 39,
+          "screenshots": [
+            "kidsuper-home-desktop.jpg"
+          ],
+          "design": {
+            "bodyFont": "Inter, sans-serif",
+            "bodyFontSize": "12px",
+            "h1Font": "\"New York\", \"Iowan Old Style\", \"Apple Garamond\", Baskerville, \"Times New Roman\", \"Droid Serif\", Times, \"Source Serif Pro\", serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"",
+            "h1FontSize": "40px",
+            "fontsUsed": [
+              "Inter",
+              "New York"
+            ],
+            "bodyBg": "rgb(255, 255, 255)",
+            "bodyColor": "rgb(0, 0, 0)",
+            "navItems": [
+              "Skip to content",
+              "ALL",
+              "AW26",
+              "SS26",
+              "CATEGORIES",
+              "COLLABS",
+              "MORE",
+              "CONTACT",
+              "USD Region and language selector",
+              "Search",
+              "Cart, 0 items"
+            ],
+            "heroVideos": [],
+            "imgsInViewport": 2,
+            "largestImgShare": 0.8,
+            "productLinksInViewport": 0,
+            "totalVideos": 8,
+            "pageHeight": 900,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": false,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": false,
+              "password": false,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": true,
+              "youtube.com": true,
+              "twitter.com": false,
+              "x.com/": true,
+              "facebook.com": true,
+              "pinterest.": false,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "homeMobile": {
+          "url": "https://kidsuper.com",
+          "finalUrl": "https://kidsuper.com/",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 325,
+            "bytes": 5391906,
+            "mb": 5.14,
+            "thirdPartyScriptDomains": 9
+          },
+          "after_scroll_total": {
+            "requests": 344,
+            "bytes": 6417653,
+            "mb": 6.12,
+            "thirdPartyScriptDomains": 9
+          },
+          "thirdPartyScriptDomainList": [
+            "squarecdn.com",
+            "shop.app",
+            "shopify.com",
+            "dubcdn.com",
+            "klaviyo.com",
+            "shopifycdn.com",
+            "googletagmanager.com",
+            "facebook.net",
+            "cloudfront.net"
+          ],
+          "lcpMs": 3368,
+          "lcpElement": "IMG https://kidsuper.com/cdn/shop/files/IMG_9025.png?v=1789190976&width=832",
+          "title": "KidSuper Studios",
+          "metaDescription": "a real company built on unreal ideas.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "KidSuper"
+          ],
+          "imgCount": 240,
+          "imgMissingAlt": 4,
+          "imgEmptyAlt": 39,
+          "screenshots": [
+            "kidsuper-home-mobile.jpg",
+            "kidsuper-home-mobile-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "Inter, sans-serif",
+            "bodyFontSize": "12px",
+            "h1Font": "\"New York\", \"Iowan Old Style\", \"Apple Garamond\", Baskerville, \"Times New Roman\", \"Droid Serif\", Times, \"Source Serif Pro\", serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"",
+            "h1FontSize": "40px",
+            "fontsUsed": [
+              "Inter",
+              "New York"
+            ],
+            "bodyBg": "rgb(255, 255, 255)",
+            "bodyColor": "rgb(0, 0, 0)",
+            "navItems": [
+              "Skip to content",
+              "Search",
+              "Cart, 0 items"
+            ],
+            "heroVideos": [],
+            "imgsInViewport": 5,
+            "largestImgShare": 0.47,
+            "productLinksInViewport": 0,
+            "totalVideos": 8,
+            "pageHeight": 2564,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": false,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": false,
+              "password": false,
+              "soldOut": true,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": true,
+              "youtube.com": true,
+              "twitter.com": false,
+              "x.com/": true,
+              "facebook.com": true,
+              "pinterest.": false,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "plpDesktop": {
+          "url": "https://kidsuper.com/collections/all",
+          "finalUrl": "https://kidsuper.com/collections/all",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 390,
+            "bytes": 8985028,
+            "mb": 8.57,
+            "thirdPartyScriptDomains": 9
+          },
+          "after_scroll_total": {
+            "requests": 418,
+            "bytes": 9079757,
+            "mb": 8.66,
+            "thirdPartyScriptDomains": 9
+          },
+          "thirdPartyScriptDomainList": [
+            "squarecdn.com",
+            "shop.app",
+            "shopify.com",
+            "klaviyo.com",
+            "dubcdn.com",
+            "shopifycdn.com",
+            "facebook.net",
+            "googletagmanager.com",
+            "cloudfront.net"
+          ],
+          "lcpMs": 8852,
+          "lcpElement": "IMG https://kidsuper.com/cdn/shop/files/blob-ac062595ddf2c12b4e81853ed289d508-AW26-SW-02-02.jpg?v=1791567007&width=352",
+          "title": "All \u2013 KidSuper",
+          "metaDescription": null,
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "All"
+          ],
+          "imgCount": 105,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 22,
+          "screenshots": [
+            "kidsuper-plp-desktop.jpg"
+          ],
+          "plp": {
+            "productCards": 24,
+            "gridColumns": 5,
+            "filterControls": [
+              "Sort"
+            ],
+            "visibleCheckboxes": 169,
+            "infiniteOrLoadMore": "load-more",
+            "productCountText": "1002 items"
+          }
+        },
+        "plpMobile": {
+          "url": "https://kidsuper.com/collections/all",
+          "finalUrl": "https://kidsuper.com/collections/all",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 367,
+            "bytes": 7598632,
+            "mb": 7.25,
+            "thirdPartyScriptDomains": 9
+          },
+          "after_scroll_total": {
+            "requests": 382,
+            "bytes": 7641449,
+            "mb": 7.29,
+            "thirdPartyScriptDomains": 9
+          },
+          "thirdPartyScriptDomainList": [
+            "squarecdn.com",
+            "shop.app",
+            "shopify.com",
+            "klaviyo.com",
+            "dubcdn.com",
+            "googletagmanager.com",
+            "facebook.net",
+            "shopifycdn.com",
+            "cloudfront.net"
+          ],
+          "lcpMs": 1148,
+          "lcpElement": "IMG https://kidsuper.com/cdn/shop/files/092426_KIDSUPER_CARD_HOLDER_0139.jpg?v=1791567748&width=832",
+          "title": "All \u2013 KidSuper",
+          "metaDescription": null,
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "All"
+          ],
+          "imgCount": 105,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 22,
+          "screenshots": [
+            "kidsuper-plp-mobile.jpg"
+          ],
+          "plp": {
+            "productCards": 34,
+            "gridColumns": 2,
+            "filterControls": [
+              "Filter"
+            ],
+            "visibleCheckboxes": 0,
+            "infiniteOrLoadMore": "none-visible",
+            "productCountText": null
+          }
+        },
+        "pdpDesktop": {
+          "url": "https://kidsuper.com/products/fur-herringbone-coat-green",
+          "finalUrl": "https://kidsuper.com/products/fur-herringbone-coat-green",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 340,
+            "bytes": 4728080,
+            "mb": 4.51,
+            "thirdPartyScriptDomains": 11
+          },
+          "after_scroll_total": {
+            "requests": 357,
+            "bytes": 4861740,
+            "mb": 4.64,
+            "thirdPartyScriptDomains": 11
+          },
+          "thirdPartyScriptDomainList": [
+            "squarecdn.com",
+            "shop.app",
+            "shopify.com",
+            "klaviyo.com",
+            "dubcdn.com",
+            "afterpay.com",
+            "jsdelivr.net",
+            "shopifycdn.com",
+            "googletagmanager.com",
+            "facebook.net",
+            "cloudfront.net"
+          ],
+          "lcpMs": 1400,
+          "lcpElement": "IMG https://kidsuper.com/cdn/shop/files/blob-cb3ced4c1263128b7ed9ae689f0b4c78-AW26-OW-25-02.jpg?v=1791567000&width=1200",
+          "title": "Fur & Herringbone Coat [Green] \u2013 KidSuper",
+          "metaDescription": "Plush olive fur exterior Oversized, boxy silhouette Cropped body length Contrast navy herringbone fabric panels Ribbed knit stand collar Full-length front zipper closure Two oversized front flap pockets with zipper closures Two vertical zippered chest pockets Zippered utility pocket on sleeve Contrast herringbone elbow",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ProductGroup",
+            "Brand",
+            "Product",
+            "Offer"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Fur & Herringbone Coat [Green]"
+          ],
+          "imgCount": 56,
+          "imgMissingAlt": 4,
+          "imgEmptyAlt": 23,
+          "screenshots": [
+            "kidsuper-pdp-desktop.jpg"
+          ],
+          "pdp": {
+            "bigImages": 8,
+            "bigImagesFirstScreen": 4,
+            "galleryGuess": "grid (2-col stack)",
+            "atcText": "Add to cart",
+            "atcSticky": "fixed",
+            "sizeOptionsSeen": [
+              "S",
+              "M",
+              "L",
+              "XL",
+              "XXL"
+            ],
+            "sizeSelects": 0,
+            "sizeGuide": true,
+            "delivery": false,
+            "returns": false,
+            "crossSell": null,
+            "bnpl": null,
+            "reviews": false,
+            "notifyMe": false,
+            "priceSample": "$495.00",
+            "accordions": 18,
+            "atcVisibleAfterScroll": true
+          }
+        },
+        "pdpMobile": {
+          "url": "https://kidsuper.com/products/fur-herringbone-coat-green",
+          "finalUrl": "https://kidsuper.com/products/fur-herringbone-coat-green",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 334,
+            "bytes": 3928035,
+            "mb": 3.75,
+            "thirdPartyScriptDomains": 11
+          },
+          "after_scroll_total": {
+            "requests": 368,
+            "bytes": 5236059,
+            "mb": 4.99,
+            "thirdPartyScriptDomains": 11
+          },
+          "thirdPartyScriptDomainList": [
+            "squarecdn.com",
+            "shop.app",
+            "shopify.com",
+            "klaviyo.com",
+            "dubcdn.com",
+            "afterpay.com",
+            "jsdelivr.net",
+            "googletagmanager.com",
+            "facebook.net",
+            "shopifycdn.com",
+            "cloudfront.net"
+          ],
+          "lcpMs": 1392,
+          "lcpElement": "IMG https://kidsuper.com/cdn/shop/files/blob-cb3ced4c1263128b7ed9ae689f0b4c78-AW26-OW-25-02.jpg?v=1791567000&width=832",
+          "title": "Fur & Herringbone Coat [Green] \u2013 KidSuper",
+          "metaDescription": "Plush olive fur exterior Oversized, boxy silhouette Cropped body length Contrast navy herringbone fabric panels Ribbed knit stand collar Full-length front zipper closure Two oversized front flap pockets with zipper closures Two vertical zippered chest pockets Zippered utility pocket on sleeve Contrast herringbone elbow",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ProductGroup",
+            "Brand",
+            "Product",
+            "Offer"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": true,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Fur & Herringbone Coat [Green]"
+          ],
+          "imgCount": 56,
+          "imgMissingAlt": 4,
+          "imgEmptyAlt": 23,
+          "screenshots": [
+            "kidsuper-pdp-mobile.jpg"
+          ],
+          "pdp": {
+            "bigImages": 4,
+            "bigImagesFirstScreen": 4,
+            "galleryGuess": "side-by-side / carousel row",
+            "atcText": "Add to cart",
+            "atcSticky": null,
+            "sizeOptionsSeen": [
+              "S",
+              "M",
+              "L",
+              "XL",
+              "XXL",
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "sizeSelects": 0,
+            "sizeGuide": true,
+            "delivery": false,
+            "returns": false,
+            "crossSell": null,
+            "bnpl": null,
+            "reviews": false,
+            "notifyMe": false,
+            "priceSample": "$495.00",
+            "accordions": 18,
+            "atcVisibleAfterScroll": false
+          }
+        }
+      }
+    },
+    "motelrocks": {
+      "homeUrl": "https://www.motelrocks.com",
+      "capturedAt": "2026-10-21T15:55:33.664Z",
+      "pages": {
+        "homeDesktop": {
+          "url": "https://www.motelrocks.com",
+          "finalUrl": "https://us.motelrocks.com/",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 476,
+            "bytes": 25270479,
+            "mb": 24.1,
+            "thirdPartyScriptDomains": 24
+          },
+          "after_scroll_total": {
+            "requests": 624,
+            "bytes": 27078314,
+            "mb": 25.82,
+            "thirdPartyScriptDomains": 31
+          },
+          "thirdPartyScriptDomainList": [
+            "kxcdn.com",
+            "shopify.com",
+            "convertexperiments.com",
+            "vennapps.com",
+            "shop.app",
+            "attn.tv",
+            "klaviyo.com",
+            "getcandid.com",
+            "digitalgenius.com",
+            "userway.org",
+            "aspnetcdn.com",
+            "hotjar.com",
+            "clarity.ms",
+            "spicegems.org",
+            "googleapis.com",
+            "google-analytics.com",
+            "webmarked.net",
+            "consentmo-geo.com",
+            "esc-apps-cdn.com",
+            "trustpilot.com",
+            "useamp.com",
+            "cloudflare.com",
+            "datadoghq-browser-agent.com",
+            "googletagmanager.com",
+            "sub2tech.com",
+            "tiktok.com",
+            "sc-static.net",
+            "adsrvr.org",
+            "facebook.net",
+            "snapchat.com"
+          ],
+          "lcpMs": 5376,
+          "lcpElement": "P",
+          "title": "Vintage & Printed Women's Fashion & Clothes - Motel Rocks \u2013 motelrocks-com-us",
+          "metaDescription": "Hey USA! Shop the newest and best women's fashion. New garms added weekly. Free Shipping* & and no duty up to $1000. Students get 10% off. Go on shop now you know you want to!",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ContactPoint",
+            "BreadcrumbList",
+            "ListItem",
+            "WebSite",
+            "SearchAction",
+            "EntryPoint"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 0,
+          "h1Texts": [],
+          "imgCount": 25,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 4,
+          "screenshots": [
+            "motelrocks-home-desktop.jpg",
+            "motelrocks-home-desktop-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "DMSansRegular",
+            "bodyFontSize": "14px",
+            "h1Font": null,
+            "h1FontSize": null,
+            "fontsUsed": [
+              "DMSansRegular",
+              "Arial",
+              "Metropolis",
+              "Times New Roman",
+              "candid-fa",
+              "DMSansMedium",
+              "sans-serif",
+              "InstrumentSerifItalic"
+            ],
+            "bodyBg": "rgb(255, 255, 255)",
+            "bodyColor": "rgb(14, 14, 14)",
+            "navItems": [
+              "Menu",
+              "Close (esc)",
+              "DRESSES",
+              "search",
+              "Account",
+              "Move to top",
+              "Cart",
+              "Open this option"
+            ],
+            "heroVideos": [
+              {
+                "w": 1440,
+                "h": 900,
+                "autoplay": true,
+                "muted": true
+              }
+            ],
+            "imgsInViewport": 2,
+            "largestImgShare": 0,
+            "productLinksInViewport": 0,
+            "totalVideos": 4,
+            "pageHeight": 4050,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": false,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": true,
+              "password": false,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": true,
+              "youtube.com": true,
+              "twitter.com": true,
+              "x.com/": false,
+              "facebook.com": true,
+              "pinterest.": true,
+              "discord": false,
+              "snapchat": true,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "homeMobile": {
+          "url": "https://www.motelrocks.com",
+          "finalUrl": "https://us.motelrocks.com/",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 462,
+            "bytes": 19841719,
+            "mb": 18.92,
+            "thirdPartyScriptDomains": 23
+          },
+          "after_scroll_total": {
+            "requests": 616,
+            "bytes": 30421309,
+            "mb": 29.01,
+            "thirdPartyScriptDomains": 31
+          },
+          "thirdPartyScriptDomainList": [
+            "kxcdn.com",
+            "shopify.com",
+            "convertexperiments.com",
+            "vennapps.com",
+            "shop.app",
+            "klaviyo.com",
+            "attn.tv",
+            "getcandid.com",
+            "digitalgenius.com",
+            "userway.org",
+            "aspnetcdn.com",
+            "hotjar.com",
+            "spicegems.org",
+            "clarity.ms",
+            "googleapis.com",
+            "google-analytics.com",
+            "webmarked.net",
+            "consentmo-geo.com",
+            "esc-apps-cdn.com",
+            "trustpilot.com",
+            "useamp.com",
+            "cloudflare.com",
+            "datadoghq-browser-agent.com",
+            "googletagmanager.com",
+            "sc-static.net",
+            "tiktok.com",
+            "sub2tech.com",
+            "adsrvr.org",
+            "facebook.net",
+            "snapchat.com"
+          ],
+          "lcpMs": 9472,
+          "lcpElement": "IMG https://us.motelrocks.com/cdn/shop/files/JEANS-MOBILE_f116c152-34cd-413f-9b1f-24e7b28db526.jpg?v=1789976559&width=1000",
+          "title": "Vintage & Printed Women's Fashion & Clothes - Motel Rocks \u2013 motelrocks-com-us",
+          "metaDescription": "Hey USA! Shop the newest and best women's fashion. New garms added weekly. Free Shipping* & and no duty up to $1000. Students get 10% off. Go on shop now you know you want to!",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ContactPoint",
+            "BreadcrumbList",
+            "ListItem",
+            "WebSite",
+            "SearchAction",
+            "EntryPoint"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 0,
+          "h1Texts": [],
+          "imgCount": 29,
+          "imgMissingAlt": 3,
+          "imgEmptyAlt": 5,
+          "screenshots": [
+            "motelrocks-home-mobile.jpg",
+            "motelrocks-home-mobile-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "DMSansRegular",
+            "bodyFontSize": "14px",
+            "h1Font": null,
+            "h1FontSize": null,
+            "fontsUsed": [
+              "DMSansRegular",
+              "DMSansMedium",
+              "Times New Roman",
+              "candid-fa",
+              "sans-serif",
+              "InstrumentSerifItalic",
+              "system-ui"
+            ],
+            "bodyBg": "rgb(255, 255, 255)",
+            "bodyColor": "rgb(14, 14, 14)",
+            "navItems": [
+              "Menu",
+              "Close (esc)",
+              "search",
+              "Move to top",
+              "Cart",
+              "Open this option"
+            ],
+            "heroVideos": [
+              {
+                "w": 390,
+                "h": 693,
+                "autoplay": true,
+                "muted": true
+              }
+            ],
+            "imgsInViewport": 6,
+            "largestImgShare": 0.6,
+            "productLinksInViewport": 0,
+            "totalVideos": 4,
+            "pageHeight": 3033,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": false,
+              "notifyMe": false,
+              "waitlist": false,
+              "newsletter": true,
+              "password": false,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": true,
+              "youtube.com": true,
+              "twitter.com": true,
+              "x.com/": false,
+              "facebook.com": true,
+              "pinterest.": true,
+              "discord": false,
+              "snapchat": true,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "plpDesktop": {
+          "url": "https://us.motelrocks.com/collections/new-in",
+          "finalUrl": "https://us.motelrocks.com/collections/new-in?page=1",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 330,
+            "bytes": 4695713,
+            "mb": 4.48,
+            "thirdPartyScriptDomains": 21
+          },
+          "after_scroll_total": {
+            "requests": 507,
+            "bytes": 6841588,
+            "mb": 6.52,
+            "thirdPartyScriptDomains": 29
+          },
+          "thirdPartyScriptDomainList": [
+            "kxcdn.com",
+            "vennapps.com",
+            "shop.app",
+            "shopify.com",
+            "klaviyo.com",
+            "attn.tv",
+            "digitalgenius.com",
+            "userway.org",
+            "aspnetcdn.com",
+            "hotjar.com",
+            "clarity.ms",
+            "spicegems.org",
+            "webmarked.net",
+            "googleapis.com",
+            "consentmo-geo.com",
+            "esc-apps-cdn.com",
+            "trustpilot.com",
+            "useamp.com",
+            "cloudflare.com",
+            "datadoghq-browser-agent.com",
+            "googletagmanager.com",
+            "sc-static.net",
+            "tiktok.com",
+            "adsrvr.org",
+            "getcandid.com",
+            "snapchat.com",
+            "facebook.net",
+            "sub2tech.com"
+          ],
+          "lcpMs": 4876,
+          "lcpElement": "IMG https://us.motelrocks.com/cdn/shop/files/UK_EUR_USA_SHIPPING.jpg?v=1787218812&width=700",
+          "title": "New Collection Women's Fashion Clothing - Motel Rocks \u2013 motelrocks-com-us",
+          "metaDescription": "Look no further than Motel Rocks\u2019 new-in edit. With fresh styles added every week, satisfying your fashion cravings has never been so easy.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ContactPoint",
+            "BreadcrumbList",
+            "ListItem"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "NEW IN"
+          ],
+          "imgCount": 50,
+          "imgMissingAlt": 0,
+          "imgEmptyAlt": 4,
+          "screenshots": [
+            "motelrocks-plp-desktop.jpg",
+            "motelrocks-plp-desktop-full.jpg"
+          ],
+          "plp": {
+            "productCards": 17,
+            "gridColumns": 4,
+            "filterControls": [],
+            "visibleCheckboxes": 102,
+            "infiniteOrLoadMore": "load-more",
+            "productCountText": null
+          }
+        },
+        "plpMobile": {
+          "url": "https://us.motelrocks.com/collections/new-in",
+          "finalUrl": "https://us.motelrocks.com/collections/new-in?page=1",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 355,
+            "bytes": 5020898,
+            "mb": 4.79,
+            "thirdPartyScriptDomains": 21
+          },
+          "after_scroll_total": {
+            "requests": 483,
+            "bytes": 6536238,
+            "mb": 6.23,
+            "thirdPartyScriptDomains": 29
+          },
+          "thirdPartyScriptDomainList": [
+            "kxcdn.com",
+            "vennapps.com",
+            "shop.app",
+            "shopify.com",
+            "attn.tv",
+            "klaviyo.com",
+            "digitalgenius.com",
+            "userway.org",
+            "aspnetcdn.com",
+            "hotjar.com",
+            "spicegems.org",
+            "clarity.ms",
+            "webmarked.net",
+            "googleapis.com",
+            "consentmo-geo.com",
+            "esc-apps-cdn.com",
+            "trustpilot.com",
+            "useamp.com",
+            "cloudflare.com",
+            "datadoghq-browser-agent.com",
+            "googletagmanager.com",
+            "sc-static.net",
+            "tiktok.com",
+            "getcandid.com",
+            "sub2tech.com",
+            "facebook.net",
+            "adsrvr.org",
+            "snapchat.com"
+          ],
+          "lcpMs": 5252,
+          "lcpElement": "IMG https://us.motelrocks.com/cdn/shop/files/UK_EUR_USA_SHIPPING.jpg?v=1787218812&width=500",
+          "title": "New Collection Women's Fashion Clothing - Motel Rocks \u2013 motelrocks-com-us",
+          "metaDescription": "Look no further than Motel Rocks\u2019 new-in edit. With fresh styles added every week, satisfying your fashion cravings has never been so easy.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ContactPoint",
+            "BreadcrumbList",
+            "ListItem"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "NEW IN"
+          ],
+          "imgCount": 54,
+          "imgMissingAlt": 2,
+          "imgEmptyAlt": 5,
+          "screenshots": [
+            "motelrocks-plp-mobile.jpg"
+          ],
+          "plp": {
+            "productCards": 17,
+            "gridColumns": 2,
+            "filterControls": [
+              "Filter & Sort"
+            ],
+            "visibleCheckboxes": 102,
+            "infiniteOrLoadMore": "load-more",
+            "productCountText": null
+          }
+        },
+        "pdpDesktop": {
+          "url": "https://us.motelrocks.com/products/letiria-dress-black-bk01",
+          "finalUrl": "https://us.motelrocks.com/products/letiria-dress-black-bk01",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 457,
+            "bytes": 24799616,
+            "mb": 23.65,
+            "thirdPartyScriptDomains": 26
+          },
+          "after_scroll_total": {
+            "requests": 610,
+            "bytes": 26386269,
+            "mb": 25.16,
+            "thirdPartyScriptDomains": 33
+          },
+          "thirdPartyScriptDomainList": [
+            "kxcdn.com",
+            "vennapps.com",
+            "shop.app",
+            "shopify.com",
+            "attn.tv",
+            "klaviyo.com",
+            "easysize.me",
+            "afterpay.com",
+            "jsdelivr.net",
+            "getcandid.com",
+            "digitalgenius.com",
+            "userway.org",
+            "aspnetcdn.com",
+            "hotjar.com",
+            "clarity.ms",
+            "spicegems.org",
+            "googleapis.com",
+            "google-analytics.com",
+            "hbiq.net",
+            "webmarked.net",
+            "consentmo-geo.com",
+            "esc-apps-cdn.com",
+            "trustpilot.com",
+            "useamp.com",
+            "cloudflare.com",
+            "googletagmanager.com",
+            "sub2tech.com",
+            "sc-static.net",
+            "tiktok.com",
+            "adsrvr.org",
+            "facebook.net",
+            "snapchat.com"
+          ],
+          "lcpMs": 1408,
+          "lcpElement": "IMG https://us.motelrocks.com/cdn/shop/files/LETIRIA-DRESS-BLACK-85877.jpg?v=1791960571&width=1300",
+          "title": "Black V-Neck Mini Dress | Letiria \u2013 motelrocks-com-us",
+          "metaDescription": "A black mini dress featuring a deep V-neckline, short sleeves, and a fitted silhouette.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ContactPoint",
+            "BreadcrumbList",
+            "ListItem",
+            "Product",
+            "brand",
+            "Offer"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Letiria Mini Dress in Black"
+          ],
+          "imgCount": 85,
+          "imgMissingAlt": 1,
+          "imgEmptyAlt": 6,
+          "screenshots": [
+            "motelrocks-pdp-desktop.jpg"
+          ],
+          "pdp": {
+            "bigImages": 32,
+            "bigImagesFirstScreen": 4,
+            "galleryGuess": "grid (2-col stack)",
+            "atcText": "ADD TO BAG",
+            "atcSticky": null,
+            "sizeOptionsSeen": [
+              "XXS",
+              "XS",
+              "S",
+              "M",
+              "L",
+              "XL",
+              "XXL"
+            ],
+            "sizeSelects": 0,
+            "sizeGuide": true,
+            "delivery": true,
+            "returns": true,
+            "crossSell": "Complete the look",
+            "bnpl": null,
+            "reviews": false,
+            "notifyMe": true,
+            "priceSample": "$95.",
+            "accordions": 0,
+            "atcVisibleAfterScroll": true
+          }
+        },
+        "pdpMobile": {
+          "url": "https://us.motelrocks.com/products/letiria-dress-black-bk01",
+          "finalUrl": "https://us.motelrocks.com/products/letiria-dress-black-bk01",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 451,
+            "bytes": 24594910,
+            "mb": 23.46,
+            "thirdPartyScriptDomains": 26
+          },
+          "after_scroll_total": {
+            "requests": 573,
+            "bytes": 26343258,
+            "mb": 25.12,
+            "thirdPartyScriptDomains": 33
+          },
+          "thirdPartyScriptDomainList": [
+            "kxcdn.com",
+            "vennapps.com",
+            "shop.app",
+            "shopify.com",
+            "attn.tv",
+            "klaviyo.com",
+            "easysize.me",
+            "afterpay.com",
+            "jsdelivr.net",
+            "getcandid.com",
+            "digitalgenius.com",
+            "userway.org",
+            "aspnetcdn.com",
+            "hotjar.com",
+            "clarity.ms",
+            "spicegems.org",
+            "googleapis.com",
+            "google-analytics.com",
+            "hbiq.net",
+            "webmarked.net",
+            "consentmo-geo.com",
+            "esc-apps-cdn.com",
+            "trustpilot.com",
+            "useamp.com",
+            "cloudflare.com",
+            "googletagmanager.com",
+            "sc-static.net",
+            "tiktok.com",
+            "sub2tech.com",
+            "adsrvr.org",
+            "snapchat.com",
+            "facebook.net"
+          ],
+          "lcpMs": 3200,
+          "lcpElement": "IMG https://us.motelrocks.com/cdn/shop/files/LETIRIA-DRESS-BLACK-85877.jpg?v=1791960571&width=800",
+          "title": "Black V-Neck Mini Dress | Letiria \u2013 motelrocks-com-us",
+          "metaDescription": "A black mini dress featuring a deep V-neckline, short sleeves, and a fitted silhouette.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Organization",
+            "ContactPoint",
+            "BreadcrumbList",
+            "ListItem",
+            "Product",
+            "brand",
+            "Offer"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": true,
+            "BreadcrumbList": true
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Letiria Mini Dress in Black"
+          ],
+          "imgCount": 89,
+          "imgMissingAlt": 3,
+          "imgEmptyAlt": 5,
+          "screenshots": [
+            "motelrocks-pdp-mobile.jpg"
+          ],
+          "pdp": {
+            "bigImages": 28,
+            "bigImagesFirstScreen": 4,
+            "galleryGuess": "grid (2-col stack)",
+            "atcText": "ADD TO BAG",
+            "atcSticky": null,
+            "sizeOptionsSeen": [
+              "XXS",
+              "XS",
+              "S",
+              "M",
+              "L",
+              "XL",
+              "XXL"
+            ],
+            "sizeSelects": 0,
+            "sizeGuide": true,
+            "delivery": true,
+            "returns": true,
+            "crossSell": "Complete the look",
+            "bnpl": null,
+            "reviews": false,
+            "notifyMe": true,
+            "priceSample": "$95.",
+            "accordions": 0,
+            "atcVisibleAfterScroll": true
+          }
+        }
+      }
+    },
+    "mingalondon": {
+      "homeUrl": "https://mingalondon.com",
+      "capturedAt": "2026-10-21T15:49:55.317Z",
+      "pages": {
+        "homeDesktop": {
+          "url": "https://mingalondon.com",
+          "finalUrl": "https://us.mingalondon.com/",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 328,
+            "bytes": 11430551,
+            "mb": 10.9,
+            "thirdPartyScriptDomains": 22
+          },
+          "after_scroll_total": {
+            "requests": 405,
+            "bytes": 13075774,
+            "mb": 12.47,
+            "thirdPartyScriptDomains": 25
+          },
+          "thirdPartyScriptDomainList": [
+            "spicegems.org",
+            "googleapis.com",
+            "jsdelivr.net",
+            "shop.app",
+            "shopify.com",
+            "klaviyo.com",
+            "afterpay.com",
+            "loyaltylion.net",
+            "squarecdn.com",
+            "pages.dev",
+            "omnisnippet1.com",
+            "googletagmanager.com",
+            "cdn-cookieyes.com",
+            "doubleclick.net",
+            "getelevar.com",
+            "amazonaws.com",
+            "rebuyengine.com",
+            "global-e.com",
+            "forter.com",
+            "facebook.net",
+            "pinimg.com",
+            "tiktok.com",
+            "sc-static.net",
+            "snapchat.com"
+          ],
+          "lcpMs": 2696,
+          "lcpElement": "IMG https://cdn.shopify.com/s/files/1/0266/0731/files/blingringB-desk-cover.webp?v=1792070630&width=1920",
+          "title": "Minga London | Official Online Store",
+          "metaDescription": "Independent fashion brand since 2014. Shop statement denim and jeans, graphic tops, bags, accessories and new drops inspired by Y2K, underground music and internet culture. Fast US shipping. Free shipping over $200.",
+          "htmlLang": "en",
+          "jsonLdTypes": [],
+          "jsonLd": {
+            "Product": false,
+            "Organization": false,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Minga London - All weirdos r welcome!"
+          ],
+          "imgCount": 65,
+          "imgMissingAlt": 7,
+          "imgEmptyAlt": 4,
+          "screenshots": [
+            "mingalondon-home-desktop.jpg",
+            "mingalondon-home-desktop-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "makro_xmmedium, Arial, sans-serif",
+            "bodyFontSize": "14px",
+            "h1Font": "makro_xmbold, Arial, sans-serif",
+            "h1FontSize": "22px",
+            "fontsUsed": [
+              "makro_xmmedium",
+              "makro_xmbold",
+              "shapiro-medium",
+              "shapiro-55-mid-extd",
+              "shapiro-45-welter-wide",
+              "Helvetica Neue Webfont",
+              "Helvetica Neue",
+              "Tahoma"
+            ],
+            "bodyBg": "rgb(255, 255, 255)",
+            "bodyColor": "rgb(0, 0, 0)",
+            "navItems": [
+              "Skip to content",
+              "JOIN NOW",
+              "SITE NAVIGATION",
+              "NEW",
+              "WOMEN",
+              "MEN",
+              "SALE",
+              "MINGA CLUB",
+              "SEARCH",
+              "LOG IN",
+              "CART"
+            ],
+            "heroVideos": [],
+            "imgsInViewport": 8,
+            "largestImgShare": 0.97,
+            "productLinksInViewport": 0,
+            "totalVideos": 0,
+            "pageHeight": 3817,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": true,
+              "notifyMe": false,
+              "waitlist": true,
+              "newsletter": false,
+              "password": false,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": true
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": true,
+              "youtube.com": true,
+              "twitter.com": false,
+              "x.com/": false,
+              "facebook.com": false,
+              "pinterest.": true,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "homeMobile": {
+          "url": "https://mingalondon.com",
+          "finalUrl": "https://us.mingalondon.com/",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 345,
+            "bytes": 11455931,
+            "mb": 10.93,
+            "thirdPartyScriptDomains": 22
+          },
+          "after_scroll_total": {
+            "requests": 394,
+            "bytes": 13186170,
+            "mb": 12.58,
+            "thirdPartyScriptDomains": 25
+          },
+          "thirdPartyScriptDomainList": [
+            "spicegems.org",
+            "googleapis.com",
+            "jsdelivr.net",
+            "shop.app",
+            "shopify.com",
+            "klaviyo.com",
+            "afterpay.com",
+            "loyaltylion.net",
+            "squarecdn.com",
+            "pages.dev",
+            "omnisnippet1.com",
+            "googletagmanager.com",
+            "cdn-cookieyes.com",
+            "doubleclick.net",
+            "getelevar.com",
+            "amazonaws.com",
+            "rebuyengine.com",
+            "global-e.com",
+            "facebook.net",
+            "pinimg.com",
+            "forter.com",
+            "tiktok.com",
+            "sc-static.net",
+            "snapchat.com"
+          ],
+          "lcpMs": 1404,
+          "lcpElement": "IMG https://cdn.shopify.com/s/files/1/0266/0731/files/blingringB-mobile-cover.webp?v=1792070629&width=1920",
+          "title": "Minga London | Official Online Store",
+          "metaDescription": "Independent fashion brand since 2014. Shop statement denim and jeans, graphic tops, bags, accessories and new drops inspired by Y2K, underground music and internet culture. Fast US shipping. Free shipping over $200.",
+          "htmlLang": "en",
+          "jsonLdTypes": [],
+          "jsonLd": {
+            "Product": false,
+            "Organization": false,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Minga London - All weirdos r welcome!"
+          ],
+          "imgCount": 65,
+          "imgMissingAlt": 7,
+          "imgEmptyAlt": 4,
+          "screenshots": [
+            "mingalondon-home-mobile.jpg",
+            "mingalondon-home-mobile-full.jpg"
+          ],
+          "design": {
+            "bodyFont": "makro_xmmedium, Arial, sans-serif",
+            "bodyFontSize": "12.88px",
+            "h1Font": "makro_xmbold, Arial, sans-serif",
+            "h1FontSize": "14.3px",
+            "fontsUsed": [
+              "makro_xmmedium",
+              "makro_xmbold",
+              "shapiro-medium",
+              "shapiro-55-mid-extd",
+              "shapiro-45-welter-wide",
+              "Helvetica Neue Webfont",
+              "Helvetica Neue",
+              "Tahoma"
+            ],
+            "bodyBg": "rgb(255, 255, 255)",
+            "bodyColor": "rgb(0, 0, 0)",
+            "navItems": [
+              "Skip to content",
+              "JOIN NOW",
+              "SITE NAVIGATION",
+              "SEARCH",
+              "CART"
+            ],
+            "heroVideos": [],
+            "imgsInViewport": 8,
+            "largestImgShare": 0.92,
+            "productLinksInViewport": 0,
+            "totalVideos": 0,
+            "pageHeight": 2679,
+            "textSignals": {
+              "countdownTimer": false,
+              "countdownWord": false,
+              "drop": true,
+              "notifyMe": false,
+              "waitlist": true,
+              "newsletter": false,
+              "password": false,
+              "soldOut": false,
+              "preorder": false,
+              "klarnaEtc": false
+            },
+            "social": {
+              "instagram.com": true,
+              "tiktok.com": true,
+              "youtube.com": true,
+              "twitter.com": false,
+              "x.com/": false,
+              "facebook.com": false,
+              "pinterest.": true,
+              "discord": false,
+              "snapchat": false,
+              "spotify": false,
+              "soundcloud": false
+            }
+          }
+        },
+        "plpDesktop": {
+          "url": "https://us.mingalondon.com/collections/new-in",
+          "finalUrl": "https://us.mingalondon.com/collections/new-in",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 406,
+            "bytes": 17679652,
+            "mb": 16.86,
+            "thirdPartyScriptDomains": 22
+          },
+          "after_scroll_total": {
+            "requests": 537,
+            "bytes": 19023146,
+            "mb": 18.14,
+            "thirdPartyScriptDomains": 25
+          },
+          "thirdPartyScriptDomainList": [
+            "spicegems.org",
+            "googleapis.com",
+            "jsdelivr.net",
+            "shopify.com",
+            "shop.app",
+            "klaviyo.com",
+            "afterpay.com",
+            "loyaltylion.net",
+            "squarecdn.com",
+            "pages.dev",
+            "omnisnippet1.com",
+            "googletagmanager.com",
+            "cdn-cookieyes.com",
+            "doubleclick.net",
+            "facebook.net",
+            "pinimg.com",
+            "getelevar.com",
+            "amazonaws.com",
+            "rebuyengine.com",
+            "global-e.com",
+            "forter.com",
+            "tiktok.com",
+            "sc-static.net",
+            "snapchat.com"
+          ],
+          "lcpMs": 9800,
+          "lcpElement": "IMG https://us.mingalondon.com/cdn/shop/files/0245_mingalondon_e-commerce_october6-915-edit-copy.webp?v=1791993291",
+          "title": "Women\u2019s New Arrivals | Jeans, Tops, Bags & More | Minga London",
+          "metaDescription": "Shop women\u2019s new arrivals at Minga London, including baggy jeans, Y2K graphic tops, hoodies, jackets, bags and accessories from the latest collections.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "CollectionPage",
+            "ImageObject"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": false,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "New"
+          ],
+          "imgCount": 175,
+          "imgMissingAlt": 6,
+          "imgEmptyAlt": 108,
+          "screenshots": [
+            "mingalondon-plp-desktop.jpg",
+            "mingalondon-plp-desktop-full.jpg"
+          ],
+          "plp": {
+            "productCards": 60,
+            "gridColumns": 4,
+            "filterControls": [
+              "SORT"
+            ],
+            "visibleCheckboxes": 4,
+            "infiniteOrLoadMore": "none-visible",
+            "productCountText": null
+          }
+        },
+        "plpMobile": {
+          "url": "https://us.mingalondon.com/collections/new-in",
+          "finalUrl": "https://us.mingalondon.com/collections/new-in",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 406,
+            "bytes": 18458023,
+            "mb": 17.6,
+            "thirdPartyScriptDomains": 22
+          },
+          "after_scroll_total": {
+            "requests": 449,
+            "bytes": 18887384,
+            "mb": 18.01,
+            "thirdPartyScriptDomains": 25
+          },
+          "thirdPartyScriptDomainList": [
+            "spicegems.org",
+            "googleapis.com",
+            "jsdelivr.net",
+            "shopify.com",
+            "shop.app",
+            "klaviyo.com",
+            "afterpay.com",
+            "loyaltylion.net",
+            "squarecdn.com",
+            "pages.dev",
+            "omnisnippet1.com",
+            "googletagmanager.com",
+            "cdn-cookieyes.com",
+            "doubleclick.net",
+            "facebook.net",
+            "pinimg.com",
+            "getelevar.com",
+            "amazonaws.com",
+            "rebuyengine.com",
+            "global-e.com",
+            "forter.com",
+            "tiktok.com",
+            "sc-static.net",
+            "snapchat.com"
+          ],
+          "lcpMs": 20276,
+          "lcpElement": "IMG https://formsv2.soundestlink.com/images/1340/6abd0c99965223afed7523ea",
+          "title": "Women\u2019s New Arrivals | Jeans, Tops, Bags & More | Minga London",
+          "metaDescription": "Shop women\u2019s new arrivals at Minga London, including baggy jeans, Y2K graphic tops, hoodies, jackets, bags and accessories from the latest collections.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "CollectionPage",
+            "ImageObject"
+          ],
+          "jsonLd": {
+            "Product": false,
+            "Organization": false,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "New"
+          ],
+          "imgCount": 175,
+          "imgMissingAlt": 6,
+          "imgEmptyAlt": 108,
+          "screenshots": [
+            "mingalondon-plp-mobile.jpg"
+          ],
+          "plp": {
+            "productCards": 60,
+            "gridColumns": 2,
+            "filterControls": [
+              "FILTER",
+              "SORT"
+            ],
+            "visibleCheckboxes": 4,
+            "infiniteOrLoadMore": "none-visible",
+            "productCountText": null
+          }
+        },
+        "pdpDesktop": {
+          "url": "https://us.mingalondon.com/products/rumor-buckle-cropped-fur-jacket",
+          "finalUrl": "https://us.mingalondon.com/products/rumor-buckle-cropped-fur-jacket",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 394,
+            "bytes": 8859791,
+            "mb": 8.45,
+            "thirdPartyScriptDomains": 22
+          },
+          "after_scroll_total": {
+            "requests": 464,
+            "bytes": 9853932,
+            "mb": 9.4,
+            "thirdPartyScriptDomains": 25
+          },
+          "thirdPartyScriptDomainList": [
+            "spicegems.org",
+            "googleapis.com",
+            "jsdelivr.net",
+            "shop.app",
+            "shopify.com",
+            "klaviyo.com",
+            "afterpay.com",
+            "loyaltylion.net",
+            "squarecdn.com",
+            "pages.dev",
+            "omnisnippet1.com",
+            "googletagmanager.com",
+            "cdn-cookieyes.com",
+            "getelevar.com",
+            "doubleclick.net",
+            "facebook.net",
+            "pinimg.com",
+            "amazonaws.com",
+            "rebuyengine.com",
+            "global-e.com",
+            "forter.com",
+            "tiktok.com",
+            "sc-static.net",
+            "snapchat.com"
+          ],
+          "lcpMs": 4912,
+          "lcpElement": "IMG https://us.mingalondon.com/cdn/shop/files/26_09_24_mingalondon_40769_c_720x.webp?v=1791901471",
+          "title": "Brown Faux Fur Cropped Jacket | Minga London",
+          "metaDescription": "Brown faux fur cropped jacket with black faux leather zip trim, double buckle collar and ribbed high neck. Regular fit with ribbed cuffs and hem.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Product",
+            "Offer",
+            "ImageObject"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": false,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Rumor Buckle Cropped Fur Jacket"
+          ],
+          "imgCount": 109,
+          "imgMissingAlt": 10,
+          "imgEmptyAlt": 28,
+          "screenshots": [
+            "mingalondon-pdp-desktop.jpg"
+          ],
+          "pdp": {
+            "bigImages": 15,
+            "bigImagesFirstScreen": 5,
+            "galleryGuess": "side-by-side / carousel row",
+            "atcText": "ADD TO BAG",
+            "atcSticky": null,
+            "sizeOptionsSeen": [
+              "XS",
+              "S",
+              "M",
+              "L",
+              "XL"
+            ],
+            "sizeSelects": 0,
+            "sizeGuide": true,
+            "delivery": true,
+            "returns": true,
+            "crossSell": "YOU MAY ALSO LIKE",
+            "bnpl": "AFTERPAY",
+            "reviews": true,
+            "notifyMe": false,
+            "priceSample": "$200",
+            "accordions": 20,
+            "atcVisibleAfterScroll": false
+          }
+        },
+        "pdpMobile": {
+          "url": "https://us.mingalondon.com/products/rumor-buckle-cropped-fur-jacket",
+          "finalUrl": "https://us.mingalondon.com/products/rumor-buckle-cropped-fur-jacket",
+          "status": 200,
+          "initial_load_plus_6s": {
+            "requests": 376,
+            "bytes": 8518495,
+            "mb": 8.12,
+            "thirdPartyScriptDomains": 22
+          },
+          "after_scroll_total": {
+            "requests": 432,
+            "bytes": 8983582,
+            "mb": 8.57,
+            "thirdPartyScriptDomains": 25
+          },
+          "thirdPartyScriptDomainList": [
+            "spicegems.org",
+            "googleapis.com",
+            "jsdelivr.net",
+            "shop.app",
+            "shopify.com",
+            "klaviyo.com",
+            "afterpay.com",
+            "loyaltylion.net",
+            "squarecdn.com",
+            "pages.dev",
+            "omnisnippet1.com",
+            "googletagmanager.com",
+            "cdn-cookieyes.com",
+            "doubleclick.net",
+            "getelevar.com",
+            "amazonaws.com",
+            "rebuyengine.com",
+            "global-e.com",
+            "facebook.net",
+            "pinimg.com",
+            "forter.com",
+            "tiktok.com",
+            "sc-static.net",
+            "snapchat.com"
+          ],
+          "lcpMs": 5456,
+          "lcpElement": "IMG https://us.mingalondon.com/cdn/shop/files/26_09_24_mingalondon_40769_c_900x.webp?v=1791901471",
+          "title": "Brown Faux Fur Cropped Jacket | Minga London",
+          "metaDescription": "Brown faux fur cropped jacket with black faux leather zip trim, double buckle collar and ribbed high neck. Regular fit with ribbed cuffs and hem.",
+          "htmlLang": "en",
+          "jsonLdTypes": [
+            "Product",
+            "Offer",
+            "ImageObject"
+          ],
+          "jsonLd": {
+            "Product": true,
+            "Organization": false,
+            "BreadcrumbList": false
+          },
+          "h1Count": 1,
+          "h1Texts": [
+            "Rumor Buckle Cropped Fur Jacket"
+          ],
+          "imgCount": 109,
+          "imgMissingAlt": 10,
+          "imgEmptyAlt": 28,
+          "screenshots": [
+            "mingalondon-pdp-mobile.jpg"
+          ],
+          "pdp": {
+            "bigImages": 3,
+            "bigImagesFirstScreen": 3,
+            "galleryGuess": "side-by-side / carousel row",
+            "atcText": "ADD TO BAG",
+            "atcSticky": null,
+            "sizeOptionsSeen": [
+              "XS",
+              "S",
+              "M",
+              "L",
+              "XL"
+            ],
+            "sizeSelects": 0,
+            "sizeGuide": true,
+            "delivery": true,
+            "returns": true,
+            "crossSell": "YOU MAY ALSO LIKE",
+            "bnpl": null,
+            "reviews": true,
+            "notifyMe": false,
+            "priceSample": "$200",
+            "accordions": 20,
+            "atcVisibleAfterScroll": false
+          }
+        }
+      }
+    },
+    "ihateblue": {
+      "status": "unreachable: egress proxy returned 502 on CONNECT to ihateblue.com and www.ihateblue.com (host not allowed / not reachable from this environment)."
+    }
+  }
+}
