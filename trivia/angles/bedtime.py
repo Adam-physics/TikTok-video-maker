@@ -101,16 +101,19 @@ def lamp(cx, cy):
 # ------------------------------------------------------------------ boards
 
 def l_hook():
-    """Frame one: the chatty kid in bed, the tired parent at the door."""
+    """Only the headline is there on frame one; the scene draws in as it is said."""
     chatter = speech(380, 520, 280, 110, (300, 700), "and also... and ALSO...", size=48)
+    chatter[0].at("talk")
     shh = speech(860, 690, 110, 70, (860, 800), "SHH!", size=52)
+    parent = kid(860, 1060, 0.75, "bored", "down")
+    parent[0].at("don't")
     return [
         Text("SUDDENLY CHATTY", (540, 320), size=84, face=MARKER, color=RED).ready(),
-        *[it.ready() for it in bed(380, 960, 560, (("happy", 0),))],
-        *[it.ready() for it in chatter],
-        *[it.ready() for it in kid(860, 1060, 0.75, "bored", "down")],
-        *[it.ready() for it in shh],
-        crossed(860, 690, 80).at("shut"),
+        *bed(380, 960, 560, (("happy", 0),)),
+        *chatter,
+        *parent,
+        *shh,
+        crossed(860, 690, 80).at("down"),
         Text("?", (620, 720), size=150, face=MARKER, color=GREEN).at("why").focus(1.08).pop(),
     ]
 
@@ -118,9 +121,9 @@ def l_hook():
 def l_quiet():
     return [
         tag("stalling?", (540, 330), size=64, color=GREY),
-        Shape(line((390, 335), (690, 325)), color=RED, width=10),
-        moon(540, 560, 110).at("quiet"),
-        tag("first quiet moment all day", (540, 760), size=54, color=TEAL).pop(),
+        Shape(line((390, 335), (690, 325)), color=RED, width=10).at("but"),
+        moon(540, 560, 110).at("bedtime"),
+        tag("first quiet moment all day", (540, 760), size=54, color=TEAL).at("quiet").pop(),
         Shape(check(300, 900, 24), color=GREEN, width=10).at("screens"),
         note("no screens", (360, 900), size=54, anchor="lm"),
         Shape(check(300, 1000, 24), color=GREEN, width=10).at("rushing"),
@@ -131,23 +134,30 @@ def l_quiet():
 
 
 def l_side():
+    win = window(820, 470, 220, 240)
+    win[0].at("dark")
+    sheets = bed(440, 900, 640, (("sleepy", 0), ("happy", 130)))
+    sheets[0].at("side")
     return [
-        *window(820, 470, 220, 240),
-        *bed(440, 900, 640, (("sleepy", 0), ("happy", 130))),
-        tag("side by side", (300, 330), size=58, color=TEAL).at("side"),
+        *win,
+        *sheets,
+        tag("side by side", (300, 330), size=58, color=TEAL),
         tag("no eye contact", (300, 420), size=50, color=GREY).at("eye"),
-        bubble(560, 1150, 230, 70, (560, 1000)).at("big").focus(1.08),
-        Text("the big stuff", (560, 1152), size=50, face=MARKER, color=RED).pop(),
+        bubble(470, 660, 210, 70, (380, 800)).at("easiest"),
+        Text("the big stuff", (470, 662), size=50, face=MARKER, color=RED).at("big").focus(1.08).pop(),
     ]
 
 
 def l_plan():
+    shh = speech(250, 400, 110, 70, (200, 500), "SHH!", size=50)
     return [
-        tag("PLAN FOR IT.", (540, 340), size=96, color=TEAL).at("plan").focus(1.08).pop(),
-        *clock(540, 640, 130),
-        tag("5 MINUTES", (540, 850), size=80, color=RED).at("five").pop(),
-        note("just for talking", (540, 960), size=60).at("talking"),
-        note("(before lights out)", (540, 1050), size=46, color=GREY),
+        *shh,
+        crossed(250, 400, 76).at("fighting"),
+        tag("PLAN FOR IT.", (680, 400), size=78, color=TEAL).at("plan").focus(1.08).pop(),
+        *[c.at("give") if k == 0 else c for k, c in enumerate(clock(540, 690, 130))],
+        tag("5 MINUTES", (540, 900), size=80, color=RED).at("five").pop(),
+        note("(before lights out)", (540, 990), size=46, color=GREY).at("lights"),
+        note("just for talking", (540, 1090), size=60).at("that"),
     ]
 
 
@@ -155,23 +165,28 @@ def l_start():
     small = bubble(300, 520, 180, 70, (220, 640))
     big = bubble(620, 900, 330, 130, (480, 1080), seed=2)
     return [
+        tag("start easy", (540, 330), size=64, color=TEAL),
         small.at("silly"),
         note("a silly question", (300, 522), size=42),
         Shape(arrow((420, 620), (520, 760), bend=20, head=22), color=GOLD, width=W).at("going"),
-        big.at("real").focus(1.08),
-        Text("the real stuff", (620, 900), size=66, face=MARKER, color=RED).pop(),
-        Shape(heart(860, 760, 34), color=RED, fill=(250, 140, 150), width=6),
+        big.at("real"),
+        Text("the real stuff", (620, 900), size=66, face=MARKER, color=RED).focus(1.08).pop(),
+        Shape(heart(860, 760, 34), color=RED, fill=(250, 140, 150), width=6).at("often"),
     ]
 
 
 def l_game():
+    bear = koala(540, 820, 1.0)
+    bear[0].at("koalas")
     return [
-        tag("1 real-or-fake a night", (540, 320), size=56, color=TEAL).at("real-or-fake"),
-        Shape(rrect(70, 390, 1010, 530, r=26), width=W, fill=(255, 255, 255), fill_offset=(0, 0)),
-        note(CLAIM, (540, 462), size=52).at("koalas"),
-        *koala(540, 820, 1.0),
-        Text("z z z", (800, 640), size=56, face=MARKER, color=GREY),
-        tag("REAL!", (540, 1150), size=120, color=GREEN).at("real").focus(1.12).pop(),
+        moon(960, 320, 40),
+        tag("1 real-or-fake a night", (500, 320), size=56, color=TEAL).at("real-or-fake"),
+        Shape(rrect(70, 390, 1010, 530, r=26), width=W, fill=(255, 255, 255), fill_offset=(0, 0)).at("like"),
+        note(CLAIM, (540, 462), size=52),
+        *bear,
+        Text("z z z", (300, 640), size=56, face=MARKER, color=GREY).at("sleep"),
+        tag("22 hrs!", (820, 650), size=60, color=RED).at("twenty-two").pop(),
+        tag("REAL!", (540, 1090), size=120, color=GREEN).at("day").focus(1.12).pop(),
     ]
 
 
@@ -191,12 +206,14 @@ def l_options():
 
 
 def l_close():
+    win = window(540, 650, 300, 300)
+    win[0].at("lights")
     return [
-        tag("GIVE THEM 5 MINUTES", (540, 340), size=74, color=TEAL).at("five").focus(1.08).pop(),
-        *window(540, 650, 300, 300),
+        tag("GIVE THEM 5 MINUTES", (540, 340), size=74, color=TEAL).focus(1.08).pop(),
+        *win,
         note("...and they'll stop stealing them after.", (540, 950), size=50, color=INK,
-             max_width=900).at("lights"),
-        Text("goodnight.", (540, 1120), size=70, face=MARKER, color=BLUE).at("stealing"),
+             max_width=900).at("stop"),
+        Text("goodnight.", (540, 1120), size=70, face=MARKER, color=BLUE),
     ]
 
 

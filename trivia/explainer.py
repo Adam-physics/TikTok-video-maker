@@ -22,12 +22,15 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from . import brand, foley, voice
-from .doodle import INK, SS, eraser_sprite, font, paint_hand, paper
+from .doodle import INK, SS, Shape, Text, eraser_sprite, font, paint_hand, paper
 from .render import ffmpeg_bin
 
 W, H, FPS = brand.WIDTH, brand.HEIGHT, brand.FPS
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FONTS = os.path.join(ROOT, "assets", "fonts")
+FILL = 0.92            # share of each gap between cues spent drawing
+STRETCH_LINE = 2.6     # slowest a line may be drawn, relative to natural pace
+STRETCH_TEXT = 2.0
 KEEP = "keep"           # third element of a SCRIPT entry: draw on the same board
 ERASE = 0.45            # one quick left-to-right pass, as in the reference
 TAIL = 0.35             # a beat after the last word, no dead air
@@ -137,6 +140,17 @@ def schedule(scene: dict) -> None:
             squeeze = max(room, 0.12 * len(seg)) / natural
             for it in seg:
                 it.duration = max(0.1, it.duration * squeeze)
+        else:
+            # Draw at the pace of the voice: slow the strokes so the pen is
+            # still moving when the next cue lands, rather than finishing in
+            # a blink and leaving a still board.
+            drawn = [it for it in seg if isinstance(it, (Shape, Text))]
+            ink = sum(it.duration for it in drawn)
+            if ink:
+                spare = room * FILL - natural
+                for it in drawn:
+                    cap = STRETCH_TEXT if isinstance(it, Text) else STRETCH_LINE
+                    it.duration = min(it.duration * cap, it.duration + spare * it.duration / ink)
         t = begin
         for it in seg:
             it.start = t
