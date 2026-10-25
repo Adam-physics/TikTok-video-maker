@@ -1,6 +1,6 @@
-"""Round 2 of the play-along series: the flamingo / polar bear / octopus page.
+"""Play-along video from the flamingo / polar bear / octopus page.
 
-Same shape as round 1. The claims and answers are copied from the printed
+Same shape as play1 but stands on its own. The claims and answers are copied from the printed
 page (assets/pages/q01.png and a01.png).
 """
 from __future__ import annotations
@@ -15,10 +15,6 @@ from .screens import octopus
 
 ID = "play2"
 TIGHTEN = 0.2
-
-
-def l_round():
-    return [tag("ROUND 2", (300, 690), size=64, color=BLUE).at("round").pop(), *l_hook()]
 
 
 def l_one():
@@ -74,7 +70,7 @@ def l_page():
 
 
 SCRIPT = [
-    ("Round two! Play this with your kid. Three facts, one is fake. Bet they beat you.", l_round),
+    ("Play this with your kid. Three facts, one is fake. Bet they beat you.", l_hook),
     ("One: A group of flamingos is called a flamboyance.", l_one),
     ("Two: Polar bears have white fur.", l_two, KEEP),
     ("Three: Octopuses have three hearts and blue blood.", l_three, KEEP),
@@ -89,7 +85,7 @@ SCRIPT = [
 ]
 
 CAPTION = (
-    "Round 2! Play this with your kid: three facts, one is fake. A group of flamingos is called "
+    "Play this with your kid: three facts, one is fake. A group of flamingos is called "
     "a flamboyance. Polar bears have white fur. Octopuses have three hearts and blue blood. "
     "Lock in your guess, then watch the reveal (the middle one gets almost everybody). That was "
     "one page of Trick Trivia, a real-or-fake book for kids with 120 claims inside. Grab your "
