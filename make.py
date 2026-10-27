@@ -6,6 +6,7 @@
     python make.py calibrate <page.png>     # check panel detection by eye
     python make.py explainer reading        # whiteboard video for one angle
     python make.py explainer reading stills # ...or its last frame per scene
+    python make.py comic comic7         # full-screen comic version from book pages
     python make.py skit                     # flat-cartoon texting skit (test)
 
 A round is three claims and their three reveals, cut straight from the
@@ -198,18 +199,20 @@ def main(argv: list[str]) -> int:
         os.makedirs(OUT, exist_ok=True)
         print(skit.render(os.path.join(OUT, "skit-lose-trivia.mp4")))
         return 0
-    if argv[1] == "explainer":
+    if argv[1] in ("explainer", "comic"):
         import importlib
+        from trivia import comic
+        engine = comic if argv[1] == "comic" else explainer
         rest = argv[2:]
         want_stills = "stills" in rest
         names = [a for a in rest if a != "stills"] or ["reading"]
         angle = importlib.import_module(f"trivia.angles.{names[0]}")
         if want_stills:
-            for p in explainer.stills(angle, os.path.join(OUT, "explainer", angle.ID, "stills")):
+            for p in engine.stills(angle, os.path.join(OUT, "explainer", angle.ID, "stills")):
                 print(p)
             return 0
         os.makedirs(OUT, exist_ok=True)
-        result = explainer.render(angle, os.path.join(OUT, f"{angle.ID}.mp4"))
+        result = engine.render(angle, os.path.join(OUT, f"{angle.ID}.mp4"))
         with open(os.path.join(OUT, f"{angle.ID}.txt"), "w") as f:
             f.write(angle.CAPTION + "\n\n" + " ".join(angle.HASHTAGS) + "\n")
         print(result["path"], f"{result['duration']:.1f}s",
