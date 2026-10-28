@@ -97,13 +97,13 @@ def l_hook():
 def l_one():
     y = ROWS[0]
     return [*number(1, y), *[a.at("ants") if k == 0 else a for k, a in enumerate(ant(270, y, 1.1))],
-            claim("Ants never sleep. They're the only insect awake 24 hours a day.", y, size=42)]
+            claim("Ants never sleep.", y, size=50)]
 
 
 def l_two():
     y = ROWS[1]
     return [*number(2, y), *[g.at("goats") if k == 0 else g for k, g in enumerate(goat(270, y + 10, 0.9))],
-            claim("Goats have rectangular pupils that give them nearly 340-degree vision.", y, size=40)]
+            claim("Goats have rectangular pupils.", y, size=48)]
 
 
 def l_three():
@@ -116,24 +116,24 @@ def l_r1():
     y = ROWS[0]
     return [*number(1, y), *ant(270, y, 1.1),
             stamp("FAKE!", y, RED).at("fake").pop(),
-            note("Ants take hundreds of tiny micro-naps a day.", (450, y + 30), size=42, max_width=580,
-                 anchor="lm").at("micro-naps"),
-            Text("z z z", (200, y - 70), size=40, face=MARKER, color=GREY).at("hundreds")]
+            note("They take tiny micro-naps.", (450, y + 30), size=44, max_width=580,
+                 anchor="lm").at("tiny"),
+            Text("z z z", (200, y - 70), size=40, face=MARKER, color=GREY)]
 
 
 def l_r2():
     y = ROWS[1]
     return [*number(2, y), *goat(270, y + 10, 0.9),
             stamp("REAL!", y, GREEN).at("real").pop(),
-            note("They see almost all the way around without moving their head.", (450, y + 45), size=38,
-                 max_width=580, anchor="lm").at("see")]
+            note("Almost all-around vision.", (450, y + 35), size=44,
+                 max_width=580, anchor="lm")]
 
 
 def l_r3():
     y = ROWS[2]
     return [*number(3, y), *croc(250, y, 1.0),
             stamp("REAL!", y, GREEN).at("real").pop(),
-            note("Huge bite, but the muscles that open the jaw are weak.", (450, y + 40), size=40, max_width=580,
+            note("Jaw-opening muscles are weak.", (450, y + 35), size=44, max_width=580,
                  anchor="lm").at("muscles"),
             Shape([ellipse(320, y + 2, 14, 42), ellipse(342, y + 2, 14, 40)],
                   color=(170, 80, 200), width=8).at("weak")]
@@ -143,40 +143,37 @@ def l_score():
     return [
         tag("how many did you get?", (540, 420), size=72, color=INK).at("how"),
         Text("0 · 1 · 2 · 3", (540, 640), size=130, face=MARKER, color=GOLD).pop(),
-        tag("comment your score", (540, 860), size=64, color=TEAL).at("did").pop(),
+        tag("comment your score", (540, 860), size=64, color=TEAL).at("comment").pop(),
     ]
 
 
 def l_find():
     return [
-        Picture(cover(), (540, 640), width=330, angle=-2, tape=True).at("one"),
-        Picture(page("q06.png"), (190, 700), width=230, angle=-7).at("page"),
+        Picture(cover(), (540, 640), width=330, angle=-2, tape=True).at("from"),
+        Picture(page("q06.png"), (190, 700), width=230, angle=-7).at("kids"),
         Picture(page("a06.png"), (890, 700), width=230, angle=7),
         tag("where to find it:", (540, 975), size=50, color=GREY).at("book"),
-        tag("search “Trick Trivia”", (540, 1060), size=60, color=TEAL).at("trivia").pop(),
-        tag("on Amazon", (540, 1140), size=60, color=TEAL).at("kids").pop(),
+        tag("search “Trick Trivia”", (540, 1060), size=60, color=TEAL).at("called").pop(),
+        tag("on Amazon", (540, 1140), size=60, color=TEAL).at("trivia").pop(),
     ]
 
 
 SCRIPT = [
     ("Are you smarter than a kids' trivia book? Three facts, one is fake.", l_hook),
-    ("One: Ants never sleep. They're the only insect that stays awake twenty-four hours a day.", l_one),
-    ("Two: Goats have rectangular pupils that give them nearly three hundred and forty degree vision.", l_two,
-     KEEP),
+    ("One: Ants never sleep.", l_one),
+    ("Two: Goats have rectangular pupils.", l_two, KEEP),
     ("Three: A rubber band can hold a crocodile's mouth shut.", l_three, KEEP),
     ("Lock in your guess. Three, two, one.", l_lock),
-    ("Ants? Fake! Ants do sleep. They take hundreds of tiny micro-naps a day.", l_r1),
-    ("Goats? Real. They can see almost all the way around without moving their head.", l_r2, KEEP),
-    ("Crocodiles? Real. Their bite is huge, but the muscles that open the jaw are so weak a rubber "
-     "band can hold it shut.", l_r3, KEEP),
-    ("So how many did you get? Comment your score.", l_score),
-    ("That was one page of a book called Trick Trivia, it's for kids, and it's on Amazon.", l_find),
+    ("Ants? Fake! They take tiny micro-naps.", l_r1),
+    ("Goats? Real.", l_r2, KEEP),
+    ("Crocodiles? Real. The muscles that open their jaw are weak.", l_r3, KEEP),
+    ("How many did you get? Comment your score.", l_score),
+    ("It's from a kids' book called Trick Trivia, on Amazon.", l_find),
 ]
 
 CAPTION = (
     "Are you smarter than a kids' trivia book? Three facts, one is fake: ants never sleep, goats "
-    "have rectangular pupils with nearly 340-degree vision, and a rubber band can hold a "
-    "crocodile's mouth shut. Comment your score out of 3, then try it on your kid. It's from "
+    "have rectangular pupils, and a rubber band can hold a crocodile's mouth shut. Comment your score out of 3, then try it on your kid. It's from "
     "Trick Trivia, a real-or-fake book for kids, on Amazon."
 )
 HASHTAGS = ["#realorfake", "#trivia", "#funfacts", "#areyousmarter", "#momtok", "#dadtok",

@@ -32,9 +32,9 @@ KALAM = os.path.join(ROOT, "assets", "fonts", "Kalam-Bold.ttf")
 
 INK = (26, 29, 38)          # black dry-erase marker, a hair toward navy
 PAPER = (255, 255, 255)
-# TT_DARK=1 renders on a dark board: ink turns to chalk, colours brighten,
+# The board is dark by default (TT_DARK=0 for the old whiteboard): ink is chalk, colours brighten,
 # white card fills turn to a slightly lighter slate.
-DARK = os.environ.get("TT_DARK") == "1"
+DARK = os.environ.get("TT_DARK", "1") != "0"
 
 
 def chalk(c, fill=False):
