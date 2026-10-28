@@ -22,7 +22,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from . import brand, foley, voice
-from .doodle import INK, SS, Shape, Text, eraser_sprite, font, paint_hand, paper
+from .doodle import DARK, INK, SS, Shape, Text, chalk, eraser_sprite, font, paint_hand, paper
 from .render import ffmpeg_bin
 
 W, H, FPS = brand.WIDTH, brand.HEIGHT, brand.FPS
@@ -179,10 +179,10 @@ def overlay(angle) -> Image.Image:
         x0, y0 = (W - w) / 2 - 26, 150
         # A solid backing, so drawings pushed up by the camera pass behind it.
         d.rounded_rectangle([(x0 - 30) * SS, (y0 - 26) * SS, (x0 + w + 82) * SS, (y0 + 100) * SS],
-                            radius=40 * SS, fill=(250, 251, 252, 255))
+                            radius=40 * SS, fill=(30, 33, 34, 255) if DARK else (250, 251, 252, 255))
         d.rounded_rectangle([x0 * SS, y0 * SS, (x0 + w + 52) * SS, (y0 + 78) * SS],
-                            radius=18 * SS, outline=TEAL, width=5 * SS)
-        d.text((W / 2 * SS, (y0 + 41) * SS), chip, font=f, fill=TEAL, anchor="mm")
+                            radius=18 * SS, outline=chalk(TEAL), width=5 * SS)
+        d.text((W / 2 * SS, (y0 + 41) * SS), chip, font=f, fill=chalk(TEAL), anchor="mm")
     foot = getattr(angle, "FOOTER", None)
     if foot:
         f = font(CAPTION_FONT, 30 * SS)
@@ -221,10 +221,12 @@ def paint_caption(img: Image.Image, words, t: float) -> None:
     for w, s, wd in zip(group, texts, widths):
         active = w["start"] - 0.03 <= t <= w["end"] + 0.05 or (
             w is group[-1] and t > w["end"])
-        if active:
+        if active and not DARK:
             d.polygon([(x - 8 * k, y - 4 * k), (x + wd + 10 * k, y - 8 * k),
                        (x + wd + 6 * k, y + 34 * k), (x - 6 * k, y + 37 * k)], fill=HIGHLIGHT)
-        d.text((x, y), s, font=f, fill=INK, anchor="ls")
+        # On the dark board the spoken word turns chalk-yellow instead.
+        ink = (255, 214, 64) if (DARK and active) else chalk(INK)
+        d.text((x, y), s, font=f, fill=ink, anchor="ls")
         x += wd + space
 
 

@@ -32,6 +32,30 @@ KALAM = os.path.join(ROOT, "assets", "fonts", "Kalam-Bold.ttf")
 
 INK = (26, 29, 38)          # black dry-erase marker, a hair toward navy
 PAPER = (255, 255, 255)
+# TT_DARK=1 renders on a dark board: ink turns to chalk, colours brighten,
+# white card fills turn to a slightly lighter slate.
+DARK = os.environ.get("TT_DARK") == "1"
+
+
+def chalk(c, fill=False):
+    """Map a whiteboard colour to its dark-board equivalent (identity when light)."""
+    if not DARK or c is None:
+        return c
+    import colorsys
+    r, g, b = (x / 255 for x in c[:3])
+    h, sat, v = colorsys.rgb_to_hsv(r, g, b)
+    if sat < 0.18 or v < 0.25:              # greys, and the near-black ink
+        if v > 0.9:
+            out = (0.20, 0.22, 0.24) if fill else (r, g, b)
+            return tuple(int(x * 255) for x in out) + tuple(c[3:])
+        v = 1 - v * 0.55                       # ink and greys become warm chalk
+        h, sat = 0.12, 0.04
+    else:
+        v = max(v, 0.9)
+        sat = sat * (0.8 if fill else 0.9)
+    return tuple(int(x * 255) for x in colorsys.hsv_to_rgb(h, sat, v)) + tuple(c[3:])
+
+
 
 BOIL_EVERY = 4          # frames between wobble redraws (~7.5 per second)
 BOIL_AMP = 0.7          # pixels: marker on a whiteboard barely shimmers
@@ -235,7 +259,7 @@ class Shape(Item):
         if isinstance(paths, np.ndarray):
             paths = [paths]
         self.paths = [np.asarray(p, float) for p in paths]
-        self.color, self.width, self.fill = color, width, fill
+        self.color, self.width, self.fill = chalk(color), width, chalk(fill, fill=True)
         self.fill_offset = fill_offset
         self.lengths = [float(np.sum(np.hypot(*np.diff(p, axis=0).T))) for p in self.paths]
         self.total = sum(self.lengths) or 1.0
@@ -304,6 +328,7 @@ class Text(Item):
 
     def __init__(self, text, xy, size=80, color=INK, face=HAND, anchor="mm",
                  max_width=940, stroke=0, stroke_color=INK, per_char=0.035, spacing=10):
+        color, stroke_color = chalk(color), chalk(stroke_color)
         f = font(face, size)
         lines = self._wrap(text, f, max_width)
         probe = ImageDraw.Draw(Image.new("L", (1, 1)))
@@ -562,8 +587,12 @@ def paper() -> Image.Image:
     w, h = W // 4, H // 4                      # smooth field, upscaled below
     yy, xx = np.mgrid[0:h, 0:w].astype(float)
     light = ((xx - w * 0.5) / (w * 0.8)) ** 2 + ((yy - h * 0.4) / (h * 0.85)) ** 2
-    v = 253 - 11 * light
-    rgb = np.stack([v - 1.5, v - 0.5, v + 0.5], axis=2)
+    if DARK:
+        v = 34 - 12 * light
+        rgb = np.stack([v - 2, v + 1, v], axis=2)
+    else:
+        v = 253 - 11 * light
+        rgb = np.stack([v - 1.5, v - 0.5, v + 0.5], axis=2)
     small = Image.fromarray(np.clip(rgb, 0, 255).astype("uint8"))
     return small.resize((W * SS, H * SS), Image.BICUBIC).convert("RGBA")
 
