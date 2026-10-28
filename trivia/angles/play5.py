@@ -149,12 +149,12 @@ def l_score():
 
 def l_find():
     return [
-        Picture(cover(), (540, 640), width=330, angle=-2, tape=True).at("from"),
-        Picture(page("q06.png"), (190, 700), width=230, angle=-7).at("kids"),
+        Picture(cover(), (540, 640), width=330, angle=-2, tape=True).at("more"),
+        Picture(page("q06.png"), (190, 700), width=230, angle=-7).at("facts"),
         Picture(page("a06.png"), (890, 700), width=230, angle=7),
-        tag("where to find it:", (540, 975), size=50, color=GREY).at("book"),
-        tag("search “Trick Trivia”", (540, 1060), size=60, color=TEAL).at("called").pop(),
-        tag("on Amazon", (540, 1140), size=60, color=TEAL).at("trivia").pop(),
+        tag("where to find it:", (540, 975), size=50, color=GREY).at("like"),
+        tag("search “Trick Trivia”", (540, 1060), size=60, color=TEAL).at("grab").pop(),
+        tag("on Amazon", (540, 1140), size=60, color=TEAL).at("trick").pop(),
     ]
 
 
@@ -168,13 +168,13 @@ SCRIPT = [
     ("Goats? Real.", l_r2, KEEP),
     ("Crocodiles? Real. The muscles that open their jaw are weak.", l_r3, KEEP),
     ("How many did you get? Comment your score.", l_score),
-    ("It's from a kids' book called Trick Trivia, on Amazon.", l_find),
+    ("For more facts like this, grab Trick Trivia on Amazon.", l_find),
 ]
 
 CAPTION = (
     "Are you smarter than a kids' trivia book? Three facts, one is fake: ants never sleep, goats "
-    "have rectangular pupils, and a rubber band can hold a crocodile's mouth shut. Comment your score out of 3, then try it on your kid. It's from "
-    "Trick Trivia, a real-or-fake book for kids, on Amazon."
+    "have rectangular pupils, and a rubber band can hold a crocodile's mouth shut. Comment your score out of 3, then try it on your kid. For more "
+    "facts like this, grab Trick Trivia on Amazon."
 )
 HASHTAGS = ["#realorfake", "#trivia", "#funfacts", "#areyousmarter", "#momtok", "#dadtok",
             "#familygame"]
