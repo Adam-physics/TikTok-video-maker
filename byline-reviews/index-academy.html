@@ -7,10 +7,10 @@
 <style>
 /* Direction: calm advisor-academy. Cool gray paper, navy ink, one teal accent, mono eyebrows, white cards on dotted bands. */
 :root{
-  --bg:#F6F7F9; --band:#EAF1F4; --surface:#FFFFFF; --surface-2:#F2F5F8; --tint:#E5F4F3; --mark:#CDEEEA;
-  --line:#E1E6ED; --line-strong:#CBD4DF; --ink:#0B1F3A; --ink-2:#3A4A63; --muted:#64728A;
-  --accent:#007C7A; --teal:#00A3A1; --btn:#0B1F3A; --btn-ink:#FFFFFF; --dot:rgba(11,31,58,.09);
-  --star:#E39B2D; --star-off:#D5DCE5; --good:#007C7A; --good-soft:#E5F4F3;
+  --bg:#F6F7F9; --band:#EDF0F8; --surface:#FFFFFF; --surface-2:#F2F5F8; --tint:#EEF1FF; --mark:#D9E0FF;
+  --line:#E1E6ED; --line-strong:#CBD4DF; --ink:#0C1532; --ink-2:#3A4A63; --muted:#64728A;
+  --accent:#2D46F5; --teal:#2D46F5; --btn:#2D46F5; --btn-ink:#FFFFFF; --dot:rgba(11,31,58,.09);
+  --star:#E39B2D; --star-off:#D5DCE5; --good:#11865A; --good-soft:#E3F5EC;
   --shadow:0 1px 2px rgba(11,31,58,.04),0 10px 30px -14px rgba(11,31,58,.18);
   --shadow-lg:0 2px 4px rgba(11,31,58,.04),0 30px 70px -30px rgba(11,31,58,.3);
   --f-display:"Plus Jakarta Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -19,17 +19,17 @@
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0F1724; --band:#142033; --surface:#172235; --surface-2:#1C2A40; --tint:#163634; --mark:#1E4A48;
-  --line:#253349; --line-strong:#33445E; --ink:#EDF2F8; --ink-2:#C3CEDD; --muted:#93A1B6;
-  --accent:#5CCBC6; --teal:#4DBFBA; --btn:#5CCBC6; --btn-ink:#0B1F3A; --dot:rgba(255,255,255,.06);
-  --star:#F0B04A; --star-off:#33445E; --good:#5CCBC6; --good-soft:#163634;
+  --bg:#0B1024; --band:#10173A; --surface:#141C3A; --surface-2:#1A2346; --tint:#1A2550; --mark:#28367A;
+  --line:#252F57; --line-strong:#323E6E; --ink:#EDF2F8; --ink-2:#C3CEDD; --muted:#93A1B6;
+  --accent:#8A9DFF; --teal:#8A9DFF; --btn:#7D93FF; --btn-ink:#081030; --dot:rgba(255,255,255,.06);
+  --star:#F0B04A; --star-off:#33445E; --good:#3DCB8C; --good-soft:#123628;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px -14px rgba(0,0,0,.6); --shadow-lg:0 30px 70px -30px rgba(0,0,0,.7);
   color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0F1724; --band:#142033; --surface:#172235; --surface-2:#1C2A40; --tint:#163634; --mark:#1E4A48;
-  --line:#253349; --line-strong:#33445E; --ink:#EDF2F8; --ink-2:#C3CEDD; --muted:#93A1B6;
-  --accent:#5CCBC6; --teal:#4DBFBA; --btn:#5CCBC6; --btn-ink:#0B1F3A; --dot:rgba(255,255,255,.06);
-  --star:#F0B04A; --star-off:#33445E; --good:#5CCBC6; --good-soft:#163634;
+  --bg:#0B1024; --band:#10173A; --surface:#141C3A; --surface-2:#1A2346; --tint:#1A2550; --mark:#28367A;
+  --line:#252F57; --line-strong:#323E6E; --ink:#EDF2F8; --ink-2:#C3CEDD; --muted:#93A1B6;
+  --accent:#8A9DFF; --teal:#8A9DFF; --btn:#7D93FF; --btn-ink:#081030; --dot:rgba(255,255,255,.06);
+  --star:#F0B04A; --star-off:#33445E; --good:#3DCB8C; --good-soft:#123628;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px -14px rgba(0,0,0,.6); --shadow-lg:0 30px 70px -30px rgba(0,0,0,.7);
   color-scheme:dark}
 
@@ -55,7 +55,8 @@ p{margin:0}
 :focus-visible{outline:3px solid var(--teal);outline-offset:3px;border-radius:10px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding-inline:28px;border-radius:999px;font:700 16.5px/1 var(--f-display);letter-spacing:-.01em;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s}
 .btn:hover{transform:translateY(-1px)}
-.btn-primary{background:var(--btn);color:var(--btn-ink);box-shadow:0 14px 28px -14px rgba(11,31,58,.55)}
+.btn-primary{background:var(--btn);color:var(--btn-ink);box-shadow:0 10px 22px -14px rgba(12,21,50,.6)}
+.btn-primary:hover{background:color-mix(in srgb,var(--btn) 88%,#000)}
 .btn-primary::after{content:"→";font-weight:600}
 .btn-ghost{background:var(--surface);color:var(--ink);border-color:var(--line-strong)}
 .btn.ext::after{content:"↗"}
@@ -67,12 +68,9 @@ p{margin:0}
 /* nav */
 .nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding-top:14px}
 .nav .bar{display:flex;align-items:center;justify-content:space-between;gap:14px;height:64px;padding:0 8px 0 16px;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:saturate(1.3) blur(14px);-webkit-backdrop-filter:saturate(1.3) blur(14px);border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadow)}
-.logo{display:inline-flex;align-items:center;gap:11px;color:var(--ink);text-decoration:none;min-width:0}
-.logo .mk{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#0B1F3A;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
-.logo .mk svg{width:18px;height:18px;fill:#2FD3CC}
-.logo .nm{display:flex;flex-direction:column;line-height:1.1;min-width:0}
-.logo b{font:800 18px/1.1 var(--f-display);letter-spacing:-.03em}
-.logo small{font:500 12px/1.2 var(--f-body);color:var(--muted);white-space:nowrap}
+.logo{display:inline-flex;align-items:baseline;gap:8px;font:800 25px/1 var(--f-display);letter-spacing:-.04em;color:var(--ink);text-decoration:none}
+.logo i{display:inline-block;width:16px;height:3px;background:var(--accent);transform:translateY(-5px)}
+.logo small{font:600 12px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-left:2px}
 .nav-links{display:flex;gap:28px}
 .nav-links a{font:600 15px/1 var(--f-body);color:var(--ink-2);text-decoration:none}
 .nav-links a:hover{color:var(--ink)}
@@ -82,7 +80,7 @@ p{margin:0}
 .theme{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);cursor:pointer}
 .theme svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 @media (max-width:900px){.nav-links{display:none}}
-@media (max-width:480px){.logo small{display:none}.logo b{font-size:16px}.nav .btn{padding-inline:14px;font-size:14px}.theme{width:42px;height:42px}}
+@media (max-width:480px){.logo{font-size:22px}.logo small,.logo i{display:none}.nav .btn{padding-inline:14px;font-size:14px}.theme{width:42px;height:42px}}
 
 /* hero */
 .hero{padding-block:clamp(48px,7vw,92px) clamp(64px,8vw,104px)}
@@ -162,14 +160,14 @@ p{margin:0}
 
 /* proof */
 .pg{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:18px;margin-top:48px;align-items:stretch}
-.video{position:relative;border-radius:24px;overflow:hidden;background:#0B1F3A;min-height:340px;display:grid;place-items:center;text-align:center;color:#fff;box-shadow:var(--shadow-lg);isolation:isolate}
+.video{position:relative;border-radius:24px;overflow:hidden;background:#0C1532;min-height:340px;display:grid;place-items:center;text-align:center;color:#fff;box-shadow:var(--shadow-lg);isolation:isolate}
 .video::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.08) 1px,transparent 1.3px);background-size:22px 22px;z-index:-1}
 .video img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.18;filter:blur(3px) grayscale(.4);z-index:-2}
 .video .in{padding:28px}
-.video .play{width:72px;height:72px;border-radius:20px;background:#007F7C;display:grid;place-items:center;margin:0 auto 18px;box-shadow:0 0 0 8px rgba(47,211,204,.15)}
+.video .play{width:72px;height:72px;border-radius:20px;background:#2D46F5;display:grid;place-items:center;margin:0 auto 18px;box-shadow:0 0 0 8px rgba(125,147,255,.2)}
 .video .play::after{content:"";border-left:20px solid #fff;border-top:13px solid transparent;border-bottom:13px solid transparent;margin-left:6px}
 .video b{display:block;font:800 24px/1.2 var(--f-display);letter-spacing:-.02em}
-.video span{display:block;margin-top:8px;font:500 12px/1.4 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:#9FE3DF}
+.video span{display:block;margin-top:8px;font:500 12px/1.4 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:#B9C5FF}
 .cases{display:grid;gap:14px}
 .case{display:grid;grid-template-columns:92px minmax(0,1fr);gap:18px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--shadow)}
 .case img{width:92px;border-radius:3px 6px 6px 3px;box-shadow:0 10px 20px -10px rgba(11,31,58,.55);display:block}
@@ -231,11 +229,11 @@ details p{padding:0 18px 18px 60px;color:var(--ink-2);max-width:62ch;font-size:1
 @media (max-width:480px){details p{padding-left:18px}}
 
 /* book */
-.book{background:#0B1F3A;color:#EDF2F8;overflow:hidden}
+.book{background:#0C1532;color:#EDF2F8;overflow:hidden}
 .book::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1.3px);background-size:22px 22px;-webkit-mask-image:linear-gradient(100deg,transparent 20%,#000 70%);mask-image:linear-gradient(100deg,transparent 20%,#000 70%);pointer-events:none}
 .book .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:40px;align-items:center}
-.book .eyebrow{color:#5CCBC6}.book .eyebrow::before{background:#5CCBC6}
-.book h2{color:#fff}.book h2 em{color:#5CCBC6}
+.book .eyebrow{color:#8A9DFF}.book .eyebrow::before{background:#8A9DFF}
+.book h2{color:#fff}.book h2 em{color:#8A9DFF}
 .book p{color:#C3CEDD;margin-top:16px;max-width:52ch;font-size:18px}
 .book-card{background:var(--surface);color:var(--ink);border-radius:24px;padding:28px;box-shadow:0 30px 70px -30px rgba(0,0,0,.6)}
 .book-card ol{margin:0;padding:0;list-style:none;display:grid;gap:10px;counter-reset:b}
@@ -249,7 +247,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
 </style>
 
 <header class="nav"><div class="wrap"><div class="bar">
-  <a class="logo" href="#top"><span class="mk" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.4 6.1 6.1 2.4-6.1 2.4L12 19.5l-2.4-6.1L3.5 11l6.1-2.4z"/></svg></span><span class="nm"><b>Byline Reviews</b><small>Honest reviews for published authors</small></span></a>
+  <a class="logo" href="#top">Byline<i></i><small>Reviews</small></a>
   <nav class="nav-links" aria-label="Sections"><a href="#how">How it works</a><a href="#proof">Clients</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></nav>
   <div class="right"><button class="theme" id="theme" type="button" aria-label="Switch light or dark mode"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button><a class="btn btn-primary" href="#book">Book a call</a></div>
 </div></div></header>
@@ -410,7 +408,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
   </div></section>
 </main>
 
-<footer><div class="wrap"><a class="logo" href="#top"><span class="mk" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.4 6.1 6.1 2.4-6.1 2.4L12 19.5l-2.4-6.1L3.5 11l6.1-2.4z"/></svg></span><span class="nm"><b>Byline Reviews</b></span></a><span>Honest reviews for recently published authors.</span></div></footer>
+<footer><div class="wrap"><a class="logo" href="#top">Byline<i></i><small>Reviews</small></a><span>Honest reviews for recently published authors.</span></div></footer>
 
 <script>
 (function(){var b=document.getElementById('theme'),R=document.documentElement;b.addEventListener('click',function(){var d=R.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');var n=d==='dark'?'light':'dark';R.setAttribute('data-theme',n);try{localStorage.setItem('bt',n)}catch(e){}});try{var s=localStorage.getItem('bt');if(s)R.setAttribute('data-theme',s)}catch(e){}})();
