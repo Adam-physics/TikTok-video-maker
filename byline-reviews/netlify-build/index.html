@@ -298,6 +298,42 @@ details p{padding:0 18px 18px 60px;color:var(--ink-2);max-width:62ch;font-size:1
 .way .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.3)}
 .way .btn-ghost:hover{background:rgba(255,255,255,.08)}
 @media (max-width:900px){.ways{grid-template-columns:minmax(0,1fr)}}
+
+/* order dialog */
+dialog#od{width:min(580px,calc(100% - 24px));max-height:calc(100dvh - 24px);overflow:auto;padding:0;border:1px solid var(--line);border-radius:24px;background:var(--surface);color:var(--ink);box-shadow:0 40px 90px -30px rgba(12,21,50,.55)}
+dialog#od::backdrop{background:rgba(12,21,50,.5);backdrop-filter:blur(3px)}
+#of{padding:24px clamp(18px,4vw,30px) 26px}
+.hp{position:absolute;left:-9999px}
+.od-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.od-k,.od-s{display:block;font:600 11px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.od-top h3{font-size:24px;margin-top:8px;letter-spacing:-.03em}
+.od-x{width:40px;height:40px;flex:none;border-radius:50%;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font-size:22px;line-height:1;cursor:pointer}
+.od-step{display:grid;gap:14px;padding-top:18px}
+.od-step[hidden]{display:none}
+.od-s{color:var(--muted)}
+.fld{display:grid;gap:6px;font-size:14px;font-weight:600}
+.fld i{font-style:normal;font-weight:400;color:var(--muted)}
+.fld input,.fld textarea{width:100%;font:400 16px/1.4 var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line-strong);border-radius:12px;padding:12px 14px;resize:vertical}
+.fld input:focus,.fld textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+.err{display:none;font-style:normal;font-weight:500;font-size:13px;color:#C4283A}
+.fld.bad .err{display:block}.fld.bad input{border-color:#C4283A}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+@media (max-width:520px){.two{grid-template-columns:minmax(0,1fr)}}
+.od-go{width:100%}
+.od-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px}
+.od-back{padding-inline:22px}
+.pm{display:grid;gap:10px}
+.pmo{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:12px;align-items:center;padding:16px;border:1px solid var(--line-strong);border-radius:16px;cursor:pointer;background:var(--surface)}
+.pmo:has(input:checked){border-color:var(--accent);box-shadow:0 0 0 3px var(--mark);background:var(--tint)}
+.pmo input{width:18px;height:18px;margin:0;accent-color:var(--accent)}
+.pmb b{display:block;font:700 16px/1.3 var(--f-display)}
+.pmb small{display:block;font-size:13.5px;color:var(--muted);margin-top:2px}
+.pmt{font:800 18px/1 var(--f-display);letter-spacing:-.02em}
+.pmo.off{opacity:.5;cursor:not-allowed}
+.od-fine{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.od-done{font-size:24px}
+.od-p{color:var(--ink-2);font-size:15.5px}
+.od-fail{margin:14px 0 0;font-size:14px;color:#C4283A}.od-fail a{color:inherit;font-weight:700}
 footer{padding-block:36px;border-top:1px solid var(--line);font-size:14px;color:var(--muted);background:var(--band)}
 footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center}
 </style>
@@ -443,8 +479,8 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
       <div class="total"><div class="t tabnum" id="total">$20,000</div><div class="s" id="eta">About 5 months to complete</div></div>
     </div>
     <div class="order">
-      <a class="btn btn-primary" id="order" href="https://calendly.com/storysculpt-contact/15min" target="_blank" rel="noopener">Order 1,000 reviews for $20,000</a>
-      <p id="order-note">Secure checkout. You'll add your book's Amazon link after you pay.</p>
+      <button type="button" class="btn btn-primary" id="order">Order 1,000 reviews for $20,000</button>
+      <p id="order-note">Pay by bank transfer, card, or invoice. We'll ask for your book's Amazon link first.</p>
     </div>
     <p class="fine">Any amount from 50 to 1,500 reviews, in steps of 10. Timing is an estimate and depends on your book's genre. Questions first? <a href="#book">Talk to us or a past client</a>.</p>
   </div></section>
@@ -490,6 +526,45 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
     </div>
   </div></section>
 </main>
+<dialog id="od" aria-labelledby="od-title">
+  <form name="order" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="of" novalidate>
+    <input type="hidden" name="form-name" value="order">
+    <input type="hidden" name="order_id"><input type="hidden" name="reviews"><input type="hidden" name="total"><input type="hidden" name="method">
+    <p class="hp"><label>Leave empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+    <div class="od-top">
+      <div><span class="od-k">Your order</span><h3 id="od-title"><span id="od-n">1,000</span> Amazon reviews</h3></div>
+      <button type="button" class="od-x" id="od-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="od-step" id="step1">
+      <span class="od-s">Step 1 of 2 · Your book</span>
+      <label class="fld"><span>Your book's Amazon link</span><input type="url" name="book_link" id="f-book" placeholder="https://www.amazon.com/dp/..." required inputmode="url"><em class="err">Paste the link to your book's Amazon page.</em></label>
+      <div class="two">
+        <label class="fld"><span>Full name</span><input type="text" name="name" id="f-name" autocomplete="name" required><em class="err">Add your name.</em></label>
+        <label class="fld"><span>Email</span><input type="email" name="email" id="f-email" autocomplete="email" required><em class="err">Add a valid email.</em></label>
+      </div>
+      <label class="fld"><span>Anything we should know? <i>Optional</i></span><textarea name="notes" rows="2"></textarea></label>
+      <button type="button" class="btn btn-primary od-go" id="to2">Continue to payment</button>
+    </div>
+    <div class="od-step" id="step2" hidden>
+      <span class="od-s">Step 2 of 2 · How would you like to pay?</span>
+      <div class="pm" role="radiogroup" aria-label="Payment method">
+        <label class="pmo"><input type="radio" name="pm" value="ach" checked><span class="pmb"><b>Bank transfer (ACH)</b><small>Recommended. Pay securely from your bank account. No fee.</small></span><span class="pmt tabnum" id="t-ach">$20,000</span></label>
+        <label class="pmo"><input type="radio" name="pm" value="card"><span class="pmb"><b>Credit or debit card</b><small id="card-sub">Includes a card processing fee.</small></span><span class="pmt tabnum" id="t-card">$20,600</span></label>
+        <label class="pmo"><input type="radio" name="pm" value="invoice"><span class="pmb"><b>Wire or invoice</b><small>We'll email you an invoice with wire and bank details.</small></span><span class="pmt tabnum" id="t-inv">$20,000</span></label>
+      </div>
+      <div class="od-row"><button type="button" class="btn btn-ghost od-back" id="to1">Back</button><button type="submit" class="btn btn-primary od-go" id="pay">Continue to secure checkout</button></div>
+      <p class="od-fine" id="od-fine">You'll finish payment on Stripe's secure checkout page.</p>
+    </div>
+    <div class="od-step" id="step3" hidden>
+      <span class="od-s">Request received</span>
+      <h3 class="od-done">Thanks. Your invoice is on its way.</h3>
+      <p class="od-p">We'll email an invoice for <b id="d-sum">1,000 reviews</b> to <b id="d-email"></b>, with wire and bank details. Your order number is <b id="d-id"></b>.</p>
+      <button type="button" class="btn btn-ghost" id="od-ok">Close</button>
+    </div>
+    <p class="od-fail" id="od-fail" hidden>Something went wrong sending your details. Please try again, or <a href="https://calendly.com/storysculpt-contact/15min" target="_blank" rel="noopener">book a quick call</a> and we'll take your order.</p>
+  </form>
+</dialog>
+
 
 <footer><div class="wrap"><a class="logo" href="#top">Byline<i></i><small>Reviews</small></a><span>Honest reviews for recently published authors.</span></div></footer>
 
@@ -499,7 +574,14 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
   var $=function(s){return document.querySelector(s)};
   // ---- Fill these in: Stripe Payment Links and Jason's contact ----
   // ANY: one link with adjustable quantity ($20 per review). Package links are optional.
-  var CHECKOUT={ANY:'', 100:'', 250:'', 500:'', 1000:'', 1500:''};
+  // ach:  Stripe Payment Link, bank (ACH) only, $20.00 per review, adjustable quantity 50-1,500.
+  // card: Stripe Payment Link, card only, $20.60 per review, adjustable quantity 50-1,500.
+  // Optional per-package links (fixed quantity) override ANY for that package size.
+  var CHECKOUT={
+    ach: {ANY:'', 100:'', 250:'', 500:'', 1000:'', 1500:''},
+    card:{ANY:'', 100:'', 250:'', 500:'', 1000:'', 1500:''}
+  };
+  var CARD_FEE=0.03;   // card processing fee shown on the card option (3%)
   var JASON_LINK='';   // e.g. 'mailto:jason@example.com?subject=Byline%20Reviews' or a Calendly link
   var CALL='https://calendly.com/storysculpt-contact/15min';
   if(JASON_LINK)document.querySelectorAll('.js-jason').forEach(function(a){a.href=JASON_LINK});
@@ -512,16 +594,65 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
     $('#total').textContent='$'+fmt(n*RATE);
     $('#eta').textContent=eta(n);
     $('#minus').disabled=n<=MIN;$('#plus').disabled=n>=MAX;
-    var link=CHECKOUT[n]||CHECKOUT.ANY, o=$('#order');
-    o.textContent='Order '+fmt(n)+' reviews for $'+fmt(n*RATE);
-    o.href=link||CALL;
-    $('#order-note').textContent=link?"Secure checkout by card. You'll add your book's Amazon link after you pay.":"We'll confirm your order and send a secure payment link on a quick call.";
+    $('#order').textContent='Order '+fmt(n)+' reviews for $'+fmt(n*RATE);
     document.querySelectorAll('.pkg').forEach(function(b){b.setAttribute('aria-pressed',String(+b.dataset.n===n))});
   }
   $('#minus').addEventListener('click',function(){n=Math.max(MIN,n-STEP);render()});
   $('#plus').addEventListener('click',function(){n=Math.min(MAX,n+STEP);render()});
   $('#pkgs').addEventListener('click',function(e){var b=e.target.closest('.pkg');if(b){n=+b.dataset.n;render()}});
   render();
+
+  // ---- Order dialog: book link first, then payment method ----
+  var od=$('#od'),of=$('#of'),oid='';
+  function money(v){return '$'+v.toLocaleString('en-US',{minimumFractionDigits:v%1?2:0,maximumFractionDigits:2})}
+  function linkFor(m){var s=CHECKOUT[m]||{};return s[n]||s.ANY||''}
+  function show(s){['step1','step2','step3'].forEach(function(id){$('#'+id).hidden=id!==s});$('#od-fail').hidden=true}
+  function cardTotal(){return Math.round(n*RATE*(1+CARD_FEE)*100)/100}
+  function method(){return of.querySelector('input[name="pm"]:checked').value}
+  function syncPay(){var m=method();$('#pay').textContent=m==='invoice'?'Request my invoice':'Continue to secure checkout';
+    $('#od-fine').textContent=m==='invoice'?"No payment now. We'll email your invoice.":"You'll finish payment on Stripe's secure checkout page."}
+  function setTotals(){
+    $('#od-n').textContent=fmt(n);$('#t-ach').textContent=money(n*RATE);$('#t-inv').textContent=money(n*RATE);$('#t-card').textContent=money(cardTotal());
+    $('#card-sub').textContent='Includes a '+Math.round(CARD_FEE*100)+'% card processing fee.';
+    ['ach','card'].forEach(function(m){var inp=of.querySelector('input[value="'+m+'"]'),ok=!!linkFor(m);
+      inp.disabled=!ok;inp.closest('.pmo').classList.toggle('off',!ok);if(!ok&&inp.checked)of.querySelector('input[value="invoice"]').checked=true});
+    if(linkFor('ach'))of.querySelector('input[value="ach"]').checked=true;
+    syncPay();
+  }
+  of.addEventListener('change',function(e){if(e.target.name==='pm')syncPay()});
+  function open(){oid='BR-'+Date.now().toString(36).toUpperCase();setTotals();show('step1');if(od.showModal)od.showModal();else od.setAttribute('open','')}
+  function close(){if(od.close)od.close();else od.removeAttribute('open')}
+  $('#order').addEventListener('click',open);
+  $('#od-close').addEventListener('click',close);$('#od-ok').addEventListener('click',close);
+  od.addEventListener('click',function(e){if(e.target===od)close()});
+  function check(el,ok){el.closest('.fld').classList.toggle('bad',!ok);return ok}
+  $('#to2').addEventListener('click',function(){
+    var bk=$('#f-book'),b=bk.value.trim(),ok=true;
+    ok=check(bk,/^(https?:\/\/)?([\w-]+\.)*(amazon\.[a-z.]+|amzn\.[a-z]+|a\.co)(\/|$)/i.test(b))&&ok;
+    ok=check($('#f-name'),$('#f-name').value.trim().length>1)&&ok;
+    ok=check($('#f-email'),/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($('#f-email').value.trim()))&&ok;
+    if(!ok){var bad=of.querySelector('.fld.bad input');if(bad)bad.focus();return}
+    if(!/^https?:/i.test(b))bk.value='https://'+b;
+    show('step2');
+  });
+  $('#to1').addEventListener('click',function(){show('step1')});
+  of.addEventListener('submit',function(e){
+    e.preventDefault();
+    var m=method(),total=m==='card'?cardTotal():n*RATE,email=$('#f-email').value.trim();
+    of.order_id.value=oid;of.reviews.value=n;of.total.value=total;of.method.value=m;
+    var btn=$('#pay');btn.disabled=true;btn.textContent='One moment...';
+    var sent=fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(of)).toString()})
+      .then(function(r){if(!r.ok)throw new Error('save failed')});
+    if(m==='invoice'){
+      sent.then(function(){$('#d-sum').textContent=fmt(n)+' reviews ('+money(total)+')';$('#d-email').textContent=email;$('#d-id').textContent=oid;show('step3')},
+                function(){$('#od-fail').hidden=false})
+          .then(function(){btn.disabled=false;syncPay()});
+    }else{
+      var url=linkFor(m);url+=(url.indexOf('?')<0?'?':'&')+'prefilled_email='+encodeURIComponent(email)+'&client_reference_id='+oid;
+      var went=false,go=function(){if(!went){went=true;window.location.href=url}};
+      sent.then(go,go);setTimeout(go,2500); // never block a payment if saving is slow
+    }
+  });
 
   // Hero: the listing's rating count climbs slowly, with a small "new rating" ping now and then.
   var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
