@@ -131,9 +131,9 @@ p{margin:0}
 .stage::before{content:"";position:absolute;inset:0 0 34px 0;border-radius:32px;background:var(--band);background-image:radial-gradient(var(--dot) 1px,transparent 1.3px);background-size:20px 20px;border:1px solid var(--line)}
 .fan{position:absolute;top:30px;left:50%;transform:translateX(-50%);width:322px;height:260px;pointer-events:none}
 .fan img{position:absolute;width:132px;border-radius:3px 7px 7px 3px;box-shadow:0 18px 34px -16px rgba(12,21,50,.55)}
-.fan .f1{right:0;top:6px;transform:rotate(9deg)}
-.fan .f2{right:96px;top:-8px;transform:rotate(2deg)}
-.fan .f3{right:190px;top:12px;transform:rotate(-6deg)}
+.fan .f1{right:0;top:6px;transform:rotate(9deg);z-index:1}
+.fan .f2{right:96px;top:-8px;transform:rotate(2deg);z-index:2}
+.fan .f3{right:190px;top:12px;transform:rotate(-6deg);z-index:3}
 .stage .listing{margin-top:124px;margin-inline:auto;max-width:430px;width:calc(100% - 48px);position:relative}
 .stage .example-tag{position:relative;text-align:center}
 @media (max-width:560px){.stage .listing{width:calc(100% - 24px)}}
@@ -276,6 +276,28 @@ details p{padding:0 18px 18px 60px;color:var(--ink-2);max-width:62ch;font-size:1
 .book-card .btn{width:100%;margin-top:24px}
 .book-card .alt{display:block;margin-top:12px;font:500 12px/1.4 var(--f-mono);color:var(--muted);text-align:center;word-break:break-all}
 @media (max-width:860px){.book .wrap{grid-template-columns:minmax(0,1fr)}}
+
+/* order bar under the calculator */
+.order{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin-top:16px}
+.order .btn{min-height:60px;padding-inline:30px;font-size:17px}
+.order p{font-size:14.5px;color:var(--muted);max-width:44ch}
+.fine a{color:var(--accent);font-weight:600}
+/* get started: three ways */
+.book .wrap{display:block}
+.book-head{max-width:760px}
+.ways{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:40px}
+.way{display:flex;flex-direction:column;gap:10px;padding:26px;border-radius:24px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12)}
+.way.main{background:var(--surface);border-color:transparent;box-shadow:0 30px 70px -30px rgba(0,0,0,.6)}
+.way .wk{font:600 11px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:#8A9DFF}
+.way.main .wk{color:var(--accent)}
+.way h3{font-size:22px;letter-spacing:-.02em;color:#fff}
+.way.main h3{color:var(--ink)}
+.way p{margin:0;font-size:15.5px;color:#C3CEDD;flex:1}
+.way.main p{color:var(--ink-2)}
+.way .btn{margin-top:10px;width:100%}
+.way .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.3)}
+.way .btn-ghost:hover{background:rgba(255,255,255,.08)}
+@media (max-width:900px){.ways{grid-template-columns:minmax(0,1fr)}}
 footer{padding-block:36px;border-top:1px solid var(--line);font-size:14px;color:var(--muted);background:var(--band)}
 footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center}
 </style>
@@ -285,7 +307,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
 <header class="nav"><div class="wrap"><div class="bar">
   <a class="logo" href="#top">Byline<i></i><small>Reviews</small></a>
   <nav class="nav-links" aria-label="Sections"><a href="#how">How it works</a><a href="#proof">Clients</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></nav>
-  <div class="right"><button class="theme" id="theme" type="button" aria-label="Switch light or dark mode"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button><a class="btn btn-primary" href="#book">Book a call</a></div>
+  <div class="right"><button class="theme" id="theme" type="button" aria-label="Switch light or dark mode"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button><a class="btn btn-primary" href="#pricing">Order reviews</a></div>
 </div></div></header>
 
 <main id="top">
@@ -294,11 +316,11 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
       <span class="eyebrow">Amazon reviews for recently published authors</span>
       <h1>Real <mark>Amazon reviews</mark> for your book.</h1>
       <p class="lede">Your book should look as credible as you are. We get it read by real readers from our network of 150,000+, and they leave honest reviews on Amazon. Choose any number up to 1,500, and the count is guaranteed.</p>
-      <div class="cta-row"><a class="btn btn-primary" href="#book">Get a review plan: free 15-min call</a><a class="btn btn-ghost" href="#pricing">See pricing</a></div>
+      <div class="cta-row"><a class="btn btn-primary" href="#pricing">Order your reviews</a><a class="btn btn-ghost" href="#book">Talk to us first</a></div>
       <ul class="facts"><li>Real readers, never paid</li><li>Honest reviews, never scripted</li><li>Nothing for you to do</li></ul>
     </div>
     <div class="stage">
-      <div class="fan" aria-hidden="true"><img src="cover-transcendent.webp" alt="" class="f1"><img src="cover-reality.webp" alt="" class="f2"><img src="cover-trivia.webp" alt="" class="f3"></div>
+      <div class="fan" aria-hidden="true"><img src="cover-trivia.webp" alt="" class="f1"><img src="cover-reality.webp" alt="" class="f2"><img src="cover-transcendent.webp" alt="" class="f3"></div>
       <div class="listing" id="listing" aria-label="Example Amazon listing gaining reviews">
         <div class="top"><span>Amazon listing</span><b>Reviews arriving</b></div>
         <div class="lbody">
@@ -398,7 +420,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
             <a href="https://www.amazon.com/dp/B0H3FBMP4Z" target="_blank" rel="noopener">See it on Amazon ↗</a></div>
         </article>
       </div>
-    <div class="talk"><div class="ti"><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg></i><p><b>Want to hear it from a client?</b>Jason Mandel is happy to talk with anyone considering Byline. Mention it on your call and we'll connect you.</p></div><a class="btn btn-primary" href="#book">Book a call</a></div>
+    <div class="talk"><div class="ti"><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg></i><p><b>Want to hear it from a client?</b>Jason Mandel is happy to talk with anyone considering Byline about his experience.</p></div><a class="btn btn-ghost js-jason" href="https://calendly.com/storysculpt-contact/15min" target="_blank" rel="noopener">Talk to Jason</a></div>
   </div></section>
 
   <section id="pricing" class="band"><div class="wrap">
@@ -420,7 +442,11 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
       </div>
       <div class="total"><div class="t tabnum" id="total">$20,000</div><div class="s" id="eta">About 5 months to complete</div></div>
     </div>
-    <p class="fine">Any amount from 50 to 1,500 reviews, in steps of 10. Timing is an estimate and depends on your book's genre.</p>
+    <div class="order">
+      <a class="btn btn-primary" id="order" href="https://calendly.com/storysculpt-contact/15min" target="_blank" rel="noopener">Order 1,000 reviews for $20,000</a>
+      <p id="order-note">Secure checkout. You'll add your book's Amazon link after you pay.</p>
+    </div>
+    <p class="fine">Any amount from 50 to 1,500 reviews, in steps of 10. Timing is an estimate and depends on your book's genre. Questions first? <a href="#book">Talk to us or a past client</a>.</p>
   </div></section>
 
   <section id="faq"><div class="wrap faq-grid">
@@ -438,15 +464,29 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
   </div></section>
 
   <section class="book" id="book"><div class="wrap">
-    <div>
-      <span class="eyebrow">Free 15-minute call</span>
-      <h2>See how many reviews <em>your book could have.</em></h2>
-      <p>A free 15-minute call. We look at your book's listing with you, recommend a number, and give you a fixed price.</p>
+    <div class="book-head">
+      <span class="eyebrow">Get started</span>
+      <h2>Ready to order? <em>Or talk it through first.</em></h2>
     </div>
-    <div class="book-card">
-      <ol><li>Send us your book's Amazon link.</li><li>We recommend a review target and timeline.</li><li>You get a fixed price. Decide whenever you're ready.</li></ol>
-      <a class="btn btn-primary ext" href="https://calendly.com/storysculpt-contact/15min" target="_blank" rel="noopener">Pick a time on Calendly</a>
-      <span class="alt">calendly.com/storysculpt-contact/15min</span>
+    <div class="ways">
+      <div class="way main">
+        <span class="wk">Order now</span>
+        <h3>Order your reviews</h3>
+        <p>Pick a package or your own number and check out in a couple of minutes. We start as soon as we have your book's link.</p>
+        <a class="btn btn-primary" href="#pricing">Choose your package</a>
+      </div>
+      <div class="way">
+        <span class="wk">Questions?</span>
+        <h3>Book a 15-minute call</h3>
+        <p>Talk to our team before you buy. We'll look at your listing with you and recommend a number.</p>
+        <a class="btn btn-ghost ext" href="https://calendly.com/storysculpt-contact/15min" target="_blank" rel="noopener">Pick a time</a>
+      </div>
+      <div class="way">
+        <span class="wk">Hear it from a client</span>
+        <h3>Talk to a past client</h3>
+        <p>Jason Mandel, author of Terminal Success and Transcendent Wealth, is happy to share his experience with Byline.</p>
+        <a class="btn btn-ghost js-jason" href="https://calendly.com/storysculpt-contact/15min" target="_blank" rel="noopener">Talk to Jason</a>
+      </div>
     </div>
   </div></section>
 </main>
@@ -457,6 +497,12 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
 (function(){var b=document.getElementById('theme'),R=document.documentElement;b.addEventListener('click',function(){var d=R.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');var n=d==='dark'?'light':'dark';R.setAttribute('data-theme',n);try{localStorage.setItem('bt',n)}catch(e){}});try{var s=localStorage.getItem('bt');if(s)R.setAttribute('data-theme',s)}catch(e){}})();
 (function(){
   var $=function(s){return document.querySelector(s)};
+  // ---- Fill these in: Stripe Payment Links and Jason's contact ----
+  // ANY: one link with adjustable quantity ($20 per review). Package links are optional.
+  var CHECKOUT={ANY:'', 100:'', 250:'', 500:'', 1000:'', 1500:''};
+  var JASON_LINK='';   // e.g. 'mailto:jason@example.com?subject=Byline%20Reviews' or a Calendly link
+  var CALL='https://calendly.com/storysculpt-contact/15min';
+  if(JASON_LINK)document.querySelectorAll('.js-jason').forEach(function(a){a.href=JASON_LINK});
   var RATE=20,MIN=50,MAX=1500,STEP=10;
   var n=1000;
   var fmt=function(v){return v.toLocaleString('en-US')};
@@ -466,6 +512,10 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
     $('#total').textContent='$'+fmt(n*RATE);
     $('#eta').textContent=eta(n);
     $('#minus').disabled=n<=MIN;$('#plus').disabled=n>=MAX;
+    var link=CHECKOUT[n]||CHECKOUT.ANY, o=$('#order');
+    o.textContent='Order '+fmt(n)+' reviews for $'+fmt(n*RATE);
+    o.href=link||CALL;
+    $('#order-note').textContent=link?"Secure checkout by card. You'll add your book's Amazon link after you pay.":"We'll confirm your order and send a secure payment link on a quick call.";
     document.querySelectorAll('.pkg').forEach(function(b){b.setAttribute('aria-pressed',String(+b.dataset.n===n))});
   }
   $('#minus').addEventListener('click',function(){n=Math.max(MIN,n-STEP);render()});
