@@ -156,6 +156,8 @@ p{margin:0}
 .case .r .stars{font-size:14px}
 .case .r .cnt{color:var(--accent);font-weight:700}
 .case a{display:inline-block;margin-top:8px;font-size:14px;font-weight:700;color:var(--accent);text-decoration:none}
+.more{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+@media (max-width:700px){.more{grid-template-columns:minmax(0,1fr)}}
 .talk{margin-top:22px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px;padding:24px 26px;border-radius:20px;background:var(--surface);border:1px solid var(--line)}
 .talk p{max-width:60ch;font-size:16.5px}.talk b{font-weight:700}
 @media (max-width:900px){.pg{grid-template-columns:minmax(0,1fr)}}
@@ -284,6 +286,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
   <section class="proof" id="proof"><div class="wrap">
     <span class="eyebrow">Clients</span>
     <h2>Real authors. <em>Real reviews.</em></h2>
+    <p class="lede">A few recent books from our clients, from finance to science to kids' trivia.</p>
     <div class="pg">
       <div class="video" aria-label="Jason Mandel's video testimonial, coming soon">
         <img src="cover-terminal.webp" alt="">
@@ -296,12 +299,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
             <div class="r"><span class="num">4.7</span><span class="stars" style="--pct:94%"></span><span class="cnt tabnum">218 ratings</span></div>
             <a href="https://www.amazon.com/s?k=Terminal+Success+Jason+Mandel" target="_blank" rel="noopener">See it on Amazon ↗</a></div>
         </article>
-        <article class="case">
-          <img src="cover-reality.webp" alt="Cover of Reality Is Weirder Than You Think" width="96" height="144">
-          <div><span class="k">Science · Popular nonfiction</span><h3>Reality Is Weirder Than You Think</h3><div class="by">Theodore G. Mercer</div>
-            <div class="r"><span class="num">4.8</span><span class="stars" style="--pct:96%"></span><span class="cnt tabnum">122 ratings</span></div>
-            <a href="https://www.amazon.com/s?k=Reality+Is+Weirder+Than+You+Think+Theodore+G.+Mercer" target="_blank" rel="noopener">See it on Amazon ↗</a></div>
-        </article>
+        
         <article class="case">
           <img src="cover-transcendent.webp" alt="Cover of Transcendent Wealth by Jason G. Mandel" width="96" height="144">
           <div><span class="k">Finance · Tax planning</span><h3>Transcendent Wealth</h3><div class="by">Jason G. Mandel, Founder and CEO, Mandel Family Office</div>
@@ -310,6 +308,19 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
         </article>
       </div>
     </div>
+    <div class="more">
+        <article class="case">
+          <img src="cover-reality.webp" alt="Cover of Reality Is Weirder Than You Think" width="96" height="144">
+          <div><span class="k">Science · Popular nonfiction</span><h3>Reality Is Weirder Than You Think</h3><div class="by">Theodore G. Mercer</div>
+            <div class="r"><span class="num">4.8</span><span class="stars" style="--pct:96%"></span><span class="cnt tabnum">122 ratings</span></div>
+            <a href="https://www.amazon.com/s?k=Reality+Is+Weirder+Than+You+Think+Theodore+G.+Mercer" target="_blank" rel="noopener">See it on Amazon ↗</a></div>
+        </article>
+        <article class="case">
+          <img src="cover-trivia.webp" alt="Cover of Trick Trivia! Real or Fake? You Decide. by Tom Hadley" width="96" height="144">
+          <div><span class="k">Kids · Trivia</span><h3>Trick Trivia! Real or Fake? You Decide.</h3><div class="by">Tom Hadley</div>
+            <a href="https://www.amazon.com/s?k=Trick+Trivia+Real+or+Fake+Tom+Hadley" target="_blank" rel="noopener">See it on Amazon ↗</a></div>
+        </article>
+      </div>
     <div class="talk"><p><b>Want to hear it from a client?</b> Jason Mandel is happy to talk with anyone considering Byline. Mention it on your call and we'll connect you.</p><a class="btn btn-ghost" href="#book">Book a call</a></div>
   </div></section>
 
