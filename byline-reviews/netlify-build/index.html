@@ -186,6 +186,7 @@ p{margin:0}
 .checks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0 0;padding:0;list-style:none}
 .checks li{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;padding:14px 16px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line)}
 .checks li::before{content:"✓";display:grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--accent);color:var(--surface);font-size:12px;font-weight:800;flex:none}
+.compl{margin:16px 0 0;font-size:14.5px;color:var(--muted);max-width:80ch}
 .who{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:30px}
 .who::before{content:"Built for";font:600 12px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-right:8px}
 .who span{font-size:14px;font-weight:600;padding:8px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong);color:var(--ink-2)}
@@ -351,7 +352,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
     <div>
       <span class="eyebrow">Amazon reviews for recently published authors</span>
       <h1>Real <mark>Amazon reviews</mark> for your book.</h1>
-      <p class="lede">Your book should look as credible as you are. We get it read by real readers from our network of 150,000+, and they leave honest reviews on Amazon. Choose any number up to 1,500, and the count is guaranteed.</p>
+      <p class="lede">Your book should look as credible as you are. We get it read by real readers from our partner network of 150,000+, and they leave honest reviews on Amazon. Choose any number up to 1,500, and the count is guaranteed.</p>
       <div class="cta-row"><a class="btn btn-primary" href="#pricing">Order your reviews</a><a class="btn btn-ghost" href="#book">Talk to us first</a></div>
       <ul class="facts"><li>Real readers, never paid</li><li>Honest reviews, never scripted</li><li>Nothing for you to do</li></ul>
     </div>
@@ -382,7 +383,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
     </div>
   </div>
   <div class="wrap"><dl class="stats">
-    <div><dt class="tabnum">150,000+</dt><dd>readers in our network</dd></div>
+    <div><dt class="tabnum">150,000+</dt><dd>readers in our partner network</dd></div>
     <div><dt class="tabnum">1,500</dt><dd>reviews, the most per book</dd></div>
     <div><dt class="tabnum">$20</dt><dd>per review, flat</dd></div>
     <div><dt>100%</dt><dd>of your review count guaranteed</dd></div>
@@ -407,7 +408,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
 
   <section id="how" class="band"><div class="wrap">
     <span class="eyebrow">How it works</span>
-    <div class="head2"><h2>Four steps.<br><em>You only do the first.</em></h2><p class="lede">Real readers from our network get a free copy of your book. What they think of it is up to them.</p></div>
+    <div class="head2"><h2>Four steps.<br><em>You only do the first.</em></h2><p class="lede">Real readers from our partner network get a free copy of your book. What they think of it is up to them.</p></div>
     <ol class="flow">
       <li><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H18v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H18v-3"/></svg></span><b>Send your book</b><span>Your Amazon link and a number.</span></li>
       <li><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><path d="M15 14.2c2.6-.4 4.7 1.2 5.3 4.3"/></svg></span><b>We match readers</b><span>From 150,000+ who read in your subject.</span></li>
@@ -415,6 +416,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
       <li><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg></span><b>Reviews arrive</b><span>Weekly updates until you hit your number.</span></li>
     </ol>
     <ul class="checks"><li>Readers are never paid</li><li>Reviews are never required</li><li>Opinions are their own</li><li>Count guaranteed, never the stars</li></ul>
+    <p class="compl">Built around Amazon's review guidelines: readers get a free copy, are never paid, are never required to review, and are never told what to write.</p>
     <div class="who" aria-label="Who this is for"><span>CPAs</span><span>Estate and tax attorneys</span><span>Financial advisors</span><span>Consultants</span><span>Coaches</span><span>Founders and executives</span></div>
   </div></section>
 
@@ -487,11 +489,11 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
   <section id="faq"><div class="wrap faq-grid">
     <div><span class="eyebrow">FAQ</span><h2>Questions authors ask <em>first</em>.</h2></div>
     <div class="faq-list">
-      <details><summary>Are these real people?</summary><p>Yes. Every review comes from a member of our reader network: people who love to read and sign up to get free books in the genres they enjoy.</p></details>
+      <details><summary>Are these real people?</summary><p>Yes. Every review comes from a member of the reader network we work with: people who love to read and sign up to get free books in the genres they enjoy.</p></details>
       <details><summary>Are reviewers paid?</summary><p>No. Readers receive a free copy of your book and nothing else. They are never paid for a review.</p></details>
       <details><summary>Do readers have to leave a review?</summary><p>No. After reading, they're invited to share honest feedback. Many choose to post it as an Amazon review. We send your book to enough readers to reach your number.</p></details>
       <details><summary>Will the reviews be positive?</summary><p>Readers say what they actually think, and we never ask for a rating. That is what makes the reviews credible. Our guarantee covers the number of reviews, not the stars.</p></details>
-      <details><summary>Is this allowed by Amazon?</summary><p>Yes. Readers get a free copy, aren't paid, aren't required to review, and aren't told what to write. Giving readers free copies so they can form their own opinion is a normal part of publishing.</p></details>
+      <details><summary>Is this allowed by Amazon?</summary><p>Yes. Amazon's guidelines allow authors to give readers free copies of their book, as long as a review isn't required and the author doesn't try to influence it. That's exactly how this works: readers get a free copy and nothing else, they decide for themselves whether to leave a review, and they write whatever they honestly think. Nobody tells them what to say or what rating to give.</p></details>
       <details><summary>How long does it take?</summary><p>Reviews usually start arriving within a few weeks. Larger packages take longer because readers need time to read the book. You get a weekly update the whole way.</p></details>
       <details><summary>What do you need from me?</summary><p>Your Amazon link and your chosen number. We handle the rest.</p></details>
       <details><summary>What books qualify?</summary><p>Any book that is live on Amazon, in print, Kindle or both.</p></details>
