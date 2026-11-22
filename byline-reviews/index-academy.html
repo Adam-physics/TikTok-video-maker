@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>Byline Reviews</title>
+<title>Byline | Real Amazon reviews for your book</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Recently published? Byline gets your book read by real readers who leave honest reviews on Amazon. Up to 1,500 reviews, count guaranteed.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -70,6 +70,7 @@ p{margin:0}
 .nav{position:relative;z-index:50;padding-top:max(10px,env(safe-area-inset-top,0px))}
 .nav .bar{display:flex;align-items:center;justify-content:space-between;gap:14px;height:76px;border-bottom:1px solid var(--line)}
 .logo{display:inline-flex;align-items:baseline;gap:8px;font:800 25px/1 var(--f-display);letter-spacing:-.04em;color:var(--ink);text-decoration:none}
+.logo .dot{color:var(--accent);margin-left:-8px}
 .logo i{display:inline-block;width:16px;height:3px;background:var(--accent);transform:translateY(-5px)}
 .logo small{font:600 12px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-left:2px}
 .nav-links{display:flex;gap:28px}
@@ -333,7 +334,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
 </style>
 
 <header class="nav"><div class="wrap"><div class="bar">
-  <a class="logo" href="#top">Byline<i></i><small>Reviews</small></a>
+  <a class="logo" href="#top">Byline<span class="dot">.</span></a>
   <nav class="nav-links" aria-label="Sections"><a href="#how">How it works</a><a href="#proof">Clients</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></nav>
   <div class="right"><button class="theme" id="theme" type="button" aria-label="Switch light or dark mode"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button><a class="btn btn-primary" href="#pricing">Order reviews</a></div>
 </div></div></header>
@@ -558,7 +559,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
 </dialog>
 
 
-<footer><div class="wrap"><a class="logo" href="#top">Byline<i></i><small>Reviews</small></a><span>Honest reviews for recently published authors.</span></div></footer>
+<footer><div class="wrap"><a class="logo" href="#top">Byline<span class="dot">.</span></a><span>Honest reviews for recently published authors.</span></div></footer>
 
 <script>
 (function(){var b=document.getElementById('theme'),R=document.documentElement;b.addEventListener('click',function(){var d=R.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');var n=d==='dark'?'light':'dark';R.setAttribute('data-theme',n);try{localStorage.setItem('bt',n)}catch(e){}});try{var s=localStorage.getItem('bt');if(s)R.setAttribute('data-theme',s)}catch(e){}})();
